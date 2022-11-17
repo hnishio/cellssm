@@ -1,0 +1,44 @@
+#' cellssm: State-space Modeling for the Directional Movement of Cells
+#'
+#' @description This package provides an easy way to analyze the time-series of distances of
+#' cells or organelles from an external stimulus. Main functions are based on the
+#' Bayesian inference of parameters in the state-space model.
+#'
+#' @details This package is composed of main functions to implement state-space modeling
+#'  and sub-functions to perform minor tasks.
+#'
+#' @section Main functions:
+#' * [ssm_individual] : Bayesian inference of the state-space model for the individual dynamics
+#' * [ssm_common] : Bayesian inference of the state-space model to extract the common dynamics
+#' * [ssm_KFAS] : Inference of the state-space model for the individual dynamics by the Kalman filter
+#' * [nomodel] : Estimation of the movement without the state-space model
+#'
+#' @section Sub-functions:
+#' * [dist_vis] : Visualization of the distance from an explanatory variable
+#' * [lm_dist_beta] : Robust linear regression (x: distance at time 0, y: coefficient of an explanatory variable)
+#' * [lm_dist_start] : Linear regression (x: distance at time 0, y: start time)
+#' * [lm_signal] : Estimation of the signal transfer speed by linear regression (x: start time, y: distance at time 0)
+#'
+#' @section Datasets:
+#' * [cell1] : Time-series of chloroplast accumulation responses in cell 1
+#' * [cell2] : Time-series of chloroplast accumulation responses in cell 2
+#' * [cell3] : Time-series of chloroplast accumulation responses in cell 3
+#' * [cell4] : Time-series of chloroplast accumulation responses in cell 4
+#' * [visual] : Visual estimation of the start time of chloroplast accumulation responses in
+#' four plant cells
+#' * [chloroplast_mvtime] : Model estimation of the start and end time of chloroplast accumulation responses in
+#' four plant cells
+#' * [Paramecium] : Time-series of Paramecium escape responses
+#' * [Paramecium_mvtime] : Model estimation of the start and end time of Paramecium escape responses
+#'
+#' @author Haruki Nishio, \email{harukin218@@gmail.com}, \url{https://orcid.org/0000-0002-6124-782X}
+#' @author Satoyuki Hirano, \email{mc226592@@s.utsunomiya-u.ac.jp}
+#' @author Yutaka Kodama, \email{kodama@@cc.utsunomiya-u.ac.jp}
+#' @docType package
+#' @name cellssm-package
+#' @aliases cellssm
+#' @import ggplot2
+#' @import patchwork
+#' @import KFAS
+#'
+NULL

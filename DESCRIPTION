@@ -1,0 +1,35 @@
+Package: cellssm
+Title: State-space Modeling for the Directional Movement of Cells
+Version: 0.0.0.9000
+Authors@R: c(
+    person("Haruki", "Nishio", , "harukin218@gmail.com", role = c("aut", "cre"),
+           comment = c(ORCID = "0000-0002-6124-782X")),
+	person("Satoyuki", "Hirano", , "mc226592@s.utsunomiya-u.ac.jp", role = c("ctb")),
+	person("Yutaka", "Kodama", , "kodama@cc.utsunomiya-u.ac.jp", role = c("ctb")))
+Description: This package provides an easy way to analyze the time-series of distances of 
+	cells or organelles from an external stimulus. Main functions are based on the 
+	Bayesian inference of parameters in the state-space model.
+License: MIT + file LICENSE
+Encoding: UTF-8
+Roxygen: list(markdown = TRUE)
+RoxygenNote: 7.2.1
+Imports: 
+    bayesplot (>= 1.9.0),
+    KFAS (>= 1.4.6),
+    data.table (>= 1.14.2),
+    patchwork (>= 1.1.1),
+    ggplot2 (>= 3.3.5),
+    dplyr (>= 1.0.7),
+    stringr (>= 1.4.0),
+    scales (>= 1.1.1),
+    RobustLinearReg (>= 1.2.0),
+    ggpubr (>= 0.4.0),
+    cmdstanr (>= 0.5.2),
+	stats
+Remotes: git::https://github.com/stan-dev/cmdstanr.git
+Depends: 
+    R (>= 3.5.0)
+Suggests: 
+    knitr,
+    rmarkdown
+VignetteBuilder: knitr
