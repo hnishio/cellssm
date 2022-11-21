@@ -1,16 +1,28 @@
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# cellssm
+# cellssm: State-space Modeling for the Directional Movement of Cells
 
 <!-- badges: start -->
 <!-- badges: end -->
 
 ## Overview
 
-cellssm provides an easy way to analyze the time-series of distances of
-cells or organelles from an external stimulus. Main functions are based
-on the Bayesian inference of parameters in the state-space model.
+The R package cellssm provides an easy way to analyze the time-series of
+distances of cells or organelles from an external stimulus. Using this
+package, you can estimate the true dynamics from noisy movement data,
+extract the common dynamics among multiple cells or organelles, and
+estimate the start time of movements.
+
+## Details
+
+You just need to prepare csv files containing these colums: time (min,
+sec, etc), presence of stimulus (0 or 1), and distances of cells from
+the stimulus (mm,
+![\\mu](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cmu "\mu")m,
+etc). Main functions are based on the Bayesian inference of parameters
+in the state-space model including the time-varying coefficient of
+regression.
 
 ## Installation
 
@@ -59,30 +71,30 @@ ssm_individual(cell_list = cell_list, out = "02_ssm_individual",
 #> Chain 3 Iteration: 3001 / 6000 [ 50%]  (Sampling) 
 #> Chain 1 Iteration: 2400 / 6000 [ 40%]  (Warmup) 
 #> Chain 1 Iteration: 3001 / 6000 [ 50%]  (Sampling) 
-#> Chain 2 Iteration: 2400 / 6000 [ 40%]  (Warmup) 
 #> Chain 3 Iteration: 4200 / 6000 [ 70%]  (Sampling) 
+#> Chain 2 Iteration: 2400 / 6000 [ 40%]  (Warmup) 
 #> Chain 1 Iteration: 4200 / 6000 [ 70%]  (Sampling) 
 #> Chain 3 Iteration: 5400 / 6000 [ 90%]  (Sampling) 
 #> Chain 3 Iteration: 6000 / 6000 [100%]  (Sampling) 
-#> Chain 3 finished in 5.7 seconds.
+#> Chain 3 finished in 5.4 seconds.
 #> Chain 2 Iteration: 3001 / 6000 [ 50%]  (Sampling) 
 #> Chain 1 Iteration: 5400 / 6000 [ 90%]  (Sampling) 
 #> Chain 1 Iteration: 6000 / 6000 [100%]  (Sampling) 
-#> Chain 1 finished in 6.7 seconds.
+#> Chain 1 finished in 6.5 seconds.
 #> Chain 2 Iteration: 4200 / 6000 [ 70%]  (Sampling) 
 #> Chain 4 Iteration: 2400 / 6000 [ 40%]  (Warmup) 
 #> Chain 4 Iteration: 3001 / 6000 [ 50%]  (Sampling) 
 #> Chain 2 Iteration: 5400 / 6000 [ 90%]  (Sampling) 
 #> Chain 2 Iteration: 6000 / 6000 [100%]  (Sampling) 
-#> Chain 2 finished in 10.3 seconds.
+#> Chain 2 finished in 10.0 seconds.
 #> Chain 4 Iteration: 4200 / 6000 [ 70%]  (Sampling) 
 #> Chain 4 Iteration: 5400 / 6000 [ 90%]  (Sampling) 
 #> Chain 4 Iteration: 6000 / 6000 [100%]  (Sampling) 
-#> Chain 4 finished in 13.2 seconds.
+#> Chain 4 finished in 13.0 seconds.
 #> 
 #> All 4 chains finished successfully.
-#> Mean chain execution time: 8.9 seconds.
-#> Total execution time: 13.2 seconds.
+#> Mean chain execution time: 8.7 seconds.
+#> Total execution time: 13.1 seconds.
 ```
 
 <img src="man/figures/ssm_individual_cell1_chloroplast1.jpg" style="width:50.0%" />

@@ -6,13 +6,18 @@
 \alias{cellssm}
 \title{cellssm: State-space Modeling for the Directional Movement of Cells}
 \description{
-This package provides an easy way to analyze the time-series of distances of
-cells or organelles from an external stimulus. Main functions are based on the
-Bayesian inference of parameters in the state-space model.
+cellssm provides an easy way to analyze the time-series of
+distances of cells or organelles from an external stimulus. Using this package,
+you can estimate the true dynamics from noisy movement data, extract the common
+dynamics among multiple cells or organelles, and estimate the start time of movements.
 }
 \details{
-This package is composed of main functions to implement state-space modeling
-and sub-functions to perform minor tasks.
+You just need to prepare csv files containing these colums: time
+(min, sec, etc), presence of stimulus (0 or 1), and distances of cells from
+the stimulus (mm, \eqn{\mu}m, etc). Main functions are based on the Bayesian
+inference of parameters in the state-space model including the time-varying
+coefficient of regression. This package is composed of main functions to implement
+state-space modeling and sub-functions to perform minor tasks.
 }
 \section{Main functions}{
 
