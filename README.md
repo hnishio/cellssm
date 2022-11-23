@@ -18,8 +18,7 @@ estimate the start time of movements.
 
 You just need to prepare csv files containing these colums: time (min,
 sec, etc), presence of stimulus (0 or 1), and distances of cells from
-the stimulus (mm,
-![\\mu](https://latex.codecogs.com/png.image?%5Cdpi%7B110%7D&space;%5Cbg_white&space;%5Cmu "\mu")m,
+the stimulus (mm, $\mu$m,
 etc). Main functions are based on the Bayesian inference of parameters
 in the state-space model including the time-varying coefficient of
 regression.
@@ -59,7 +58,9 @@ ssm_individual(cell_list = cell_list, out = "02_ssm_individual",
                unit1 = "micrometer", unit2 = "min")
 ```
 
-<img src="man/figures/ssm_individual_cell1_chloroplast1.jpg" width="30%" />
+<figure>
+<img src="man/figures/ssm_individual_cell1_chloroplast1.jpg" width="60.0%" alt="figure" /><figcaption aria-hidden="true">figure</figcaption>
+</figure>
 
 This figure is an example of the output files. Dots, solid lines and
 shaded regions are the observed values, median and 95% credible
