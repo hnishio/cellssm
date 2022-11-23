@@ -14,10 +14,10 @@ movements in response to a laser heating, estimated by \link{ssm_individual}.
 \details{
 A data frame with 10 rows and 5 columns.
 }
-\section{Paramecium_mvtime}{
+\section{Columns}{
 
 \itemize{
-\item experiment : index of experiment (1)
+\item experiment : index of experiment
 \item Paramecium : index of Paramecium in each cell
 \item start_time : start time of Paramecium movements in seconds
 \item end_time : end time of Paramecium movements in seconds

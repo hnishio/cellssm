@@ -17,7 +17,7 @@ quantile99 <- function(x){
 #' (\url{https://mc-stan.org/docs/cmdstan-guide/cmdstan-installation.html}).
 #' To install CmdStan, installation from GitHub would be easier for beginners:
 #' you need to install Git and execute a few commands in the Terminal app on Mac or
-#'  the Command Prompt app or the Git Bash app on Windows.
+#' the Git Bash app on Windows.
 #'
 #' @param cell_list (list of data frame) The input time-series data. First column, time (column name "time");
 #' second column, an explanatory variable (0 or 1, column name "ex"); third to the last columns,

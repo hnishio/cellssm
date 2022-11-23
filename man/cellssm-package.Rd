@@ -6,7 +6,7 @@
 \alias{cellssm}
 \title{cellssm: State-space Modeling for the Directional Movement of Cells}
 \description{
-cellssm provides an easy way to analyze the time-series of
+\code{cellssm} provides an easy way to analyze the time-series of
 distances of cells or organelles from an external stimulus. Using this package,
 you can estimate the true dynamics from noisy movement data, extract the common
 dynamics among multiple cells or organelles, and estimate the start time of movements.

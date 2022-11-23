@@ -13,9 +13,9 @@ A real dataset containing the start time of chloroplast movements
 in response to a blue microbeam.
 }
 \details{
-A data frame  (visual) with 50 rows and 3 columns.
+A data frame with 50 rows and 3 columns.
 }
-\section{visual}{
+\section{Columns}{
 
 \itemize{
 \item cell : index of cells (1--4)

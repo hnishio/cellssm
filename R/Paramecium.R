@@ -5,7 +5,7 @@
 #'
 #' @details A data frame of Paramecium movements with 200 rows and 12 columns.
 #'
-#' @section Paramecium:
+#' @section Columns:
 #' * time : time in seconds, setting the start of a laser heating as 1
 #' * ex : presence of an explanatory variable (a laser heating) represented by 0 or 1
 #' * Paramecium1 -- Paramecium10 : distances of Paramecium from a laser heating

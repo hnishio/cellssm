@@ -14,7 +14,7 @@ from a laser heating.
 \details{
 A data frame of Paramecium movements with 200 rows and 12 columns.
 }
-\section{Paramecium}{
+\section{Columns}{
 
 \itemize{
 \item time : time in seconds, setting the start of a laser heating as 1

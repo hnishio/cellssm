@@ -9,7 +9,7 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.path = "man/figures/README-",
-  out.width = "100%"
+  out.width = "50%"
 )
 ```
 
@@ -40,7 +40,7 @@ devtools::install_github("hnishio/cellssm")
 A real data example of chloroplast accumulation responses to a blue microbeam:
 
 ```{r setting, include=F}
-knitr::opts_chunk$set(warning = F, message = F)
+knitr::opts_chunk$set(warning = F, message = F, results = "hide")
 ```
 
 ```{r example}

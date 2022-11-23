@@ -6,9 +6,10 @@ Authors@R: c(
            comment = c(ORCID = "0000-0002-6124-782X")),
 	person("Satoyuki", "Hirano", , "mc226592@s.utsunomiya-u.ac.jp", role = c("ctb")),
 	person("Yutaka", "Kodama", , "kodama@cc.utsunomiya-u.ac.jp", role = c("ctb")))
-Description: This package provides an easy way to analyze the time-series of distances of 
-	cells or organelles from an external stimulus. Main functions are based on the 
-	Bayesian inference of parameters in the state-space model.
+Description: cellssm provides an easy way to analyze the time-series of distances of 
+	cells or organelles from an external stimulus. Using this package, you can estimate 
+	the true dynamics from noisy movement data, extract the common dynamics among 
+	multiple cells or organelles, and estimate the start time of movements.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)

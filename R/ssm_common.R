@@ -17,7 +17,7 @@ quantile99 <- function(x){
 #' (\url{https://mc-stan.org/docs/cmdstan-guide/cmdstan-installation.html}).
 #' To install CmdStan, installation from GitHub would be easier for beginners:
 #' you need to install Git and execute a few commands in the Terminal app on Mac or
-#'  the Command Prompt app or the Git Bash app on Windows.
+#' the Git Bash app on Windows.
 #'
 #' @param cell_list (list of data frame) The input time-series data. First column, time (column name "time");
 #' second column, an explanatory variable (0 or 1, column name "ex"); third to the last columns,
@@ -29,7 +29,7 @@ quantile99 <- function(x){
 #' ("ssm_individual_mvtime.csv"). This parameter is optional but should be set if the start time of
 #' movement is affected by the distance from the explanatory variable.
 #'
-#' When the data frame is given for this parameter,
+#' When a data frame is given for this parameter,
 #' the model assumes the virtual response variable the distance of which from the explanatory variable is zero.
 #' Then the observed dynamics of all response variables in a data frame are assumed to be produced from
 #' the dynamics of the virtual response variable (the common dynamics) with modifications of

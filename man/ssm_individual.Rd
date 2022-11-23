@@ -130,7 +130,7 @@ this function, you need to install the cmdstanr package (>= 0.5.2)
 (\url{https://mc-stan.org/docs/cmdstan-guide/cmdstan-installation.html}).
 To install CmdStan, installation from GitHub would be easier for beginners:
 you need to install Git and execute a few commands in the Terminal app on Mac or
-the Command Prompt app or the Git Bash app on Windows.
+the Git Bash app on Windows.
 }
 \examples{
 # For the first time usage, install the cmdstanr package (>= 0.5.2)

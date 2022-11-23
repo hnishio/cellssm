@@ -5,8 +5,8 @@
 #'
 #' @details A data frame with 10 rows and 5 columns.
 #'
-#' @section Paramecium_mvtime:
-#' * experiment : index of experiment (1)
+#' @section Columns:
+#' * experiment : index of experiment
 #' * Paramecium : index of Paramecium in each cell
 #' * start_time : start time of Paramecium movements in seconds
 #' * end_time : end time of Paramecium movements in seconds

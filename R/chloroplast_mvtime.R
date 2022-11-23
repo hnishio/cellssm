@@ -6,7 +6,7 @@
 #'
 #' @details A data frame with 50 rows and 5 columns.
 #'
-#' @section chloroplast_mvtime:
+#' @section Columns:
 #' * cell : index of cells (1--4)
 #' * chloroplast : index of chloroplasts in each cell
 #' * start_time : start time of chloroplast movements in minutes

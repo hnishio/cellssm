@@ -15,7 +15,7 @@ movements in response to a blue microbeam, estimated by \link{ssm_individual}.
 \details{
 A data frame with 50 rows and 5 columns.
 }
-\section{chloroplast_mvtime}{
+\section{Columns}{
 
 \itemize{
 \item cell : index of cells (1--4)

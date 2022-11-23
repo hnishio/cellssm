@@ -14,7 +14,7 @@ from a blue microbeam.
 \details{
 A data frames of chloroplast movements (cell3) with 120 rows and 15 columns.
 }
-\section{cell3}{
+\section{Columns}{
 
 \itemize{
 \item time : time in minutes, setting the start of a blue microbeam irradiation as 1
