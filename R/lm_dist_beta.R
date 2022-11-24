@@ -72,42 +72,6 @@
 #' suppressWarnings(ggplot2::ggsave(paste0(out, "/individual_chloroplast_lm_dist_beta.pdf"),
 #'                                  g, height = 104, width = 168, units = "mm"))
 #'
-#'
-#'
-#' ### A simulated data example of Paramecium escape responses from a laser heating ###
-#'
-#' # Load packages
-#' library(cellssm)
-#'
-#' # Create an output directory
-#' out <- "15_lm_dist_beta"
-#' if(file.exists(out)==FALSE){
-#'   dir.create(out, recursive=TRUE)
-#' }
-#'
-#' # Load data
-#' data("Paramecium", "Paramecium_mvtime")
-#' cell_list <- list(Paramecium)
-#'
-#' # Specify the path of the output directory of [ssm_individual] or [ssm_KFAS]
-#' # below, the path of system files is specified to show an example
-#' ssm_file <- stringr::str_split(system.file("extdata", "individual_model.stan",
-#'                                            package = "cellssm"), "/")[[1]]
-#' ssm_path <- paste(ssm_file[-length(ssm_file)], collapse = "/")
-#'
-#' # Linear regression
-#' glist <- lm_dist_beta(cell_list = cell_list, mvtime = Paramecium_mvtime,
-#'                       ssm_path = ssm_path, ex_sign = "positive",
-#'                       ssm_method = "Bayes", df_name = "experiment",
-#'                       res_name = "Paramecium", ex_name = "heat",
-#'                       unit1 = "millimeter", unit2 = "sec")
-#'
-#' # Save output
-#' g <- glist[[1]] + glist[[2]] + glist[[3]] + glist[[4]] + glist[[5]] +
-#'   patchwork::plot_layout(nrow = 2)
-#' suppressWarnings(ggplot2::ggsave(paste0(out, "/individual_Paramecium_lm_dist_beta.pdf"),
-#'                                  g, height = 104, width = 168, units = "mm"))
-#'
 #' @export
 #'
 lm_dist_beta <- function(cell_list, mvtime, ssm_path,

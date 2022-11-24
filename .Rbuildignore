@@ -2,6 +2,8 @@
 ^\.Rproj\.user$
 ^LICENSE\.md$
 ^README\.html$
+^README\.Rmd$
+^cran-comments\.md$
 ^01_dist_vis$
 ^02_ssm_individual$
 ^03_ssm_KFAS$
@@ -18,4 +20,3 @@
 ^16_lm_dist_start$
 ^17_lm_signal$
 ^18_ssm_common$
-^README\.Rmd$
