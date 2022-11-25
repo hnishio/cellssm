@@ -184,7 +184,10 @@ ssm_individual <- function(cell_list, visual=NULL, out, warmup=1000, sampling=10
     dir.create(paste0(out, "/diagnosis"), recursive=T)
   }
   if(file.exists("/tmp")==F){
-    dir.create("/tmp", recursive=T)
+    dir.create("tmp", recursive=T)
+    output_dir <- "tmp"
+  }else{
+    output_dir <- "/tmp"
   }
 
   # Prepare a container for movement time
@@ -235,14 +238,14 @@ ssm_individual <- function(cell_list, visual=NULL, out, warmup=1000, sampling=10
         refresh = floor(warmup/2.5*thin),
         #show_messages = F,
         #sig_figs = 4,
-        output_dir = "/tmp",
+        output_dir = output_dir,
         output_basename = paste0("cell", i, "_", res_name, j),
         adapt_delta = 0.95,
         thin = thin
       )
 
       # 99% Bayesian credible intervals
-      outcsv_name <- list.files("/tmp")
+      outcsv_name <- list.files(output_dir)
       outcsv_name <- outcsv_name[grep(paste0("cell", i, "_", res_name, j, "-"), outcsv_name)]
       tmp_csv_w <- NULL
       tmp_csv_b_ex <- NULL
@@ -252,7 +255,7 @@ ssm_individual <- function(cell_list, visual=NULL, out, warmup=1000, sampling=10
       tmp_csv_s_Y <- NULL
 
       for(k in 1:length(outcsv_name)){
-        tmp_csv <- as.data.frame(data.table::fread(cmd = paste0("grep -v '^#' ", "/tmp/", outcsv_name[k])))
+        tmp_csv <- as.data.frame(data.table::fread(cmd = paste0("grep -v '^#' ", output_dir, "/", outcsv_name[k])))
         tmp_csv_w <- rbind(tmp_csv_w, tmp_csv[,stringr::str_starts(names(tmp_csv), "w")])
         tmp_csv_b_ex <- rbind(tmp_csv_b_ex, tmp_csv[,stringr::str_starts(names(tmp_csv), "b_ex")])
         tmp_csv_alpha <- rbind(tmp_csv_alpha, tmp_csv[,stringr::str_starts(names(tmp_csv), "alpha")])
@@ -752,7 +755,12 @@ ssm_individual <- function(cell_list, visual=NULL, out, warmup=1000, sampling=10
 
 
       ## Remove temporary files
-      file.remove(paste0("/tmp/", outcsv_name))
+      if(output_dir == "tmp"){
+        unlink(output_dir, recursive = T)
+      }else{
+        file.remove(paste0(output_dir, "/", outcsv_name))
+      }
+
 
       ## Release memory
       rm(fit, tmp_csv, tmp_csv_w, tmp_csv_b_ex, tmp_csv_alpha,
