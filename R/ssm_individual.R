@@ -756,7 +756,7 @@ ssm_individual <- function(cell_list, visual=NULL, out, warmup=1000, sampling=10
 
 
       ## Remove temporary files
-      unlink(output_dir, recursive = T)
+      file.remove(paste0(output_dir, "/", outcsv_name))
 
 
       ## Release memory
@@ -766,6 +766,10 @@ ssm_individual <- function(cell_list, visual=NULL, out, warmup=1000, sampling=10
       gc(reset = T);gc(reset = T)
     }
   }
+
+
+  ## Remove the temporary directory
+  unlink(output_dir, recursive = T)
 
 
   ## Save movement time

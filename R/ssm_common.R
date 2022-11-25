@@ -378,13 +378,17 @@ ssm_common <- function(cell_list, mvtime=NULL, out, warmup=1000, sampling=1000, 
 
 
     # Remove temporary files
-    unlink(output_dir, recursive = T)
+    file.remove(paste0(output_dir, "/", outcsv_name))
 
     rm(fit, tmp_csv, tmp_csv_w, tmp_csv_b_ex, tmp_csv_alpha, tmp_csv_dist,
        tmp_csv_b_ex_each, tmp_csv_alpha_each,
        tmp_csv_s_w, tmp_csv_s_b_ex, tmp_csv_s_Y,
        dfs)
   }
+
+
+  ## Remove the temporary directory
+  unlink(output_dir, recursive = T)
 
 
   ## Y range of plots
