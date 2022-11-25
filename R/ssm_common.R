@@ -184,11 +184,12 @@ ssm_common <- function(cell_list, mvtime=NULL, out, warmup=1000, sampling=1000, 
   if(file.exists(paste0(out, "/diagnosis"))==F){
     dir.create(paste0(out, "/diagnosis"), recursive=T)
   }
-  if(file.exists("/tmp")==F){
+  if(file.exists("tmp")==F){
     dir.create("tmp", recursive=T)
     output_dir <- "tmp"
   }else{
-    output_dir <- "/tmp"
+    dir.create("tmp99", recursive=T)
+    output_dir <- "tmp99"
   }
 
   # Adjust data.frame
@@ -377,11 +378,7 @@ ssm_common <- function(cell_list, mvtime=NULL, out, warmup=1000, sampling=1000, 
 
 
     # Remove temporary files
-    if(output_dir == "tmp"){
-      unlink(output_dir, recursive = T)
-    }else{
-      file.remove(paste0(output_dir, "/", outcsv_name))
-    }
+    unlink(output_dir, recursive = T)
 
     rm(fit, tmp_csv, tmp_csv_w, tmp_csv_b_ex, tmp_csv_alpha, tmp_csv_dist,
        tmp_csv_b_ex_each, tmp_csv_alpha_each,

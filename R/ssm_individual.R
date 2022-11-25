@@ -183,11 +183,12 @@ ssm_individual <- function(cell_list, visual=NULL, out, warmup=1000, sampling=10
   if(file.exists(paste0(out, "/diagnosis"))==F){
     dir.create(paste0(out, "/diagnosis"), recursive=T)
   }
-  if(file.exists("/tmp")==F){
+  if(file.exists("tmp")==F){
     dir.create("tmp", recursive=T)
     output_dir <- "tmp"
   }else{
-    output_dir <- "/tmp"
+    dir.create("tmp99", recursive=T)
+    output_dir <- "tmp99"
   }
 
   # Prepare a container for movement time
@@ -755,11 +756,7 @@ ssm_individual <- function(cell_list, visual=NULL, out, warmup=1000, sampling=10
 
 
       ## Remove temporary files
-      if(output_dir == "tmp"){
-        unlink(output_dir, recursive = T)
-      }else{
-        file.remove(paste0(output_dir, "/", outcsv_name))
-      }
+      unlink(output_dir, recursive = T)
 
 
       ## Release memory
