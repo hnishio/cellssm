@@ -183,6 +183,9 @@ ssm_individual <- function(cell_list, visual=NULL, out, warmup=1000, sampling=10
   if(file.exists(paste0(out, "/diagnosis"))==F){
     dir.create(paste0(out, "/diagnosis"), recursive=T)
   }
+  if(file.exists("/tmp")==F){
+    dir.create("/tmp", recursive=T)
+  }
 
   # Prepare a container for movement time
   df_mv <- data.frame(NULL)

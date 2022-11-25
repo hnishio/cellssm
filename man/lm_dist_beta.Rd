@@ -79,7 +79,7 @@ library(cellssm)
 
 # Create an output directory
 out <- "05_lm_dist_beta"
-if(file.exists(out)==FALSE){
+if(!file.exists(out)){
   dir.create(out, recursive=TRUE)
 }
 

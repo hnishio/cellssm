@@ -184,6 +184,9 @@ ssm_common <- function(cell_list, mvtime=NULL, out, warmup=1000, sampling=1000, 
   if(file.exists(paste0(out, "/diagnosis"))==F){
     dir.create(paste0(out, "/diagnosis"), recursive=T)
   }
+  if(file.exists("/tmp")==F){
+    dir.create("/tmp", recursive=T)
+  }
 
   # Adjust data.frame
   if(!is.null(mvtime)){
