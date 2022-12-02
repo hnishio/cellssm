@@ -2,22 +2,22 @@
 #' Inference of the state-space model by the Kalman filter
 #'
 #' \code{ssm_KFAS} estimates the parameters of the state-space model to
-#' analyze the velocity of individual cell or organelle by the Kalman filter using the [KFAS] package.
-#' It estimates the credible intervals of parameters and the start time of
-#' the influence of an explanatory variable in a regression model.
+#' analyse the velocity of individual cells or organelles by the Kalman filter using the [KFAS] package.
+#' It estimates the credible intervals of the parameters and the start time of
+#' the influence of an explanatory variable in the regression model.
 #'
 #' @param cell_list (list of data frame) The input time-series data. First column, time (column name "time");
 #' second column, an explanatory variable (0 or 1, column name "ex"); third to the last columns,
 #' distances of cells or organelles from the explanatory variable (
-#' any column names are accepted). The velocity of third to the last columns is
+#' any column names are accepted). The velocities of the third to the last columns are
 #' calculated from the distance and time, and used as response variables in the
-#' modeling. See examples below for more details.
+#' modelling. See the following \strong{Examples} for further details.
 #' @param visual (data frame) The optional data of visual estimation of the start time of
 #' the influence of an explanatory variable. First column, cells (column name "cell");
 #' second column, index (column name "index"); third column, the start time. The default is `NULL`.
 #' @param out (character string) The path of the output directory.
 #' @param start_sensitivity (positive integer) The sensitivity to detect the start time
-#' of movements. Larger values indicate higher sensitivities. The default is 5.
+#' of movements. Larger values indicate a higher sensitivity. The default is 5.
 #' @param ex_sign (character string) "positive" or "negative". This is used to
 #' estimate the start time of the positive or negative influence of the explanatory
 #' variable on the distances of cells or organelles.
@@ -30,80 +30,80 @@
 #' for file names and graph labels.
 #' @param ex_name (character string) The name of the explanatory variable. This is
 #' used for graph labels.
-#' @param unit1 (character string) The unit of a response variable. One of "meter",
+#' @param unit1 (character string) The unit of the response variable. One of "meter",
 #' "centimeter", "millimeter", "micrometer", "nanometer". If another character
 #' string is given, it is used as it is. This is used for graph labels.
 #' @param unit2 (character string) The unit of time. This is used for graph labels.
-#' @param shade (logical) Whether to draw shade in graphs during the absence of
+#' @param shade (logical) Whether to draw shade in graphs during the period without
 #' the explanatory variable. The default is `TRUE`.
 #' @param start_line (logical) Whether to draw a line at the start time of the influence of
 #' the explanatory variable in graphs. The default is `TRUE`.
 #' @param ps (positive integer) Font size of graphs specified in pt. The default is 7 pt.
 #' Plot sizes are automatically adjusted according to the font size.
-#' @param theme_plot (character string) A ggplot theme. One of "bw", "light",
+#' @param theme_plot (character string) A plot theme of the [ggplot2] package. One of "bw", "light",
 #' "classic", "gray", "dark", "test", "minimal" and "void". The default is "bw".
-#' @returns A directory named after the `out` parameter is created, which have two subdirectories.
+#' @returns A directory named after the `out` parameter is created, which has two subdirectories.
 #' * A subdirectory "csv" includes "ssm_KFAS_cell `i` _ `res_name` `j` .csv",
 #' "ssm_KFAS_sd.csv" and "ssm_KFAS_mvtime.csv" with `i` the indexes of cells,
 #' `j` the indexes of the response variables. "ssm_KFAS_cell `i` _ `res_name` `j` .csv"
 #' contains the credible intervals of time-varying parameters, where "Y" is
-#' the observed velocity, "alpha" is the true state of velocity and "b_ex" is
+#' the observed velocity, "alpha" is the true state of velocity, and "b_ex" is
 #' the time-varying coefficient of the explanatory variable. In "ssm_KFAS_sd.csv",
 #' "s_b_ex" and "s_Y" are the system noise and observation error as standard deviations,
 #' respectively. "ssm_KFAS_mvtime.csv" contains the estimated start time,
-#' end time and period of the directional movement.
+#' end time, and period of the directional movement.
 #' * A subdirectory "pdf" includes "ssm_KFAS_cell `i` _ `res_name` `j` .pdf".
-#' This is the visualized results of the model. The figure consists of three panels,
-#' (1) the observed distance of `res_name` from `ex_name`, (2) the velocity of `res_name`,
-#' (3) the regression coefficient of `ex_name`. In these panels,
-#' dots, solid lines and shaded regions are the observed values, median and 95%
+#' This is the visualised results of the model. The figure consists of three panels:
+#' (1) observed distance of `res_name` from `ex_name`, (2) velocity of `res_name`, and
+#' (3) regression coefficient of `ex_name`. In these panels,
+#' dots, solid lines and shaded regions are the observed values, medians and 95%
 #' credible intervals, respectively. When the optional visual estimation of
 #' the start time is given to the `visual` parameter, orange solid lines and
 #' green dashed lines represent the start time estimated by the model and
 #' the visual observation, respectively. When the `shade` parameter is `TRUE`,
-#' the shaded and light regions represent the period without and with the explanatory
+#' the shaded and light regions represent the periods without and with the explanatory
 #' variable, respectively.
 #' @examples
-#' ### A real data example of chloroplast accumulation responses to a blue microbeam ###
+#' ### Real data example of chloroplast accumulation responses to a blue microbeam ###
 #'
-#' # Load packages
+#' # Load package
 #' library(cellssm)
 #'
 #' # Load data of chloroplast movements
 #' data("cell1", "cell2", "cell3", "cell4", "visual")
 #' cell_list <- list(cell1, cell2, cell3, cell4)
 #'
-#' # Check the format of the input data
+#' # Check the format of input data
 #' cell_list
 #' visual
 #'
-#' # Execution of state-space modeling
+#' # Execution of state-space modelling
 #'
-#' # When you don't want to compare the statistical and visual estimation of the start time
+#' # When you do not want to compare the statistical and visual estimations of the start time
 #' ssm_KFAS(cell_list = cell_list, out = "03_ssm_KFAS",
 #'          res_name = "chloroplast", ex_name = "microbeam",
 #'          unit1 = "micrometer", unit2 = "min")
 #'
-#' # When you want to compare the statistical and visual estimation of the start time
+#' # When you do want to compare the statistical and visual estimations of the start time
 #' ssm_KFAS(cell_list = cell_list, visual = visual, out = "03_ssm_KFAS",
 #'          res_name = "chloroplast", ex_name = "microbeam",
 #'          unit1 = "micrometer", unit2 = "min")
 #'
 #'
 #'
-#' ### A simulated data example of Paramecium escape responses from a laser heating ###
+#' ### Simulated data example of Paramecium escape responses from laser heating ###
 #'
-#' # Load packages
+#' # Load package
 #' library(cellssm)
 #'
 #' # Load data
 #' data("Paramecium")
 #' cell_list <- list(Paramecium)
 #'
-#' # Check the format of the input data
+#' # Check the format of input data
 #' cell_list
 #'
-#' # Execution of state-space modeling
+#' # Execution of state-space modelling
 #' ssm_KFAS(cell_list = cell_list, out = "13_ssm_KFAS",
 #'          ex_sign = "positive", df_name = "experiment",
 #'          res_name = "Paramecium", ex_name = "heat",

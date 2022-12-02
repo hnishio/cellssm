@@ -1,20 +1,21 @@
 
-#' Robust linear regression (x: distance at time 0, y: coefficient of an explanatory variable or velocity)
+#' Robust linear regression (x: distance at time 0, y: coefficient of explanatory variable or velocity)
 #'
-#' \code{lm_dist_beta} performs the robust linear regression to analyze the
+#' \code{lm_dist_beta} performs the robust linear regression to analyse the
 #' relationship between the distance at time 0 and the influence of an explanatory variable
 #' obtained by the state-space model.
 #'
 #' @param cell_list (list of data frame) The input time-series data. First column, time (column name "time");
 #' second column, an explanatory variable (0 or 1, column name "ex"); third to the last columns,
 #' distances of cells or organelles from the explanatory variable (
-#' any column names are accepted). See examples below for more details.
+#' any column names are accepted). See the following \strong{Examples} for further details.
 #' @param mvtime (data frame) The movement time estimated by [ssm_individual]
 #' ("ssm_individual_mvtime.csv") or [ssm_KFAS] ("ssm_KFAS_mvtime.csv").
 #' @param ssm_path (character string) The path of the output directory of
-#' [ssm_individual] defined by the `out` parameter when `ssm_method` is "Bayes".
+#' [ssm_individual] specified by the `out` parameter when `ssm_method` is "Bayes".
 #'
-#' The path of the output directory of [ssm_KFAS] defined by the `out` parameter when `ssm_method` is "KFAS".
+#' The path of the output directory of [ssm_KFAS] specified by the `out` parameter
+#' when `ssm_method` is "KFAS".
 #' @param ex_sign (character string) "positive" or "negative". This is used to
 #' estimate the start time of the positive or negative influence of the explanatory
 #' variable on the distances of cells or organelles.
@@ -24,23 +25,23 @@
 #' @param ssm_method (character string) "Bayes" or "KFAS".
 #' @param df_name (character string) The name of the data frame. This is used for
 #' file names and graph titles. The default is "cell".
-#' @param res_name (character string) The name of a response variable.
-#' @param ex_name (character string) The name of an explanatory variable.
-#' @param unit1 (character string) The unit of a response variable. One of "meter",
+#' @param res_name (character string) The name of the response variable.
+#' @param ex_name (character string) The name of the explanatory variable.
+#' @param unit1 (character string) The unit of the response variable. One of "meter",
 #' "centimeter", "millimeter", "micrometer", "nanometer". If another character
 #' string is given, it is used as it is. This is used for graph labels.
 #' @param unit2 (character string) The unit of time. This is used for graph labels.
 #' @param ps (positive integer) Font size of graphs specified in pt. The default is 7 pt.
 #' Plot sizes are automatically adjusted according to the font size.
-#' @param theme_plot (character string) A ggplot theme. One of "bw", "light",
+#' @param theme_plot (character string) A plot theme of the [ggplot2] package. One of "bw", "light",
 #' "classic", "gray", "dark", "test", "minimal" and "void". The default is "bw".
 #' @returns A list of ggplot objects is returned. In each plot, dots, solid lines
-#' and shaded regions are the observed values, regression lines and 95% confidence
+#' and shaded regions are the observed values, regression lines, and 95% confidence
 #' intervals, respectively.
 #' @examples
-#' ### A real data example of chloroplast accumulation responses to a blue microbeam ###
+#' ### Real data example of chloroplast accumulation responses to a blue microbeam ###
 #'
-#' # Load packages
+#' # Load package
 #' library(cellssm)
 #'
 #' # Create an output directory
@@ -55,7 +56,7 @@
 #' cell_list <- list(cell1, cell2, cell3, cell4)
 #'
 #' # Specify the path of the output directory of [ssm_individual] or [ssm_KFAS]
-#' # below, the path of system files is specified to show an example
+#' # Below, the path of the system files is specified to provide an example
 #' ssm_file <- stringr::str_split(system.file("extdata", "individual_model.stan",
 #'                                            package = "cellssm"), "/")[[1]]
 #' ssm_path <- paste(ssm_file[-length(ssm_file)], collapse = "/")

@@ -2,7 +2,7 @@
 % Please edit documentation in R/lm_signal.R
 \name{lm_signal}
 \alias{lm_signal}
-\title{Estimation of the signal transfer speed by linear regression (x: start time, y: distance at time 0)}
+\title{Estimation of signal transfer speed by linear regression (x: start time, y: distance at time 0)}
 \usage{
 lm_signal(
   cell_list,
@@ -19,7 +19,7 @@ lm_signal(
 \item{cell_list}{(list of data frame) The input time-series data. First column, time (column name "time");
 second column, an explanatory variable (0 or 1, column name "ex"); third to the last columns,
 distances of cells or organelles from the explanatory variable (
-any column names are accepted). See examples below for more details.}
+any column names are accepted). See the following \strong{Examples} for further details.}
 
 \item{mvtime}{(data frame) The movement time estimated by \link{ssm_individual}
 ("ssm_individual_mvtime.csv") or \link{ssm_KFAS} ("ssm_KFAS_mvtime.csv").}
@@ -27,9 +27,9 @@ any column names are accepted). See examples below for more details.}
 \item{df_name}{(character string) The name of data frame. This is used for graph labels.
 The default is "cell".}
 
-\item{ex_name}{(character string) The name of an explanatory variable. This is used for graph labels.}
+\item{ex_name}{(character string) The name of the explanatory variable. This is used for graph labels.}
 
-\item{unit1}{(character string) The unit of a response variable. One of "meter",
+\item{unit1}{(character string) The unit of the response variable. One of "meter",
 "centimeter", "millimeter", "micrometer", "nanometer". If another character
 string is given, it is used as it is. This is used for graph labels.}
 
@@ -38,12 +38,12 @@ string is given, it is used as it is. This is used for graph labels.}
 \item{ps}{(positive integer) Font size of graphs specified in pt. The default is 7 pt.
 Plot sizes are automatically adjusted according to the font size.}
 
-\item{theme_plot}{(character string) A ggplot theme. One of "bw", "light",
+\item{theme_plot}{(character string) A plot theme of the \link{ggplot2} package. One of "bw", "light",
 "classic", "gray", "dark", "test", "minimal" and "void". The default is "bw".}
 }
 \value{
 A list of ggplot objects is returned. In each plot, dots, solid lines
-and shaded regions are the observed values, regression lines and 95\% confidence
+and shaded regions are the observed values, regression lines, and 95\% confidence
 intervals, respectively.
 }
 \description{
@@ -52,9 +52,9 @@ between the distance at time 0 and the start time of the
 influence of an explanatory variable obtained by the state-space model.
 }
 \examples{
-### A real data example of chloroplast accumulation responses to a blue microbeam ###
+### Real data example of chloroplast accumulation responses to a blue microbeam ###
 
-# Load packages
+# Load package
 library(cellssm)
 
 # Create an output directory
@@ -80,9 +80,9 @@ suppressWarnings(ggplot2::ggsave(paste0(out, "/individual_chloroplast_lm_signal.
 
 
 
-### A simulated data example of Paramecium escape responses from a laser heating ###
+### Simulated data example of Paramecium escape responses from a laser heating ###
 
-# Load packages
+# Load package
 library(cellssm)
 
 # Create an output directory

@@ -3,24 +3,24 @@
 \docType{data}
 \name{Paramecium}
 \alias{Paramecium}
-\title{Time-series of Paramecium escape responses}
+\title{Time-series of \emph{Paramecium} escape responses}
 \usage{
 data("Paramecium")
 }
 \description{
-A simulated dataset containing the time-series of distances of 10 Paramecium
-from a laser heating.
+A simulated dataset containing the time series of distances of 10 \emph{Paramecium}
+from laser heating.
 }
 \details{
-A data frame of Paramecium movements with 200 rows and 12 columns.
+A data frame of \emph{Paramecium} movements with 200 rows and 12 columns.
 }
 \section{Columns}{
 
 \itemize{
 \item time : time in seconds, setting the start of a laser heating as 1
-\item ex : presence of an explanatory variable (a laser heating) represented by 0 or 1
-\item Paramecium1 -- Paramecium10 : distances of Paramecium from a laser heating
-in millimeter
+\item ex : presence of an explanatory variable (laser heating) represented by 0 or 1
+\item Paramecium1 -- Paramecium10 : distances of \emph{Paramecium} from laser heating
+in millimeters
 }
 }
 

@@ -9,34 +9,33 @@ quantile99 <- function(x){
 #' Bayesian inference of the state-space model (individual model)
 #'
 #' \code{ssm_individual} performs the Bayesian inference of the parameters of the
-#' state-space model to analyze the velocity of individual cell or organelle.
-#' It estimates the Bayesian credible intervals of parameters and the start time of
-#' the influence of an explanatory variable in a regression model. Before using
-#' this function, you need to install the cmdstanr package (>= 0.5.2)
-#' (\url{https://mc-stan.org/cmdstanr/index.html}) and CmdStan
-#' (\url{https://mc-stan.org/docs/cmdstan-guide/cmdstan-installation.html}).
-#' To install CmdStan, installation from GitHub would be easier for beginners:
-#' you need to install Git and execute a few commands in the Terminal app on Mac or
+#' state-space model to analyse the velocity of individual cells or organelles.
+#' It estimates the Bayesian credible intervals of the parameters and the start time of
+#' the influence of an explanatory variable in the regression model. Before using
+#' this function, CmdStan (\url{https://mc-stan.org/docs/cmdstan-guide/cmdstan-installation.html})
+#' must be installed. Installation of CmdStan from GitHub would be easier for beginners.
+#' Install Git and execute a few commands in the Terminal app on Mac or
 #' the Git Bash app on Windows.
 #'
 #' @param cell_list (list of data frame) The input time-series data. First column, time (column name "time");
 #' second column, an explanatory variable (0 or 1, column name "ex"); third to the last columns,
 #' distances of cells or organelles from the explanatory variable (
-#' any column names are accepted). The velocity of third to the last columns is
+#' any column names are accepted). The velocities of the third to the last columns are
 #' calculated from the distance and time, and used as response variables in the
-#' modeling. See examples below for more details.
+#' modelling. See the following \strong{Examples} for further details.
 #' @param visual (data frame) The optional data of visual estimation of the start time of
 #' the influence of an explanatory variable. First column, cells (column name "cell");
-#' second column, index (column name "index"); third column, the start time. The default is `NULL`.
+#' second column, index (column name "index"); third column, start time. The default is `NULL`.
 #' @param out (character string) The path of the output directory.
 #' @param warmup (positive integer) The number of warmup iterations of MCMC sampling after thinning.
 #' The default is 1000.
 #' @param sampling (positive integer) The number of post-warmup iterations of MCMC sampling after thinning.
 #' The default is 1000.
-#' @param thin (positive integer) Interval of MCMC sampling. This is useful to reduce autocorrelation of
-#' MCMC samples and improve convergence of MCMC. The default is 3.
+#' @param thin (positive integer) Intervals of MCMC samples. This is useful for
+#' reducing the autocorrelation of the MCMC samples and improving the convergence of
+#' MCMC. The default is 3.
 #' @param start_sensitivity (positive integer) The sensitivity to detect the start time
-#' of movements. Larger values indicate higher sensitivities. The default is 5.
+#' of movements. Larger values indicate a higher sensitivity. The default is 5.
 #' @param ex_sign (character string) "positive" or "negative". This is used to
 #' estimate the start time of the positive or negative influence of the explanatory
 #' variable on the distances of cells or organelles.
@@ -49,107 +48,104 @@ quantile99 <- function(x){
 #' for file names and graph labels.
 #' @param ex_name (character string) The name of the explanatory variable. This is used
 #' for graph labels.
-#' @param unit1 (character string) The unit of a response variable. One of "meter",
+#' @param unit1 (character string) The unit of the response variable. One of "meter",
 #' "centimeter", "millimeter", "micrometer", "nanometer". If another character
 #' string is given, it is used as it is. This is used for graph labels.
 #' @param unit2 (character string) The unit of time. This is used for graph labels.
-#' @param shade (logical) Whether to draw shade in graphs during the absence of
+#' @param shade (logical) Whether to draw shade in graphs during the period without
 #' the explanatory variable. The default is `TRUE`.
 #' @param start_line (logical) Whether to draw a line at the start time of the influence of
 #' the explanatory variable in graphs. The default is `TRUE`.
 #' @param ps (positive integer) Font size of graphs specified in pt. The default is 7 pt.
 #' Plot sizes are automatically adjusted according to the font size.
-#' @param theme_plot (character string) A ggplot theme. One of "bw", "light",
+#' @param theme_plot (character string) A plot theme of the [ggplot2] package. One of "bw", "light",
 #' "classic", "gray", "dark", "test", "minimal" and "void". The default is "bw".
-#' @returns A directory named after the `out` parameter is created, which have three subdirectories.
+#' @returns A directory named after the `out` parameter is created, which has three subdirectories.
 #' * A subdirectory "csv" includes "ssm_individual_cell `i` _ `res_name` `j` .csv",
 #' "ssm_individual_cell `i` _ `res_name` `j` _sd.csv" and "ssm_individual_mvtime.csv"
 #' with `i` the indexes of cells, `j` the indexes of the response variables.
 #' "ssm_individual_cell `i` _ `res_name` `j` .csv" contains the Bayesian credible
 #' intervals of time-varying parameters, where "Y" is the observed velocity, "w" is
-#' the white noise, "alpha" is the true state of velocity and "b_ex" is
+#' the white noise, "alpha" is the true state of velocity, and "b_ex" is
 #' the time-varying coefficient of the explanatory variable. "ssm_individual_cell `i` _ `res_name` `j` _sd.csv"
 #' contains the Bayesian credible intervals of non-time-varying parameters, where
-#' "s_w", "s_b_ex" and "s_Y" are the white noise, system noise and observation error
+#' "s_w", "s_b_ex" and "s_Y" are the white noise, system noise, and observation error
 #' as standard deviations, respectively.
-#' "ssm_individual_mvtime.csv" contains the estimated start time, end time and period of
+#' "ssm_individual_mvtime.csv" contains the estimated start time, end time, and period of
 #' the directional movement.
 #' * A subdirectory "pdf" includes "ssm_individual_cell `i` _ `res_name` `j` .pdf".
-#' This is the visualized results of the model. The figure consists of four panels,
-#' (1) the observed distance of `res_name` from `ex_name`, (2) the velocity of `res_name`,
-#' (3) the regression coefficient of `ex_name`, (4) the random fluctuations
-#' of the velocity. In these panels,
-#' dots, solid lines and shaded regions are the observed values, median and 95%
+#' This is the visualised results of the model. The figure consists of four panels:
+#' (1) observed distance of `res_name` from `ex_name`, (2) velocity of `res_name`,
+#' (3) regression coefficient of `ex_name`, and (4) random fluctuations
+#' in the velocity. In these panels,
+#' dots, solid lines, and shaded regions are the observed values, medians, and 95%
 #' credible intervals of the Bayesian inference, respectively. When the optional visual estimation of
 #' the start time is given to the `visual` parameter, orange solid lines and
-#' green dashed lines represent the start time estimated by the model and
+#' green dashed lines represent the start time estimated using the model and
 #' the visual observation, respectively. When the `shade` parameter is `TRUE`,
-#' the shaded and light regions represent the period without and with the explanatory
+#' the shaded and light regions represent the periods without and with the explanatory
 #' variable, respectively.
 #' * A subdirectory "diagnosis" includes "ssm_individual_combo_cell `i` _ `res_name` `j` .pdf" and
-#' "ssm_individual_rhat_cell `i` _ `res_name` `j` .pdf". These are the visualized diagnosis of
+#' "ssm_individual_rhat_cell `i` _ `res_name` `j` .pdf". These are visualised diagnoses of
 #' MCMC sampling. "ssm_individual_combo_cell `i` _ `res_name` `j` .pdf" shows the
 #' density plots of the posterior distributions and the trace plots for "b_ex" and
-#' "alpha" at the start and end of time series and the parameter with the worst Rhat value.
-#' "ssm_individual_rhat_cell `i` _ `res_name` `j` .pdf" shows the Rhat values of parameters.
+#' "alpha" at the start and end of the time series and the parameter with the worst Rhat value.
+#' "ssm_individual_rhat_cell `i` _ `res_name` `j` .pdf" indicates the Rhat values of the parameters.
 #' These are drawn using the [bayesplot] package.
 #' @examples
-#' # For the first time usage, install the cmdstanr package (>= 0.5.2)
-#' # (https://mc-stan.org/cmdstanr/index.html) and CmdStan
+#' # For the first-time usage, install CmdStan
 #' # (https://mc-stan.org/docs/cmdstan-guide/cmdstan-installation.html)
 #'
 #'
-#' ### A real data example of chloroplast accumulation responses to a blue microbeam ###
+#' ### Real data example of chloroplast accumulation responses to a blue microbeam ###
 #'
-#' # Load packages
+#' # Load package
 #' library(cellssm)
-#'
-#' # Set the path to which CmdStan was installed
-#' cmdstanr::set_cmdstan_path("~/cmdstan/")
 #'
 #' # Load data of chloroplast movements
 #' data("cell1", "cell2", "cell3", "cell4", "visual")
-#' cell_list <- list(cell1)
-#' # If you want to run the modeling for multiple data frames, execute:
-#' # cell_list <- list(cell1, cell2, cell3, cell4)
+#' cell_list <- list(cell1, cell2, cell3, cell4)
 #'
-#' # Check the format of the input data
+#' # Check the format of input data
 #' cell_list
 #' visual
 #'
-#' # Execution of state-space modeling
+#' # Execution of state-space modelling
 #'
 #' \dontrun{
-#' # When you don't want to compare the statistical and visual estimation of the start time
+#' # Set the path where CmdStan was installed
+#' cmdstanr::set_cmdstan_path("~/cmdstan/")
+#'
+#' # When you do not want to compare the statistical and visual estimations of the start time
 #' ssm_individual(cell_list = cell_list, out = "02_ssm_individual",
 #'                res_name = "chloroplast", ex_name = "microbeam",
 #'                unit1 = "micrometer", unit2 = "min")
 #'
-#' # When you want to compare the statistical and visual estimation of the start time
+#' # When you do want to compare the statistical and visual estimations of the start time
 #' ssm_individual(cell_list = cell_list, visual = visual, out = "02_ssm_individual",
 #'                res_name = "chloroplast", ex_name = "microbeam",
 #'                unit1 = "micrometer", unit2 = "min")
 #' }
 #'
 #'
-#' ### A simulated data example of Paramecium escape responses from a laser heating ###
+#' ### Simulated data example of Paramecium escape responses from laser heating ###
 #'
-#' # Load packages
+#' # Load package
 #' library(cellssm)
-#'
-#' # Set the path to which CmdStan was installed
-#' cmdstanr::set_cmdstan_path("~/cmdstan/")
 #'
 #' # Load data
 #' data("Paramecium")
 #' cell_list <- list(Paramecium)
 #'
-#' # Check the format of the input data
+#' # Check the format of input data
 #' cell_list
 #'
-#' # Execution of state-space modeling
+#' # Execution of state-space modelling
 #'
 #' \dontrun{
+#' # Set the path where CmdStan was installed
+#' cmdstanr::set_cmdstan_path("~/cmdstan/")
+#'
 #' ssm_individual(cell_list = cell_list, out = "12_ssm_individual",
 #'                warmup=1000, sampling=1000, thin=6,
 #'                start_sensitivity = 3, ex_sign = "positive", df_name = "experiment",

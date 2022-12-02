@@ -1,37 +1,40 @@
 
-#' Visualization of the distance from an explanatory variable
+#' Visualisation of the distance from an explanatory variable
 #'
-#' \code{dist_vis} visualizes the distance of a response variable from an
+#' \code{dist_vis} visualises the distance of a response variable from an
 #' explanatory variable
 #'
 #' @param cell_list (list of data frame) The input time-series data. First column, time (column name "time");
 #' second column, an explanatory variable (0 or 1, column name "ex"); third to the last columns,
 #' distances of cells or organelles from the explanatory variable (
-#' any column names are accepted). See examples below for more details.
+#' any column names are accepted). See the following \strong{Examples} for further details.
 #' @param df_name (character string) The name of the data frame. This is used for
 #' graph titles. The default is "cell".
 #' @param res_name (character string) The name of the response variable. This is used
 #' for graph labels.
 #' @param ex_name (character string) The name of the explanatory variable. This is used
 #' for graph labels.
-#' @param unit1 (character string) The unit of a response variable. One of "meter",
+#' @param unit1 (character string) The unit of the response variable. One of "meter",
 #' "centimeter", "millimeter", "micrometer", "nanometer". If another character
 #' string is given, it is used as it is. This is used for graph labels.
 #' @param unit2 (character string) The unit of time. This is used for graph labels.
-#' @param shade (logical) Whether to draw shade in graphs during the absence of
+#' @param col (character string) A colour map of [viridisLite::viridis] to draw the lines.
+#' One of "viridis", "magma", "plasma", "inferno", "cividis", "mako", "rocket", and "turbo".
+#' The default is "viridis".
+#' @param shade (logical) Whether to draw shade in graphs during the period without
 #' the explanatory variable. The default is `TRUE`.
 #' @param ps (positive integer) Font size of graphs specified in pt. The default is 7 pt.
 #' Plot sizes are automatically adjusted according to the font size.
-#' @param theme_plot (character string) A ggplot theme. One of "bw", "light",
+#' @param theme_plot (character string) A plot theme of the [ggplot2] package. One of "bw", "light",
 #' "classic", "gray", "dark", "test", "minimal" and "void". The default is "bw".
-#' @returns A list of ggplot objects is returned. In each plot, colored lines are
+#' @returns A list of ggplot objects is returned. In each plot, coloured lines represent
 #' different `res_name` in each data frame. When the `shade` parameter is `TRUE`,
-#' the shaded and light regions represent the period without and with the explanatory
+#' the shaded and light regions represent the periods without and with the explanatory
 #' variable, respectively.
 #' @examples
-#' ### A real data example of chloroplast accumulation responses to a blue microbeam ###
+#' ### Real data example of chloroplast accumulation responses to a blue microbeam ###
 #'
-#' # Load packages
+#' # Load package
 #' library(cellssm)
 #'
 #' # Create an output directory
@@ -44,7 +47,7 @@
 #' data("cell1", "cell2", "cell3", "cell4")
 #' cell_list <- list(cell1, cell2, cell3, cell4)
 #'
-#' # Check the format of the input data
+#' # Check the format of input data
 #' cell_list
 #'
 #' # Plotting
@@ -59,9 +62,9 @@
 #'
 #'
 #'
-#' ### A simulated data example of Paramecium escape responses from a laser heating ###
+#' ### Simulated data example of Paramecium escape responses from a laser heating ###
 #'
-#' # Load packages
+#' # Load package
 #' library(cellssm)
 #'
 #' # Create an output directory
@@ -74,7 +77,7 @@
 #' data("Paramecium")
 #' cell_list <- list(Paramecium)
 #'
-#' # Check the format of the input data
+#' # Check the format of input data
 #' cell_list
 #'
 #' # Plotting
@@ -89,7 +92,7 @@
 #' @export
 #'
 dist_vis <- function(cell_list, df_name = "cell", res_name, ex_name, unit1, unit2,
-                         shade = TRUE, ps = 7, theme_plot = "bw"){
+                     col = "viridis", shade = TRUE, ps = 7, theme_plot = "bw"){
 
   # Binding variables locally to the function
   time <- NULL
@@ -206,7 +209,23 @@ dist_vis <- function(cell_list, df_name = "cell", res_name, ex_name, unit1, unit
 
     # for loop of response variable
     for(j in 1:(ncol(cell_list[[i]])-2)){
-      g <- g + eval(parse(text = paste("geom_line(aes(y = cell_list[[", i, "]][,", j+2, "]), col = as.vector(viridis::viridis(", (ncol(cell_list[[i]])-2), "))[", j, "])", sep="")))
+      if(col == "viridis"){
+        g <- g + eval(parse(text = paste("geom_line(aes(y = cell_list[[", i, "]][,", j+2, "]), col = as.vector(viridisLite::viridis(", (ncol(cell_list[[i]])-2), "))[", j, "])", sep="")))
+      }else if(col == "magma"){
+        g <- g + eval(parse(text = paste("geom_line(aes(y = cell_list[[", i, "]][,", j+2, "]), col = as.vector(viridisLite::magma(", (ncol(cell_list[[i]])-2), "))[", j, "])", sep="")))
+      }else if(col == "plasma"){
+        g <- g + eval(parse(text = paste("geom_line(aes(y = cell_list[[", i, "]][,", j+2, "]), col = as.vector(viridisLite::plasma(", (ncol(cell_list[[i]])-2), "))[", j, "])", sep="")))
+      }else if(col == "inferno"){
+        g <- g + eval(parse(text = paste("geom_line(aes(y = cell_list[[", i, "]][,", j+2, "]), col = as.vector(viridisLite::inferno(", (ncol(cell_list[[i]])-2), "))[", j, "])", sep="")))
+      }else if(col == "cividis"){
+        g <- g + eval(parse(text = paste("geom_line(aes(y = cell_list[[", i, "]][,", j+2, "]), col = as.vector(viridisLite::cividis(", (ncol(cell_list[[i]])-2), "))[", j, "])", sep="")))
+      }else if(col == "mako"){
+        g <- g + eval(parse(text = paste("geom_line(aes(y = cell_list[[", i, "]][,", j+2, "]), col = as.vector(viridisLite::mako(", (ncol(cell_list[[i]])-2), "))[", j, "])", sep="")))
+      }else if(col == "rocket"){
+        g <- g + eval(parse(text = paste("geom_line(aes(y = cell_list[[", i, "]][,", j+2, "]), col = as.vector(viridisLite::rocket(", (ncol(cell_list[[i]])-2), "))[", j, "])", sep="")))
+      }else if(col == "turbo"){
+        g <- g + eval(parse(text = paste("geom_line(aes(y = cell_list[[", i, "]][,", j+2, "]), col = as.vector(viridisLite::turbo(", (ncol(cell_list[[i]])-2), "))[", j, "])", sep="")))
+      }
     }
 
     glist[[i]] <- g

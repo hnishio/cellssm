@@ -1,15 +1,15 @@
 Package: cellssm
 Title: State-space Modeling for the Directional Movement of Cells
-Version: 0.0.0.9000
+Version: 1.0.0
 Authors@R: c(
     person("Haruki", "Nishio", , "harukin218@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-6124-782X")),
 	person("Satoyuki", "Hirano", , "mc226592@s.utsunomiya-u.ac.jp", role = c("ctb")),
 	person("Yutaka", "Kodama", , "kodama@cc.utsunomiya-u.ac.jp", role = c("ctb")))
-Description: cellssm provides an easy way to analyze the time-series of distances of 
-	cells or organelles from an external stimulus. Using this package, you can estimate 
+Description: cellssm provides an easy way to analyse the time series of distances of 
+	cells or organelles from an external stimulus. Using this package, one can estimate 
 	the true dynamics from noisy movement data, extract the common dynamics among 
-	multiple cells or organelles, and estimate the start time of movements.
+	multiple cells or organelles, and estimate the start time of the movements.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -26,11 +26,14 @@ Imports:
     RobustLinearReg (>= 1.2.0),
     ggpubr (>= 0.4.0),
     cmdstanr (>= 0.5.2),
+	viridisLite (>= 0.4.0),
 	stats
 Remotes: git::https://github.com/stan-dev/cmdstanr.git
 Depends: 
-    R (>= 3.5.0)
+    R (>= 3.4.0)
 Suggests: 
     knitr,
-    rmarkdown
+    rmarkdown,
+    testthat (>= 3.0.0)
 VignetteBuilder: knitr
+Config/testthat/edition: 3

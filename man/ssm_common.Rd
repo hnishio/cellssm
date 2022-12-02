@@ -25,9 +25,9 @@ ssm_common(
 \item{cell_list}{(list of data frame) The input time-series data. First column, time (column name "time");
 second column, an explanatory variable (0 or 1, column name "ex"); third to the last columns,
 distances of cells or organelles from the explanatory variable (
-any column names are accepted). The velocity of third to the last columns is
+any column names are accepted). The velocities of the third to the last columns are
 calculated from the distance and time, and used as response variables in the
-modeling. See examples below for more details.}
+modelling. See the following \strong{Examples} for further details.}
 
 \item{mvtime}{(data frame) The movement time estimated by \link{ssm_individual}
 ("ssm_individual_mvtime.csv"). This parameter is optional but should be set if the start time of
@@ -35,12 +35,12 @@ movement is affected by the distance from the explanatory variable.
 
 When a data frame is given for this parameter,
 the model assumes the virtual response variable the distance of which from the explanatory variable is zero.
-Then the observed dynamics of all response variables in a data frame are assumed to be produced from
+The observed dynamics of all response variables in a data frame are then assumed to be produced from
 the dynamics of the virtual response variable (the common dynamics) with modifications of
-(1) the time-lag of the start time depending on the distance from the explanatory variable and
+(1) the time lag of the start time depending on the distance from the explanatory variable, and
 (2) system noise and observation error.
 
-When nothing is given for this parameter, the time-lag of the start time is not assumed, and
+When nothing is given for this parameter, the time lag of the start time is not assumed, and
 the observed dynamics of all response variables in a data frame are assumed to be produced from
 the common dynamics.}
 
@@ -52,7 +52,7 @@ The default is 1000.}
 \item{sampling}{(positive integer) The number of post-warmup iterations of MCMC sampling after thinning.
 The default is 1000.}
 
-\item{thin}{(positive integer) Interval of MCMC sampling. This is useful to reduce the autocorrelation of
+\item{thin}{(positive integer) Intervals of MCMC samples. This is useful to reduce the autocorrelation of
 MCMC samples and improve the convergence. The default is 3.}
 
 \item{df_name}{(character string) The name of the data frame. This is used for
@@ -64,23 +64,23 @@ for file names and graph labels.}
 \item{ex_name}{(character string) The name of the explanatory variable. This is
 used for graph labels.}
 
-\item{unit1}{(character string) The unit of a response variable. One of "meter",
+\item{unit1}{(character string) The unit of the response variable. One of "meter",
 "centimeter", "millimeter", "micrometer", "nanometer". If another character
 string is given, it is used as it is. This is used for graph labels.}
 
 \item{unit2}{(character string) The unit of time. This is used for graph labels.}
 
-\item{shade}{(logical) Whether to draw shade in graphs during the absence of
+\item{shade}{(logical) Whether to draw shade in graphs during the period without
 the explanatory variable. The default is \code{TRUE}.}
 
 \item{ps}{(positive integer) Font size of graphs specified in pt. The default is 7 pt.
 Plot sizes are automatically adjusted according to the font size.}
 
-\item{theme_plot}{(character string) A ggplot theme. One of "bw", "light",
+\item{theme_plot}{(character string) A plot theme of the \link{ggplot2} package. One of "bw", "light",
 "classic", "gray", "dark", "test", "minimal" and "void". The default is "bw".}
 }
 \value{
-A directory named after the \code{out} parameter is created, which have three subdirectories.
+A directory named after the \code{out} parameter is created, which has three subdirectories.
 \itemize{
 \item A subdirectory "csv" includes "ssm_common_cell \code{j} .csv" and
 "ssm_common_cell \code{j} _sd.csv" with \code{j} the indexes of data frames.
@@ -91,51 +91,45 @@ the common time-varying coefficient of an explanatory variable, "alpha_each" is
 the true state of each velocity, and "b_ex_each" is the true state of each
 time-varying coefficient. "ssm_common_cell \code{j} _sd.csv"
 contains the Bayesian credible intervals of non-time-varying parameters, where
-"s_w", "s_b_ex" and "s_Y" are the white noise, system noise and observation error
+"s_w", "s_b_ex", and "s_Y" are the white noise, system noise, and observation error
 as standard deviations, respectively.
 \item A subdirectory "pdf" includes "ssm_common_cell \code{j} .pdf".
-This is the visualized results of the model. The figure consists of four panels,
-(1) the observed distance of \code{res_name} from \code{ex_name}, (2) the velocity of \code{res_name},
-(3) the regression coefficient of \code{ex_name}, (4) the random fluctuations
-of the velocity. In these panels,
-solid lines and shaded regions are the median and 95\%
+This is the visualised results of the model. The figure consists of four panels:
+(1) observed distance of \code{res_name} from \code{ex_name}, (2) velocity of \code{res_name},
+(3) regression coefficient of \code{ex_name}, and (4) random fluctuations
+in the velocity. In these panels,
+solid lines and shaded regions are the medians and 95\%
 credible intervals of the Bayesian inference, respectively. When the \code{shade} parameter is \code{TRUE},
-the shaded and light regions represent the period without and with the explanatory
+the shaded and light regions represent the periods without and with the explanatory
 variable, respectively.
 \item A subdirectory "diagnosis" includes "ssm_common_combo_cell \code{j} .pdf" and
-"ssm_common_rhat_cell \code{j} .pdf". These are the visualized diagnosis of
+"ssm_common_rhat_cell \code{j} .pdf". These are the visualised diagnoses of
 MCMC sampling. "ssm_common_combo_cell \code{j} .pdf" shows the
 density plots of the posterior distributions and the trace plots for "b_ex" and
-"alpha" at the start and end of time series and the parameter with the worst Rhat value.
-"ssm_common_rhat_cell \code{j} .pdf" shows the Rhat values of parameters.
+"alpha" at the start and end of the time series and the parameter with the worst Rhat value.
+"ssm_common_rhat_cell \code{j} .pdf" indicates the Rhat values of parameters.
 These are drawn using the \link{bayesplot} package.
 }
 }
 \description{
 \code{ssm_common} performs the Bayesian inference of the parameters of the
 state-space model to extract the common dynamics among the replicated input data.
-It estimates the Bayesian credible intervals of parameters and the start time of
-the influence of an explanatory variable in a regression model. Before using
-this function, you need to install the cmdstanr package (>= 0.5.2)
-(https://mc-stan.org/cmdstanr/index.html) and CmdStan
-(\url{https://mc-stan.org/docs/cmdstan-guide/cmdstan-installation.html}).
-To install CmdStan, installation from GitHub would be easier for beginners:
-you need to install Git and execute a few commands in the Terminal app on Mac or
+It estimates the Bayesian credible intervals of the parameters and the start time of
+the influence of an explanatory variable in the regression model. Before using
+this function, CmdStan (\url{https://mc-stan.org/docs/cmdstan-guide/cmdstan-installation.html})
+must be installed. Installation of CmdStan from GitHub would be easier for beginners.
+Install Git and execute a few commands in the Terminal app on Mac or
 the Git Bash app on Windows.
 }
 \examples{
-# For the first time usage, install the cmdstanr package (>= 0.5.2)
-# (https://mc-stan.org/cmdstanr/index.html) and CmdStan
+# For the first time usage, install CmdStan
 # (https://mc-stan.org/docs/cmdstan-guide/cmdstan-installation.html)
 
 
-### A real data example of chloroplast accumulation responses to a blue microbeam ###
+### Real data example of chloroplast accumulation responses to a blue microbeam ###
 
-# Load packages
+# Load package
 library(cellssm)
-
-# Set the path to which CmdStan was installed
-cmdstanr::set_cmdstan_path("~/cmdstan/")
 
 # Load data
 data("cell1", "cell2", "cell3", "cell4", "chloroplast_mvtime")
@@ -148,6 +142,9 @@ chloroplast_mvtime
 # Execution of state-space modeling
 
 \dontrun{
+# Set the path to which CmdStan was installed
+cmdstanr::set_cmdstan_path("~/cmdstan/")
+
 # With the data frame of the movement time. This is recommended.
 ssm_common(cell_list = cell_list, mvtime = chloroplast_mvtime, out = "08_ssm_common",
            res_name = "chloroplast", ex_name = "microbeam",
@@ -161,31 +158,31 @@ ssm_common(cell_list = cell_list, out = "08_ssm_common",
 
 
 
-### A simulated data example of Paramecium escape responses from a laser heating ###
+### Simulated data example of Paramecium escape responses from laser heating ###
 
-# Load packages
+# Load package
 library(cellssm)
-
-# Set the path to which CmdStan was installed
-cmdstanr::set_cmdstan_path("~/cmdstan/")
 
 # Load data
 data("Paramecium", "Paramecium_mvtime")
 cell_list <- list(Paramecium)
 
-# Check the format of the input data
+# Check the format of input data
 cell_list
 Paramecium_mvtime
 
-# Execution of state-space modeling
+# Execution of state-space modelling
 
 \dontrun{
-# With the data frame of the movement time. This is recommended.
+# Set the path where CmdStan was installed
+cmdstanr::set_cmdstan_path("~/cmdstan/")
+
+# With the data frame of the movement time. This is recommended
 ssm_common(cell_list = cell_list, mvtime = Paramecium_mvtime, out = "18_ssm_common",
            df_name = "experiment", res_name = "Paramecium", ex_name = "heat",
            unit1 = "millimeter", unit2 = "sec")
 
-# Without the data frame of the movement time.
+# Without the data frame of the movement time
 ssm_common(cell_list = cell_list, out = "18_ssm_common",
            df_name = "experiment", res_name = "Paramecium", ex_name = "heat",
           unit1 = "millimeter", unit2 = "sec")

@@ -3,13 +3,13 @@
 \docType{data}
 \name{chloroplast_mvtime}
 \alias{chloroplast_mvtime}
-\title{Model estimation of the start and end time of chloroplast accumulation responses in
+\title{Model estimation of the start and end times of chloroplast accumulation responses in
 four plant cells}
 \usage{
 data("chloroplast_mvtime")
 }
 \description{
-A real dataset containing the start and end time of chloroplast
+A real dataset containing the start and end times of chloroplast
 movements in response to a blue microbeam, estimated by \link{ssm_individual}.
 }
 \details{

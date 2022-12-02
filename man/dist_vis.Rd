@@ -2,7 +2,7 @@
 % Please edit documentation in R/dist_vis.R
 \name{dist_vis}
 \alias{dist_vis}
-\title{Visualization of the distance from an explanatory variable}
+\title{Visualisation of the distance from an explanatory variable}
 \usage{
 dist_vis(
   cell_list,
@@ -11,6 +11,7 @@ dist_vis(
   ex_name,
   unit1,
   unit2,
+  col = "viridis",
   shade = TRUE,
   ps = 7,
   theme_plot = "bw"
@@ -20,7 +21,7 @@ dist_vis(
 \item{cell_list}{(list of data frame) The input time-series data. First column, time (column name "time");
 second column, an explanatory variable (0 or 1, column name "ex"); third to the last columns,
 distances of cells or organelles from the explanatory variable (
-any column names are accepted). See examples below for more details.}
+any column names are accepted). See the following \strong{Examples} for further details.}
 
 \item{df_name}{(character string) The name of the data frame. This is used for
 graph titles. The default is "cell".}
@@ -31,35 +32,39 @@ for graph labels.}
 \item{ex_name}{(character string) The name of the explanatory variable. This is used
 for graph labels.}
 
-\item{unit1}{(character string) The unit of a response variable. One of "meter",
+\item{unit1}{(character string) The unit of the response variable. One of "meter",
 "centimeter", "millimeter", "micrometer", "nanometer". If another character
 string is given, it is used as it is. This is used for graph labels.}
 
 \item{unit2}{(character string) The unit of time. This is used for graph labels.}
 
-\item{shade}{(logical) Whether to draw shade in graphs during the absence of
+\item{col}{(character string) A colour map of \link[viridisLite:viridis]{viridisLite::viridis} to draw the lines.
+One of "viridis", "magma", "plasma", "inferno", "cividis", "mako", "rocket", and "turbo".
+The default is "viridis".}
+
+\item{shade}{(logical) Whether to draw shade in graphs during the period without
 the explanatory variable. The default is \code{TRUE}.}
 
 \item{ps}{(positive integer) Font size of graphs specified in pt. The default is 7 pt.
 Plot sizes are automatically adjusted according to the font size.}
 
-\item{theme_plot}{(character string) A ggplot theme. One of "bw", "light",
+\item{theme_plot}{(character string) A plot theme of the \link{ggplot2} package. One of "bw", "light",
 "classic", "gray", "dark", "test", "minimal" and "void". The default is "bw".}
 }
 \value{
-A list of ggplot objects is returned. In each plot, colored lines are
+A list of ggplot objects is returned. In each plot, coloured lines represent
 different \code{res_name} in each data frame. When the \code{shade} parameter is \code{TRUE},
-the shaded and light regions represent the period without and with the explanatory
+the shaded and light regions represent the periods without and with the explanatory
 variable, respectively.
 }
 \description{
-\code{dist_vis} visualizes the distance of a response variable from an
+\code{dist_vis} visualises the distance of a response variable from an
 explanatory variable
 }
 \examples{
-### A real data example of chloroplast accumulation responses to a blue microbeam ###
+### Real data example of chloroplast accumulation responses to a blue microbeam ###
 
-# Load packages
+# Load package
 library(cellssm)
 
 # Create an output directory
@@ -72,7 +77,7 @@ if(file.exists(out)==FALSE){
 data("cell1", "cell2", "cell3", "cell4")
 cell_list <- list(cell1, cell2, cell3, cell4)
 
-# Check the format of the input data
+# Check the format of input data
 cell_list
 
 # Plotting
@@ -87,9 +92,9 @@ ggplot2::ggsave(paste0(out, "/distance_chloroplast.pdf"),
 
 
 
-### A simulated data example of Paramecium escape responses from a laser heating ###
+### Simulated data example of Paramecium escape responses from a laser heating ###
 
-# Load packages
+# Load package
 library(cellssm)
 
 # Create an output directory
@@ -102,7 +107,7 @@ if(file.exists(out)==FALSE){
 data("Paramecium")
 cell_list <- list(Paramecium)
 
-# Check the format of the input data
+# Check the format of input data
 cell_list
 
 # Plotting

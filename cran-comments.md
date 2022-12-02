@@ -1,7 +1,8 @@
 
 ## Test environments
 * macOS 11.6.4, R 4.1.1
-* 
+* Windows 10, R 4.2.2
+* Ubuntu, R 4.2.1
 
 ## R CMD check results
 There were no ERRORs or WARNINGs.

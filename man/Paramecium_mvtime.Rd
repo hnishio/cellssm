@@ -3,12 +3,12 @@
 \docType{data}
 \name{Paramecium_mvtime}
 \alias{Paramecium_mvtime}
-\title{Model estimation of the start and end time of Paramecium escape responses}
+\title{Model estimation of the start and end times of \emph{Paramecium} escape responses}
 \usage{
 data("Paramecium_mvtime")
 }
 \description{
-A simulated dataset containing the start and end time of Paramecium
+A simulated dataset containing the start and end times of \emph{Paramecium}
 movements in response to a laser heating, estimated by \link{ssm_individual}.
 }
 \details{
@@ -18,10 +18,10 @@ A data frame with 10 rows and 5 columns.
 
 \itemize{
 \item experiment : index of experiment
-\item Paramecium : index of Paramecium in each cell
-\item start_time : start time of Paramecium movements in seconds
-\item end_time : end time of Paramecium movements in seconds
-\item move_time : duration of Paramecium movements in seconds
+\item Paramecium : index of \emph{Paramecium} in each cell
+\item start_time : start time of \emph{Paramecium} movements in seconds
+\item end_time : end time of \emph{Paramecium} movements in seconds
+\item move_time : duration of \emph{Paramecium} movements in seconds
 }
 }
 
