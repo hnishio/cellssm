@@ -21,7 +21,6 @@ Imports:
     ggplot2 (>= 3.4.0),
     dplyr (>= 1.0.7),
     stringr (>= 1.4.0),
-    scales (>= 1.1.1),
     RobustLinearReg (>= 1.2.0),
     cmdstanr (>= 0.5.2),
 	viridisLite (>= 0.4.0),
