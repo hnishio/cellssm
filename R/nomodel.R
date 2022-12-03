@@ -302,7 +302,7 @@ nomodel <- function(cell_list, visual = NULL, out,
       g_dist <- ggplot(data = df_g) +
         annotate("rect", xmin = shade_xmin, xmax = shade_xmax,
                  ymin = yfloor, ymax = yceiling, alpha = alpha, fill = "gray50") +
-        geom_line(aes(x = x, y = y), size=0.5) +
+        geom_line(aes(x = x, y = y), linewidth=0.5) +
         geom_vline(xintercept = mv_time$start_time, linetype="solid", col = col1) +
         geom_vline(xintercept = vis, linetype="dashed", col = col2) +
         annotate("text", x=text_x1, y=yceiling-yrange*0.08, label=label_statistical, col=col1, size = ps/ggplot2::.pt) +

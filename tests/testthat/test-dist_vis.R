@@ -30,7 +30,7 @@ cell_list <- list(Paramecium)
 # Plotting
 glist <- dist_vis(cell_list = cell_list,
                   res_name = "Paramecium", ex_name = "heat",
-                  unit1 = "millimeter", unit2 = "sec")
+                  unit1 = "millimeter", unit2 = "sec", col = "plasma")
 
 # Test
 test_that("length and class of the output are correct", {

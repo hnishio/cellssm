@@ -128,6 +128,7 @@ quantile99 <- function(x){
 #' }
 #'
 #'
+#'
 #' ### Simulated data example of Paramecium escape responses from laser heating ###
 #'
 #' # Load package
@@ -628,7 +629,7 @@ ssm_individual <- function(cell_list, visual=NULL, out, warmup=1000, sampling=10
       g_dist <- ggplot(data = cell_list[[i]]) +
         annotate("rect", xmin = shade_xmin, xmax = shade_xmax,
                  ymin = yfloor, ymax = yceiling, alpha = alpha, fill = "gray50") +
-        geom_line(aes(x = time, y = cell_list[[i]][,j+2]), size=0.5) +
+        geom_line(aes(x = time, y = cell_list[[i]][,j+2]), linewidth=0.5) +
         geom_vline(xintercept = mv_time$start_time, linetype="solid", col = col1) +
         geom_vline(xintercept = vis, linetype="dashed", col = col2) +
         annotate("text", x=text_x1, y=yceiling-yrange*0.08, label=label_statistical, col=col1, size = ps/ggplot2::.pt) +
@@ -655,7 +656,7 @@ ssm_individual <- function(cell_list, visual=NULL, out, warmup=1000, sampling=10
         annotate("rect", xmin = shade_xmin, xmax = shade_xmax,
                  ymin = yfloor, ymax = yceiling, alpha = alpha, fill = "gray50") +
         geom_ribbon(aes(ymin = `alpha_2.5%`, ymax = `alpha_97.5%`), alpha = 0.5) +
-        geom_line(aes(y = `alpha_50%`), size = 0.5) +
+        geom_line(aes(y = `alpha_50%`), linewidth = 0.5) +
         geom_point(aes(y = Y), alpha = 0.5, size=0.5) +
         geom_vline(xintercept = mv_time$start_time, linetype="solid", col = col1) +
         geom_vline(xintercept = vis, linetype="dashed", col = col2) +
@@ -681,7 +682,7 @@ ssm_individual <- function(cell_list, visual=NULL, out, warmup=1000, sampling=10
         annotate("rect", xmin = shade_xmin, xmax = shade_xmax,
                  ymin = yfloor, ymax = yceiling, alpha = alpha, fill = "gray50") +
         geom_ribbon(aes(ymin = `b_ex_2.5%`, ymax = `b_ex_97.5%`), alpha = 0.5) +
-        geom_line(aes(y = `b_ex_50%`), size = 0.5) +
+        geom_line(aes(y = `b_ex_50%`), linewidth = 0.5) +
         geom_vline(xintercept = mv_time$start_time, linetype="solid", col = col1) +
         geom_vline(xintercept = vis, linetype="dashed", col = col2) +
         geom_hline(yintercept = 0, linetype="dashed") +
@@ -706,7 +707,7 @@ ssm_individual <- function(cell_list, visual=NULL, out, warmup=1000, sampling=10
         annotate("rect", xmin = shade_xmin, xmax = shade_xmax,
                  ymin = yfloor, ymax = yceiling, alpha = alpha, fill = "gray50") +
         geom_ribbon(aes(ymin = `w_2.5%`, ymax = `w_97.5%`), alpha = 0.5) +
-        geom_line(aes(y = `w_50%`), size = 0.5) +
+        geom_line(aes(y = `w_50%`), linewidth = 0.5) +
         geom_vline(xintercept = mv_time$start_time, linetype="solid", col = col1) +
         geom_vline(xintercept = vis, linetype="dashed", col = col2) +
         geom_hline(yintercept = 0, linetype="dashed") +

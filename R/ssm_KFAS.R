@@ -64,6 +64,8 @@
 #' the shaded and light regions represent the periods without and with the explanatory
 #' variable, respectively.
 #' @examples
+#' ### Package KFAS must be installed to use this function
+#'
 #' ### Real data example of chloroplast accumulation responses to a blue microbeam ###
 #'
 #' # Load package
@@ -79,6 +81,7 @@
 #'
 #' # Execution of state-space modelling
 #'
+#' \dontrun{
 #' # When you do not want to compare the statistical and visual estimations of the start time
 #' ssm_KFAS(cell_list = cell_list, out = "03_ssm_KFAS",
 #'          res_name = "chloroplast", ex_name = "microbeam",
@@ -88,6 +91,7 @@
 #' ssm_KFAS(cell_list = cell_list, visual = visual, out = "03_ssm_KFAS",
 #'          res_name = "chloroplast", ex_name = "microbeam",
 #'          unit1 = "micrometer", unit2 = "min")
+#' }
 #'
 #'
 #'
@@ -104,10 +108,13 @@
 #' cell_list
 #'
 #' # Execution of state-space modelling
+#'
+#' \dontrun{
 #' ssm_KFAS(cell_list = cell_list, out = "13_ssm_KFAS",
 #'          ex_sign = "positive", df_name = "experiment",
 #'          res_name = "Paramecium", ex_name = "heat",
 #'          unit1 = "millimeter", unit2 = "sec")
+#' }
 #'
 #' @export
 #'
@@ -549,7 +556,7 @@ ssm_KFAS <- function(cell_list, visual = NULL, out,
       g_dist <- ggplot(data = cell_list[[i]]) +
         annotate("rect", xmin = shade_xmin, xmax = shade_xmax,
                  ymin = yfloor, ymax = yceiling, alpha = alpha, fill = "gray50") +
-        geom_line(aes(x = time, y = cell_list[[i]][,j+2]), size=0.5) +
+        geom_line(aes(x = time, y = cell_list[[i]][,j+2]), linewidth=0.5) +
         geom_vline(xintercept = mv_time$start_time, linetype="solid", col = col1) +
         geom_vline(xintercept = vis, linetype="dashed", col = col2) +
         annotate("text", x=text_x1, y=yceiling-yrange*0.08, label=label_statistical, col=col1, size = ps/ggplot2::.pt) +
@@ -576,7 +583,7 @@ ssm_KFAS <- function(cell_list, visual = NULL, out,
         annotate("rect", xmin = shade_xmin, xmax = shade_xmax,
                  ymin = yfloor, ymax = yceiling, alpha = alpha, fill = "gray50") +
         geom_ribbon(aes(ymin = `alpha_2.5%`, ymax = `alpha_97.5%`), alpha = 0.5) +
-        geom_line(aes(y = `alpha_50%`), size = 0.5) +
+        geom_line(aes(y = `alpha_50%`), linewidth = 0.5) +
         geom_point(aes(y = Y), alpha = 0.5, size=0.5) +
         geom_vline(xintercept = mv_time$start_time, linetype="solid", col = col1) +
         geom_vline(xintercept = vis, linetype="dashed", col = col2) +
@@ -602,7 +609,7 @@ ssm_KFAS <- function(cell_list, visual = NULL, out,
         annotate("rect", xmin = shade_xmin, xmax = shade_xmax,
                  ymin = yfloor, ymax = yceiling, alpha = alpha, fill = "gray50") +
         geom_ribbon(aes(ymin = `b_ex_2.5%`, ymax = `b_ex_97.5%`), alpha = 0.5) +
-        geom_line(aes(y = `b_ex_50%`), size = 0.5) +
+        geom_line(aes(y = `b_ex_50%`), linewidth = 0.5) +
         geom_vline(xintercept = mv_time$start_time, linetype="solid", col = col1) +
         geom_vline(xintercept = vis, linetype="dashed", col = col2) +
         geom_hline(yintercept = 0, linetype="dashed") +

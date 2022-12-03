@@ -300,7 +300,7 @@ lm_dist_beta <- function(cell_list, mvtime, ssm_path,
     max_axis_x <- max(df_new$distance)
 
     g1 <- ggplot() +
-      geom_line(data = conf_interval2, aes(x=distance, y=fit), color = "steelblue", size = 1) +
+      geom_line(data = conf_interval2, aes(x=distance, y=fit), color = "steelblue", linewidth = 1) +
       geom_ribbon(data = conf_interval2, aes(x=distance, ymin = lwr, ymax = upr), alpha = 0.4, fill = "steelblue") +
       geom_point(data = df_new, aes(x=distance, y=mean_b), size=0.8, alpha=0.5) +
       annotate("text", x=max_axis_x - (max_axis_x - min_axis_x)*0.45, y=max_axis_y - (max_axis_y - min_axis_y)*0.03,
@@ -341,7 +341,7 @@ lm_dist_beta <- function(cell_list, mvtime, ssm_path,
     max_axis_x <- max(df_new$distance)
 
     g2 <- ggplot() +
-      geom_line(data = conf_interval2, aes(x=distance, y=fit), color = "steelblue", size = 1) +
+      geom_line(data = conf_interval2, aes(x=distance, y=fit), color = "steelblue", linewidth = 1) +
       geom_ribbon(data = conf_interval2, aes(x=distance, ymin = lwr, ymax = upr), alpha = 0.4, fill = "steelblue") +
       geom_point(data = df_new, aes(x=distance, y=most_b), size=0.8, alpha=0.5) +
       annotate("text", x=max_axis_x - (max_axis_x - min_axis_x)*0.45, y=max_axis_y - (max_axis_y - min_axis_y)*0.03,
@@ -381,7 +381,7 @@ lm_dist_beta <- function(cell_list, mvtime, ssm_path,
     max_axis_x <- max(df_new$distance)
 
     g3 <- ggplot() +
-      geom_line(data = conf_interval2, aes(x=distance, y=fit), color = "steelblue", size = 1) +
+      geom_line(data = conf_interval2, aes(x=distance, y=fit), color = "steelblue", linewidth = 1) +
       geom_ribbon(data = conf_interval2, aes(x=distance, ymin = lwr, ymax = upr), alpha = 0.4, fill = "steelblue") +
       geom_point(data = df_new, aes(x=distance, y=s_b_ex), size=0.8, alpha=0.5) +
       annotate("text", x=max_axis_x - (max_axis_x - min_axis_x)*0.45, y=max_axis_y - (max_axis_y - min_axis_y)*0.03,
@@ -422,7 +422,7 @@ lm_dist_beta <- function(cell_list, mvtime, ssm_path,
     max_axis_x <- max(df_new$distance)
 
     g4 <- ggplot() +
-      geom_line(data = conf_interval2, aes(x=distance, y=fit), color = "steelblue", size = 1) +
+      geom_line(data = conf_interval2, aes(x=distance, y=fit), color = "steelblue", linewidth = 1) +
       geom_ribbon(data = conf_interval2, aes(x=distance, ymin = lwr, ymax = upr), alpha = 0.4, fill = "steelblue") +
       geom_point(data = df_new, aes(x=distance, y=mean_alpha), size=0.8, alpha=0.5) +
       annotate("text", x=max_axis_x - (max_axis_x - min_axis_x)*0.45, y=max_axis_y - (max_axis_y - min_axis_y)*0.03,
@@ -463,7 +463,7 @@ lm_dist_beta <- function(cell_list, mvtime, ssm_path,
     max_axis_x <- max(df_new$distance)
 
     g5 <- ggplot() +
-      geom_line(data = conf_interval2, aes(x=distance, y=fit), color = "steelblue", size = 1) +
+      geom_line(data = conf_interval2, aes(x=distance, y=fit), color = "steelblue", linewidth = 1) +
       geom_ribbon(data = conf_interval2, aes(x=distance, ymin = lwr, ymax = upr), alpha = 0.4, fill = "steelblue") +
       geom_point(data = df_new, aes(x=distance, y=most_alpha), size=0.8, alpha=0.5) +
       annotate("text", x=max_axis_x - (max_axis_x - min_axis_x)*0.45, y=max_axis_y - (max_axis_y - min_axis_y)*0.03,
@@ -626,7 +626,7 @@ lm_dist_beta <- function(cell_list, mvtime, ssm_path,
     max_axis_x <- max(df_new$distance)
 
     g1 <- ggplot() +
-      geom_line(data = conf_interval2, aes(x=distance, y=fit), color = "steelblue", size = 1) +
+      geom_line(data = conf_interval2, aes(x=distance, y=fit), color = "steelblue", linewidth = 1) +
       geom_ribbon(data = conf_interval2, aes(x=distance, ymin = lwr, ymax = upr), alpha = 0.4, fill = "steelblue") +
       geom_point(data = df_new, aes(x=distance, y=mean_b), size=0.8, alpha=0.5) +
       annotate("text", x=max_axis_x - (max_axis_x - min_axis_x)*0.45, y=max_axis_y - (max_axis_y - min_axis_y)*0.03,
@@ -667,7 +667,7 @@ lm_dist_beta <- function(cell_list, mvtime, ssm_path,
     max_axis_x <- max(df_new$distance)
 
     g2 <- ggplot() +
-      geom_line(data = conf_interval2, aes(x=distance, y=fit), color = "steelblue", size = 1) +
+      geom_line(data = conf_interval2, aes(x=distance, y=fit), color = "steelblue", linewidth = 1) +
       geom_ribbon(data = conf_interval2, aes(x=distance, ymin = lwr, ymax = upr), alpha = 0.4, fill = "steelblue") +
       geom_point(data = df_new, aes(x=distance, y=most_b), size=0.8, alpha=0.5) +
       annotate("text", x=max_axis_x - (max_axis_x - min_axis_x)*0.45, y=max_axis_y - (max_axis_y - min_axis_y)*0.03,
@@ -707,7 +707,7 @@ lm_dist_beta <- function(cell_list, mvtime, ssm_path,
     max_axis_x <- max(df_new$distance)
 
     g3 <- ggplot() +
-      geom_line(data = conf_interval2, aes(x=distance, y=fit), color = "steelblue", size = 1) +
+      geom_line(data = conf_interval2, aes(x=distance, y=fit), color = "steelblue", linewidth = 1) +
       geom_ribbon(data = conf_interval2, aes(x=distance, ymin = lwr, ymax = upr), alpha = 0.4, fill = "steelblue") +
       geom_point(data = df_new, aes(x=distance, y=s_b_ex), size=0.8, alpha=0.5) +
       annotate("text", x=max_axis_x - (max_axis_x - min_axis_x)*0.45, y=max_axis_y - (max_axis_y - min_axis_y)*0.03,

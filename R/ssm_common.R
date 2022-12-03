@@ -520,7 +520,7 @@ ssm_common <- function(cell_list, mvtime=NULL, out, warmup=1000, sampling=1000, 
       annotate("rect", xmin = shade_xmin, xmax = shade_xmax,
                ymin = yfloor_dist, ymax = yceiling_dist, alpha = alpha, fill = "gray50") +
       geom_ribbon(aes(ymin = `dist_2.5%`, ymax = `dist_97.5%`), alpha = 0.5) +
-      geom_line(aes(y = `dist_50%`), size=0.5) +
+      geom_line(aes(y = `dist_50%`), linewidth=0.5) +
       scale_x_continuous(expand = c(0,0)) +
       scale_y_continuous(expand = c(0,0)) +
       theme_plot2 +
@@ -543,7 +543,7 @@ ssm_common <- function(cell_list, mvtime=NULL, out, warmup=1000, sampling=1000, 
       annotate("rect", xmin = shade_xmin, xmax = shade_xmax,
                ymin = yfloor_alpha, ymax = yceiling_alpha, alpha = alpha, fill = "gray50") +
       geom_ribbon(aes(ymin = `alpha_2.5%`, ymax = `alpha_97.5%`), alpha = 0.5) +
-      geom_line(aes(y = `alpha_50%`), size = 0.5) +
+      geom_line(aes(y = `alpha_50%`), linewidth = 0.5) +
       geom_hline(yintercept = 0, linetype="dashed") +
       scale_x_continuous(expand = c(0,0)) +
       scale_y_continuous(expand = c(0,0)) +
@@ -566,7 +566,7 @@ ssm_common <- function(cell_list, mvtime=NULL, out, warmup=1000, sampling=1000, 
       annotate("rect", xmin = shade_xmin, xmax = shade_xmax,
                ymin = yfloor_b, ymax = yceiling_b, alpha = alpha, fill = "gray50") +
       geom_ribbon(aes(ymin = `b_ex_2.5%`, ymax = `b_ex_97.5%`), alpha = 0.5) +
-      geom_line(aes(y = `b_ex_50%`), size = 0.5) +
+      geom_line(aes(y = `b_ex_50%`), linewidth = 0.5) +
       geom_hline(yintercept = 0, linetype="dashed") +
       scale_x_continuous(expand = c(0,0)) +
       scale_y_continuous(expand = c(0,0)) +
@@ -589,7 +589,7 @@ ssm_common <- function(cell_list, mvtime=NULL, out, warmup=1000, sampling=1000, 
       annotate("rect", xmin = shade_xmin, xmax = shade_xmax,
                ymin = yfloor_w, ymax = yceiling_w, alpha = alpha, fill = "gray50") +
       geom_ribbon(aes(ymin = `w_2.5%`, ymax = `w_97.5%`), alpha = 0.5) +
-      geom_line(aes(y = `w_50%`), size = 0.5) +
+      geom_line(aes(y = `w_50%`), linewidth = 0.5) +
       geom_hline(yintercept = 0, linetype="dashed") +
       scale_x_continuous(expand = c(0,0)) +
       scale_y_continuous(expand = c(0,0)) +
