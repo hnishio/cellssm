@@ -11,7 +11,7 @@ cell_list <- list(cell1, cell2, cell3, cell4)
 # Plotting
 glist <- dist_vis(cell_list = cell_list,
                   res_name = "chloroplast", ex_name = "microbeam",
-                  unit1 = "micrometer", unit2 = "min")
+                  unit1 = "micrometer", unit2 = "min", col = "plasma")
 
 # Test
 test_that("length and class of the output are correct", {

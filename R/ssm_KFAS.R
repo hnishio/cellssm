@@ -81,16 +81,18 @@
 #'
 #' # Execution of state-space modelling
 #'
-#' \dontrun{
 #' # When you do not want to compare the statistical and visual estimations of the start time
-#' ssm_KFAS(cell_list = cell_list, out = "03_ssm_KFAS",
-#'          res_name = "chloroplast", ex_name = "microbeam",
-#'          unit1 = "micrometer", unit2 = "min")
+#' if (require("KFAS")) {
+#'   ssm_KFAS(cell_list = cell_list, out = "03_ssm_KFAS",
+#'            res_name = "chloroplast", ex_name = "microbeam",
+#'            unit1 = "micrometer", unit2 = "min")
+#' }
 #'
 #' # When you do want to compare the statistical and visual estimations of the start time
-#' ssm_KFAS(cell_list = cell_list, visual = visual, out = "03_ssm_KFAS",
-#'          res_name = "chloroplast", ex_name = "microbeam",
-#'          unit1 = "micrometer", unit2 = "min")
+#' if (require("KFAS")) {
+#'   ssm_KFAS(cell_list = cell_list, visual = visual, out = "03_ssm_KFAS",
+#'            res_name = "chloroplast", ex_name = "microbeam",
+#'            unit1 = "micrometer", unit2 = "min")
 #' }
 #'
 #'
@@ -109,11 +111,11 @@
 #'
 #' # Execution of state-space modelling
 #'
-#' \dontrun{
-#' ssm_KFAS(cell_list = cell_list, out = "13_ssm_KFAS",
-#'          ex_sign = "positive", df_name = "experiment",
-#'          res_name = "Paramecium", ex_name = "heat",
-#'          unit1 = "millimeter", unit2 = "sec")
+#' if (require("KFAS")) {
+#'   ssm_KFAS(cell_list = cell_list, out = "13_ssm_KFAS",
+#'            ex_sign = "positive", df_name = "experiment",
+#'            res_name = "Paramecium", ex_name = "heat",
+#'            unit1 = "millimeter", unit2 = "sec")
 #' }
 #'
 #' @export

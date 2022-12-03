@@ -167,6 +167,7 @@ ssm_individual(cell_list = cell_list, visual = visual, out = "02_ssm_individual"
 }
 
 
+
 ### Simulated data example of Paramecium escape responses from laser heating ###
 
 # Load package
