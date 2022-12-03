@@ -12,7 +12,9 @@ quantile99 <- function(x){
 #' state-space model to analyse the velocity of individual cells or organelles.
 #' It estimates the Bayesian credible intervals of the parameters and the start time of
 #' the influence of an explanatory variable in the regression model. Before using
-#' this function, CmdStan (\url{https://mc-stan.org/docs/cmdstan-guide/cmdstan-installation.html})
+#' this function, the cmdstanr package (>= 0.5.2)
+#' (\url{https://mc-stan.org/cmdstanr/index.html}) and CmdStan
+#' (\url{https://mc-stan.org/docs/cmdstan-guide/cmdstan-installation.html})
 #' must be installed. Installation of CmdStan from GitHub would be easier for beginners.
 #' Install Git and execute a few commands in the Terminal app on Mac or
 #' the Git Bash app on Windows.
@@ -93,7 +95,8 @@ quantile99 <- function(x){
 #' "ssm_individual_rhat_cell `i` _ `res_name` `j` .pdf" indicates the Rhat values of the parameters.
 #' These are drawn using the [bayesplot] package.
 #' @examples
-#' # For the first-time usage, install CmdStan
+#' # For the first-time usage, install the cmdstanr package (>= 0.5.2)
+#' # (https://mc-stan.org/cmdstanr/index.html) and CmdStan
 #' # (https://mc-stan.org/docs/cmdstan-guide/cmdstan-installation.html)
 #'
 #'
@@ -110,21 +113,23 @@ quantile99 <- function(x){
 #' cell_list
 #' visual
 #'
-#' # Execution of state-space modelling
-#'
 #' \dontrun{
-#' # Set the path where CmdStan was installed
-#' cmdstanr::set_cmdstan_path("~/cmdstan/")
+#' # Execution of state-space modelling
+#' if (require("cmdstanr")) {
 #'
-#' # When you do not want to compare the statistical and visual estimations of the start time
-#' ssm_individual(cell_list = cell_list, out = "02_ssm_individual",
-#'                res_name = "chloroplast", ex_name = "microbeam",
-#'                unit1 = "micrometer", unit2 = "min")
+#'   # Set the path where CmdStan was installed
+#'   cmdstanr::set_cmdstan_path("~/cmdstan/")
 #'
-#' # When you do want to compare the statistical and visual estimations of the start time
-#' ssm_individual(cell_list = cell_list, visual = visual, out = "02_ssm_individual",
-#'                res_name = "chloroplast", ex_name = "microbeam",
-#'                unit1 = "micrometer", unit2 = "min")
+#'   # When you do not want to compare the statistical and visual estimations of the start time
+#'   ssm_individual(cell_list = cell_list, out = "02_ssm_individual",
+#'                  res_name = "chloroplast", ex_name = "microbeam",
+#'                  unit1 = "micrometer", unit2 = "min")
+#'
+#'   # When you do want to compare the statistical and visual estimations of the start time
+#'   ssm_individual(cell_list = cell_list, visual = visual, out = "02_ssm_individual",
+#'                  res_name = "chloroplast", ex_name = "microbeam",
+#'                  unit1 = "micrometer", unit2 = "min")
+#' }
 #' }
 #'
 #'
@@ -141,17 +146,19 @@ quantile99 <- function(x){
 #' # Check the format of input data
 #' cell_list
 #'
-#' # Execution of state-space modelling
-#'
 #' \dontrun{
-#' # Set the path where CmdStan was installed
-#' cmdstanr::set_cmdstan_path("~/cmdstan/")
+#' # Execution of state-space modelling
+#' if (require("cmdstanr")) {
 #'
-#' ssm_individual(cell_list = cell_list, out = "12_ssm_individual",
-#'                warmup=1000, sampling=1000, thin=6,
-#'                start_sensitivity = 3, ex_sign = "positive", df_name = "experiment",
-#'                res_name = "Paramecium", ex_name = "heat",
-#'                unit1 = "millimeter", unit2 = "sec")
+#'   # Set the path where CmdStan was installed
+#'   cmdstanr::set_cmdstan_path("~/cmdstan/")
+#'
+#'   ssm_individual(cell_list = cell_list, out = "12_ssm_individual",
+#'                  warmup=1000, sampling=1000, thin=6,
+#'                  start_sensitivity = 3, ex_sign = "positive", df_name = "experiment",
+#'                  res_name = "Paramecium", ex_name = "heat",
+#'                  unit1 = "millimeter", unit2 = "sec")
+#' }
 #' }
 #'
 #' @export
@@ -160,6 +167,12 @@ ssm_individual <- function(cell_list, visual=NULL, out, warmup=1000, sampling=10
                            start_sensitivity = 5, ex_sign = "negative", df_name = "cell",
                            res_name, ex_name, unit1, unit2,
                            shade = TRUE, start_line = TRUE, ps = 7, theme_plot = "bw"){
+
+  ## Dependency on cmdstanr
+  if(!requireNamespace("cmdstanr", quietly = TRUE)){
+    stop("Package \"cmdstanr\" must be installed to use this function.",
+         call. = FALSE)
+  }
 
 
   ## Binding variables locally to the function

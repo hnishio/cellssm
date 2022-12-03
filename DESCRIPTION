@@ -22,10 +22,9 @@ Imports:
     dplyr (>= 1.0.7),
     stringr (>= 1.4.0),
     RobustLinearReg (>= 1.2.0),
-    cmdstanr (>= 0.5.2),
-	viridisLite (>= 0.4.0),
-	stats
-Remotes: git::https://github.com/stan-dev/cmdstanr.git
+    viridisLite (>= 0.4.0),
+    stats,
+    cmdstanr
 Depends: 
     R (>= 3.5.0)
 Suggests: 

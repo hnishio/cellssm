@@ -126,7 +126,9 @@ These are drawn using the \link{bayesplot} package.
 state-space model to analyse the velocity of individual cells or organelles.
 It estimates the Bayesian credible intervals of the parameters and the start time of
 the influence of an explanatory variable in the regression model. Before using
-this function, CmdStan (\url{https://mc-stan.org/docs/cmdstan-guide/cmdstan-installation.html})
+this function, the cmdstanr package (>= 0.5.2)
+(\url{https://mc-stan.org/cmdstanr/index.html}) and CmdStan
+(\url{https://mc-stan.org/docs/cmdstan-guide/cmdstan-installation.html})
 must be installed. Installation of CmdStan from GitHub would be easier for beginners.
 Install Git and execute a few commands in the Terminal app on Mac or
 the Git Bash app on Windows.
@@ -149,21 +151,23 @@ cell_list <- list(cell1, cell2, cell3, cell4)
 cell_list
 visual
 
-# Execution of state-space modelling
-
 \dontrun{
-# Set the path where CmdStan was installed
-cmdstanr::set_cmdstan_path("~/cmdstan/")
+# Execution of state-space modelling
+if (require("cmdstanr")) {
 
-# When you do not want to compare the statistical and visual estimations of the start time
-ssm_individual(cell_list = cell_list, out = "02_ssm_individual",
-               res_name = "chloroplast", ex_name = "microbeam",
-               unit1 = "micrometer", unit2 = "min")
+  # Set the path where CmdStan was installed
+  cmdstanr::set_cmdstan_path("~/cmdstan/")
 
-# When you do want to compare the statistical and visual estimations of the start time
-ssm_individual(cell_list = cell_list, visual = visual, out = "02_ssm_individual",
-               res_name = "chloroplast", ex_name = "microbeam",
-               unit1 = "micrometer", unit2 = "min")
+  # When you do not want to compare the statistical and visual estimations of the start time
+  ssm_individual(cell_list = cell_list, out = "02_ssm_individual",
+                 res_name = "chloroplast", ex_name = "microbeam",
+                 unit1 = "micrometer", unit2 = "min")
+
+  # When you do want to compare the statistical and visual estimations of the start time
+  ssm_individual(cell_list = cell_list, visual = visual, out = "02_ssm_individual",
+                 res_name = "chloroplast", ex_name = "microbeam",
+                 unit1 = "micrometer", unit2 = "min")
+}
 }
 
 
@@ -180,17 +184,19 @@ cell_list <- list(Paramecium)
 # Check the format of input data
 cell_list
 
-# Execution of state-space modelling
-
 \dontrun{
-# Set the path where CmdStan was installed
-cmdstanr::set_cmdstan_path("~/cmdstan/")
+# Execution of state-space modelling
+if (require("cmdstanr")) {
 
-ssm_individual(cell_list = cell_list, out = "12_ssm_individual",
-               warmup=1000, sampling=1000, thin=6,
-               start_sensitivity = 3, ex_sign = "positive", df_name = "experiment",
-               res_name = "Paramecium", ex_name = "heat",
-               unit1 = "millimeter", unit2 = "sec")
+  # Set the path where CmdStan was installed
+  cmdstanr::set_cmdstan_path("~/cmdstan/")
+
+  ssm_individual(cell_list = cell_list, out = "12_ssm_individual",
+                 warmup=1000, sampling=1000, thin=6,
+                 start_sensitivity = 3, ex_sign = "positive", df_name = "experiment",
+                 res_name = "Paramecium", ex_name = "heat",
+                 unit1 = "millimeter", unit2 = "sec")
+}
 }
 
 }

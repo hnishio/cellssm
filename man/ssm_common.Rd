@@ -139,21 +139,23 @@ cell_list <- list(cell1, cell2, cell3, cell4)
 cell_list
 chloroplast_mvtime
 
-# Execution of state-space modeling
-
 \dontrun{
-# Set the path to which CmdStan was installed
-cmdstanr::set_cmdstan_path("~/cmdstan/")
+# Execution of state-space modeling
+if (require("cmdstanr")) {
 
-# With the data frame of the movement time. This is recommended.
-ssm_common(cell_list = cell_list, mvtime = chloroplast_mvtime, out = "08_ssm_common",
-           res_name = "chloroplast", ex_name = "microbeam",
-           unit1 = "micrometer", unit2 = "min")
+  # Set the path to which CmdStan was installed
+  cmdstanr::set_cmdstan_path("~/cmdstan/")
 
-# Without the data frame of the movement time.
-ssm_common(cell_list = cell_list, out = "08_ssm_common",
-           res_name = "chloroplast", ex_name = "microbeam",
-           unit1 = "micrometer", unit2 = "min")
+  # With the data frame of the movement time. This is recommended.
+  ssm_common(cell_list = cell_list, mvtime = chloroplast_mvtime, out = "08_ssm_common",
+             res_name = "chloroplast", ex_name = "microbeam",
+             unit1 = "micrometer", unit2 = "min")
+
+  # Without the data frame of the movement time.
+  ssm_common(cell_list = cell_list, out = "08_ssm_common",
+             res_name = "chloroplast", ex_name = "microbeam",
+             unit1 = "micrometer", unit2 = "min")
+}
 }
 
 
@@ -171,21 +173,23 @@ cell_list <- list(Paramecium)
 cell_list
 Paramecium_mvtime
 
-# Execution of state-space modelling
-
 \dontrun{
-# Set the path where CmdStan was installed
-cmdstanr::set_cmdstan_path("~/cmdstan/")
+# Execution of state-space modelling
+if (require("cmdstanr")) {
 
-# With the data frame of the movement time. This is recommended
-ssm_common(cell_list = cell_list, mvtime = Paramecium_mvtime, out = "18_ssm_common",
-           df_name = "experiment", res_name = "Paramecium", ex_name = "heat",
-           unit1 = "millimeter", unit2 = "sec")
+  # Set the path where CmdStan was installed
+  cmdstanr::set_cmdstan_path("~/cmdstan/")
 
-# Without the data frame of the movement time
-ssm_common(cell_list = cell_list, out = "18_ssm_common",
-           df_name = "experiment", res_name = "Paramecium", ex_name = "heat",
-          unit1 = "millimeter", unit2 = "sec")
+  # With the data frame of the movement time. This is recommended
+  ssm_common(cell_list = cell_list, mvtime = Paramecium_mvtime, out = "18_ssm_common",
+             df_name = "experiment", res_name = "Paramecium", ex_name = "heat",
+             unit1 = "millimeter", unit2 = "sec")
+
+  # Without the data frame of the movement time
+  ssm_common(cell_list = cell_list, out = "18_ssm_common",
+             df_name = "experiment", res_name = "Paramecium", ex_name = "heat",
+            unit1 = "millimeter", unit2 = "sec")
+}
 }
 
 }
