@@ -99,7 +99,7 @@ variable, respectively.
 }
 \description{
 \code{ssm_KFAS} estimates the parameters of the state-space model to
-analyse the velocity of individual cells or organelles by the Kalman filter using the \link{KFAS} package.
+analyse the velocity of individual cells or organelles by the Kalman filter using the KFAS package.
 It estimates the credible intervals of the parameters and the start time of
 the influence of an explanatory variable in the regression model.
 }

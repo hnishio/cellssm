@@ -282,16 +282,16 @@ lm_dist_beta <- function(cell_list, mvtime, ssm_path,
     ##### Linear regression (x: distance, y: mean_b) #####
     model <- RobustLinearReg::siegel_regression(mean_b ~ distance, data = df_new)
 
-    newx = seq(min(df_new$distance), max(df_new$distance), by = 1)
+    newx = seq(min(df_new$distance), max(df_new$distance), by = 0.1)
     suppressWarnings(conf_interval <- stats::predict(model, newdata=data.frame(x=newx), interval="confidence", level = 0.95))
     conf_interval2 <- as.data.frame(cbind(df_new$distance, conf_interval)[order(df_new$distance, decreasing = F),])
     names(conf_interval2)[1] <- "distance"
 
 
     ## Plotting
-    r2 <- formatC(summary(model)$r.squared, digits=2)
+    r2 <- format(summary(model)$r.squared, digits=2, nsmall = 2)
     p <- formatC(summary(model)$coefficients[2,4], digits = 2, format = "e")
-    r2lab <- bquote(paste(R^2, " = ", .(r2), sep=""))
+    r2lab <- bquote(paste(italic(R^2), " = ", .(r2), sep=""))
     plab <- bquote(paste(italic(P), " = ", .(p), sep=""))
 
     min_axis_y <- min(df_new$mean_b) - diff(range(df_new$mean_b))*0.1
@@ -303,10 +303,10 @@ lm_dist_beta <- function(cell_list, mvtime, ssm_path,
       geom_line(data = conf_interval2, aes(x=distance, y=fit), color = "steelblue", size = 1) +
       geom_ribbon(data = conf_interval2, aes(x=distance, ymin = lwr, ymax = upr), alpha = 0.4, fill = "steelblue") +
       geom_point(data = df_new, aes(x=distance, y=mean_b), size=0.8, alpha=0.5) +
-      annotate("text", x=max_axis_x - (max_axis_x - min_axis_x)*0.25, y=max_axis_y - (max_axis_y - min_axis_y)*0.03,
-               label=r2lab, size=ps/ggplot2::.pt) +
-      annotate("text", x=max_axis_x - (max_axis_x - min_axis_x)*0.25, y=max_axis_y - (max_axis_y - min_axis_y)*0.13,
-               label=plab, size=ps/ggplot2::.pt) +
+      annotate("text", x=max_axis_x - (max_axis_x - min_axis_x)*0.45, y=max_axis_y - (max_axis_y - min_axis_y)*0.03,
+               label=r2lab, size=ps/ggplot2::.pt, hjust = 0) +
+      annotate("text", x=max_axis_x - (max_axis_x - min_axis_x)*0.45, y=max_axis_y - (max_axis_y - min_axis_y)*0.13,
+               label=plab, size=ps/ggplot2::.pt, hjust = 0) +
       coord_cartesian(xlim=c(min_axis_x, max_axis_x), ylim=c(min_axis_y, max_axis_y), clip='on') +
       theme_plot2 +
       theme(plot.title = element_text(size=ps, face = "bold"),
@@ -330,9 +330,9 @@ lm_dist_beta <- function(cell_list, mvtime, ssm_path,
 
 
     ## Plotting
-    r2 <- formatC(summary(model)$r.squared, digits=2)
+    r2 <- format(summary(model)$r.squared, digits=2, nsmall = 2)
     p <- formatC(summary(model)$coefficients[2,4], digits = 2, format = "e")
-    r2lab <- bquote(paste(R^2, " = ", .(r2), sep=""))
+    r2lab <- bquote(paste(italic(R^2), " = ", .(r2), sep=""))
     plab <- bquote(paste(italic(P), " = ", .(p), sep=""))
 
     min_axis_y <- min(df_new$most_b) - diff(range(df_new$most_b))*0.1
@@ -344,10 +344,10 @@ lm_dist_beta <- function(cell_list, mvtime, ssm_path,
       geom_line(data = conf_interval2, aes(x=distance, y=fit), color = "steelblue", size = 1) +
       geom_ribbon(data = conf_interval2, aes(x=distance, ymin = lwr, ymax = upr), alpha = 0.4, fill = "steelblue") +
       geom_point(data = df_new, aes(x=distance, y=most_b), size=0.8, alpha=0.5) +
-      annotate("text", x=max_axis_x - (max_axis_x - min_axis_x)*0.25, y=max_axis_y - (max_axis_y - min_axis_y)*0.03,
-               label=r2lab, size=ps/ggplot2::.pt) +
-      annotate("text", x=max_axis_x - (max_axis_x - min_axis_x)*0.25, y=max_axis_y - (max_axis_y - min_axis_y)*0.13,
-               label=plab, size=ps/ggplot2::.pt) +
+      annotate("text", x=max_axis_x - (max_axis_x - min_axis_x)*0.45, y=max_axis_y - (max_axis_y - min_axis_y)*0.03,
+               label=r2lab, size=ps/ggplot2::.pt, hjust = 0) +
+      annotate("text", x=max_axis_x - (max_axis_x - min_axis_x)*0.45, y=max_axis_y - (max_axis_y - min_axis_y)*0.13,
+               label=plab, size=ps/ggplot2::.pt, hjust = 0) +
       coord_cartesian(xlim=c(min_axis_x, max_axis_x), ylim=c(min_axis_y, max_axis_y), clip='on') +
       theme_plot2 +
       theme(plot.title = element_text(size=ps, face = "bold"),
@@ -370,9 +370,9 @@ lm_dist_beta <- function(cell_list, mvtime, ssm_path,
 
 
     ## Plotting
-    r2 <- formatC(summary(model)$r.squared, digits=2)
+    r2 <- format(summary(model)$r.squared, digits=2, nsmall = 2)
     p <- formatC(summary(model)$coefficients[2,4], digits = 2, format = "e")
-    r2lab <- bquote(paste(R^2, " = ", .(r2), sep=""))
+    r2lab <- bquote(paste(italic(R^2), " = ", .(r2), sep=""))
     plab <- bquote(paste(italic(P), " = ", .(p), sep=""))
 
     min_axis_y <- min(df_new$s_b_ex) - diff(range(df_new$s_b_ex))*0.1
@@ -384,10 +384,10 @@ lm_dist_beta <- function(cell_list, mvtime, ssm_path,
       geom_line(data = conf_interval2, aes(x=distance, y=fit), color = "steelblue", size = 1) +
       geom_ribbon(data = conf_interval2, aes(x=distance, ymin = lwr, ymax = upr), alpha = 0.4, fill = "steelblue") +
       geom_point(data = df_new, aes(x=distance, y=s_b_ex), size=0.8, alpha=0.5) +
-      annotate("text", x=max_axis_x - (max_axis_x - min_axis_x)*0.25, y=max_axis_y - (max_axis_y - min_axis_y)*0.03,
-               label=r2lab, size=ps/ggplot2::.pt) +
-      annotate("text", x=max_axis_x - (max_axis_x - min_axis_x)*0.25, y=max_axis_y - (max_axis_y - min_axis_y)*0.13,
-               label=plab, size=ps/ggplot2::.pt) +
+      annotate("text", x=max_axis_x - (max_axis_x - min_axis_x)*0.45, y=max_axis_y - (max_axis_y - min_axis_y)*0.03,
+               label=r2lab, size=ps/ggplot2::.pt, hjust = 0) +
+      annotate("text", x=max_axis_x - (max_axis_x - min_axis_x)*0.45, y=max_axis_y - (max_axis_y - min_axis_y)*0.13,
+               label=plab, size=ps/ggplot2::.pt, hjust = 0) +
       coord_cartesian(xlim=c(min_axis_x, max_axis_x), ylim=c(min_axis_y, max_axis_y), clip='on') +
       theme_plot2 +
       theme(plot.title = element_text(size=ps, face = "bold"),
@@ -411,9 +411,9 @@ lm_dist_beta <- function(cell_list, mvtime, ssm_path,
 
 
     ## Plotting
-    r2 <- formatC(summary(model)$r.squared, digits=2)
+    r2 <- format(summary(model)$r.squared, digits=2, nsmall = 2)
     p <- formatC(summary(model)$coefficients[2,4], digits = 2, format = "e")
-    r2lab <- bquote(paste(R^2, " = ", .(r2), sep=""))
+    r2lab <- bquote(paste(italic(R^2), " = ", .(r2), sep=""))
     plab <- bquote(paste(italic(P), " = ", .(p), sep=""))
 
     min_axis_y <- min(df_new$mean_alpha) - diff(range(df_new$mean_alpha))*0.1
@@ -425,10 +425,10 @@ lm_dist_beta <- function(cell_list, mvtime, ssm_path,
       geom_line(data = conf_interval2, aes(x=distance, y=fit), color = "steelblue", size = 1) +
       geom_ribbon(data = conf_interval2, aes(x=distance, ymin = lwr, ymax = upr), alpha = 0.4, fill = "steelblue") +
       geom_point(data = df_new, aes(x=distance, y=mean_alpha), size=0.8, alpha=0.5) +
-      annotate("text", x=max_axis_x - (max_axis_x - min_axis_x)*0.25, y=max_axis_y - (max_axis_y - min_axis_y)*0.03,
-               label=r2lab, size=ps/ggplot2::.pt) +
-      annotate("text", x=max_axis_x - (max_axis_x - min_axis_x)*0.25, y=max_axis_y - (max_axis_y - min_axis_y)*0.13,
-               label=plab, size=ps/ggplot2::.pt) +
+      annotate("text", x=max_axis_x - (max_axis_x - min_axis_x)*0.45, y=max_axis_y - (max_axis_y - min_axis_y)*0.03,
+               label=r2lab, size=ps/ggplot2::.pt, hjust = 0) +
+      annotate("text", x=max_axis_x - (max_axis_x - min_axis_x)*0.45, y=max_axis_y - (max_axis_y - min_axis_y)*0.13,
+               label=plab, size=ps/ggplot2::.pt, hjust = 0) +
       coord_cartesian(xlim=c(min_axis_x, max_axis_x), ylim=c(min_axis_y, max_axis_y), clip='on') +
       theme_plot2 +
       theme(plot.title = element_text(size=ps, face = "bold"),
@@ -452,9 +452,9 @@ lm_dist_beta <- function(cell_list, mvtime, ssm_path,
 
 
     ## Plotting
-    r2 <- formatC(summary(model)$r.squared, digits=2)
+    r2 <- format(summary(model)$r.squared, digits=2, nsmall = 2)
     p <- formatC(summary(model)$coefficients[2,4], digits = 2, format = "e")
-    r2lab <- bquote(paste(R^2, " = ", .(r2), sep=""))
+    r2lab <- bquote(paste(italic(R^2), " = ", .(r2), sep=""))
     plab <- bquote(paste(italic(P), " = ", .(p), sep=""))
 
     min_axis_y <- min(df_new$most_alpha) - diff(range(df_new$most_alpha))*0.1
@@ -466,10 +466,10 @@ lm_dist_beta <- function(cell_list, mvtime, ssm_path,
       geom_line(data = conf_interval2, aes(x=distance, y=fit), color = "steelblue", size = 1) +
       geom_ribbon(data = conf_interval2, aes(x=distance, ymin = lwr, ymax = upr), alpha = 0.4, fill = "steelblue") +
       geom_point(data = df_new, aes(x=distance, y=most_alpha), size=0.8, alpha=0.5) +
-      annotate("text", x=max_axis_x - (max_axis_x - min_axis_x)*0.25, y=max_axis_y - (max_axis_y - min_axis_y)*0.03,
-               label=r2lab, size=ps/ggplot2::.pt) +
-      annotate("text", x=max_axis_x - (max_axis_x - min_axis_x)*0.25, y=max_axis_y - (max_axis_y - min_axis_y)*0.13,
-               label=plab, size=ps/ggplot2::.pt) +
+      annotate("text", x=max_axis_x - (max_axis_x - min_axis_x)*0.45, y=max_axis_y - (max_axis_y - min_axis_y)*0.03,
+               label=r2lab, size=ps/ggplot2::.pt, hjust = 0) +
+      annotate("text", x=max_axis_x - (max_axis_x - min_axis_x)*0.45, y=max_axis_y - (max_axis_y - min_axis_y)*0.13,
+               label=plab, size=ps/ggplot2::.pt, hjust = 0) +
       coord_cartesian(xlim=c(min_axis_x, max_axis_x), ylim=c(min_axis_y, max_axis_y), clip='on') +
       theme_plot2 +
       theme(plot.title = element_text(size=ps, face = "bold"),
@@ -615,9 +615,9 @@ lm_dist_beta <- function(cell_list, mvtime, ssm_path,
 
 
     ## Plotting
-    r2 <- formatC(summary(model)$r.squared, digits=2)
+    r2 <- format(summary(model)$r.squared, digits=2, nsmall = 2)
     p <- formatC(summary(model)$coefficients[2,4], digits = 2, format = "e")
-    r2lab <- bquote(paste(R^2, " = ", .(r2), sep=""))
+    r2lab <- bquote(paste(italic(R^2), " = ", .(r2), sep=""))
     plab <- bquote(paste(italic(P), " = ", .(p), sep=""))
 
     min_axis_y <- min(df_new$mean_b) - diff(range(df_new$mean_b))*0.1
@@ -629,10 +629,10 @@ lm_dist_beta <- function(cell_list, mvtime, ssm_path,
       geom_line(data = conf_interval2, aes(x=distance, y=fit), color = "steelblue", size = 1) +
       geom_ribbon(data = conf_interval2, aes(x=distance, ymin = lwr, ymax = upr), alpha = 0.4, fill = "steelblue") +
       geom_point(data = df_new, aes(x=distance, y=mean_b), size=0.8, alpha=0.5) +
-      annotate("text", x=max_axis_x - (max_axis_x - min_axis_x)*0.25, y=max_axis_y - (max_axis_y - min_axis_y)*0.03,
-               label=r2lab, size=ps/ggplot2::.pt) +
-      annotate("text", x=max_axis_x - (max_axis_x - min_axis_x)*0.25, y=max_axis_y - (max_axis_y - min_axis_y)*0.13,
-               label=plab, size=ps/ggplot2::.pt) +
+      annotate("text", x=max_axis_x - (max_axis_x - min_axis_x)*0.45, y=max_axis_y - (max_axis_y - min_axis_y)*0.03,
+               label=r2lab, size=ps/ggplot2::.pt, hjust = 0) +
+      annotate("text", x=max_axis_x - (max_axis_x - min_axis_x)*0.45, y=max_axis_y - (max_axis_y - min_axis_y)*0.13,
+               label=plab, size=ps/ggplot2::.pt, hjust = 0) +
       coord_cartesian(xlim=c(min_axis_x, max_axis_x), ylim=c(min_axis_y, max_axis_y), clip='on') +
       theme_plot2 +
       theme(plot.title = element_text(size=ps, face = "bold"),
@@ -656,9 +656,9 @@ lm_dist_beta <- function(cell_list, mvtime, ssm_path,
 
 
     ## Plotting
-    r2 <- formatC(summary(model)$r.squared, digits=2)
+    r2 <- format(summary(model)$r.squared, digits=2, nsmall = 2)
     p <- formatC(summary(model)$coefficients[2,4], digits = 2, format = "e")
-    r2lab <- bquote(paste(R^2, " = ", .(r2), sep=""))
+    r2lab <- bquote(paste(italic(R^2), " = ", .(r2), sep=""))
     plab <- bquote(paste(italic(P), " = ", .(p), sep=""))
 
     min_axis_y <- min(df_new$most_b) - diff(range(df_new$most_b))*0.1
@@ -670,10 +670,10 @@ lm_dist_beta <- function(cell_list, mvtime, ssm_path,
       geom_line(data = conf_interval2, aes(x=distance, y=fit), color = "steelblue", size = 1) +
       geom_ribbon(data = conf_interval2, aes(x=distance, ymin = lwr, ymax = upr), alpha = 0.4, fill = "steelblue") +
       geom_point(data = df_new, aes(x=distance, y=most_b), size=0.8, alpha=0.5) +
-      annotate("text", x=max_axis_x - (max_axis_x - min_axis_x)*0.25, y=max_axis_y - (max_axis_y - min_axis_y)*0.03,
-               label=r2lab, size=ps/ggplot2::.pt) +
-      annotate("text", x=max_axis_x - (max_axis_x - min_axis_x)*0.25, y=max_axis_y - (max_axis_y - min_axis_y)*0.13,
-               label=plab, size=ps/ggplot2::.pt) +
+      annotate("text", x=max_axis_x - (max_axis_x - min_axis_x)*0.45, y=max_axis_y - (max_axis_y - min_axis_y)*0.03,
+               label=r2lab, size=ps/ggplot2::.pt, hjust = 0) +
+      annotate("text", x=max_axis_x - (max_axis_x - min_axis_x)*0.45, y=max_axis_y - (max_axis_y - min_axis_y)*0.13,
+               label=plab, size=ps/ggplot2::.pt, hjust = 0) +
       coord_cartesian(xlim=c(min_axis_x, max_axis_x), ylim=c(min_axis_y, max_axis_y), clip='on') +
       theme_plot2 +
       theme(plot.title = element_text(size=ps, face = "bold"),
@@ -696,9 +696,9 @@ lm_dist_beta <- function(cell_list, mvtime, ssm_path,
 
 
     ## Plotting
-    r2 <- formatC(summary(model)$r.squared, digits=2)
+    r2 <- format(summary(model)$r.squared, digits=2, nsmall = 2)
     p <- formatC(summary(model)$coefficients[2,4], digits = 2, format = "e")
-    r2lab <- bquote(paste(R^2, " = ", .(r2), sep=""))
+    r2lab <- bquote(paste(italic(R^2), " = ", .(r2), sep=""))
     plab <- bquote(paste(italic(P), " = ", .(p), sep=""))
 
     min_axis_y <- min(df_new$s_b_ex) - diff(range(df_new$s_b_ex))*0.1
@@ -710,10 +710,10 @@ lm_dist_beta <- function(cell_list, mvtime, ssm_path,
       geom_line(data = conf_interval2, aes(x=distance, y=fit), color = "steelblue", size = 1) +
       geom_ribbon(data = conf_interval2, aes(x=distance, ymin = lwr, ymax = upr), alpha = 0.4, fill = "steelblue") +
       geom_point(data = df_new, aes(x=distance, y=s_b_ex), size=0.8, alpha=0.5) +
-      annotate("text", x=max_axis_x - (max_axis_x - min_axis_x)*0.25, y=max_axis_y - (max_axis_y - min_axis_y)*0.03,
-               label=r2lab, size=ps/ggplot2::.pt) +
-      annotate("text", x=max_axis_x - (max_axis_x - min_axis_x)*0.25, y=max_axis_y - (max_axis_y - min_axis_y)*0.13,
-               label=plab, size=ps/ggplot2::.pt) +
+      annotate("text", x=max_axis_x - (max_axis_x - min_axis_x)*0.45, y=max_axis_y - (max_axis_y - min_axis_y)*0.03,
+               label=r2lab, size=ps/ggplot2::.pt, hjust = 0) +
+      annotate("text", x=max_axis_x - (max_axis_x - min_axis_x)*0.45, y=max_axis_y - (max_axis_y - min_axis_y)*0.13,
+               label=plab, size=ps/ggplot2::.pt, hjust = 0) +
       coord_cartesian(xlim=c(min_axis_x, max_axis_x), ylim=c(min_axis_y, max_axis_y), clip='on') +
       theme_plot2 +
       theme(plot.title = element_text(size=ps, face = "bold"),

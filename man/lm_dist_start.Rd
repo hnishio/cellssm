@@ -74,8 +74,8 @@ glist <- lm_dist_start(cell_list = cell_list, mvtime = chloroplast_mvtime,
 g <- glist[[1]] + glist[[2]] + glist[[3]] + glist[[4]] + glist[[5]] +
   patchwork::plot_layout(ncol = 3)
 
-ggplot2::ggsave(paste0(out, "/individual_chloroplast_lm_dist_start.pdf"),
-                g, height = 110, width = 50*3, units = "mm")
+suppressWarnings(ggplot2::ggsave(paste0(out, "/individual_chloroplast_lm_dist_start.pdf"),
+                                 g, height = 110, width = 50*3, units = "mm"))
 
 
 
@@ -101,7 +101,7 @@ glist <- lm_dist_start(cell_list = cell_list, mvtime = Paramecium_mvtime,
 
 # Save output
 g <- glist[[1]]
-ggplot2::ggsave(paste0(out, "/individual_Paramecium_lm_dist_start.pdf"),
-                g, height = 50, width = 50, units = "mm")
+suppressWarnings(ggplot2::ggsave(paste0(out, "/individual_Paramecium_lm_dist_start.pdf"),
+                                 g, height = 50, width = 50, units = "mm"))
 
 }

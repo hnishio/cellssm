@@ -176,11 +176,31 @@ lm_signal <- function(cell_list, mvtime,
     min_axis_y <- min(df$distance) - range_y*0.1
     max_axis_y <- max(df$distance) + range_y*0.1
 
+    ##### Linear regression (x: predicted, y: distance) #####
+    model <- stats::lm(data$distance ~ data$predicted)
+    #newx = seq(min(data$predicted), max(data$predicted), by = 0.1)
+    #suppressWarnings(conf_interval <- stats::predict(model, newdata=data.frame(x=newx), interval="confidence", level = 0.95))
+    #conf_interval2 <- as.data.frame(cbind(data$predicted, conf_interval)[order(data$predicted, decreasing = F),])
+    #names(conf_interval2)[1] <- "predicted"
+
+    r2 <- format(summary(model)$r.squared, digits=2, nsmall = 2)
+    r2lab <- bquote(paste(italic(R^2), " = ", .(r2), sep=""))
+
+    intercept <- format(summary(model)$coefficients[1,1], digits=2, nsmall = 2)
+    coefficient <- format(summary(model)$coefficients[2,1], digits=2, nsmall = 2)
+    equationlab <- bquote(paste(italic(y), " = ", .(intercept), " + ", .(coefficient), " ", italic(x), sep=""))
+    if(as.numeric(coefficient) < 0){
+      coefficient <- format(-summary(model)$coefficients[2,1], digits=2, nsmall = 2)
+      equationlab <- bquote(paste(italic(y), " = ", .(intercept), " - ", .(coefficient), " ", italic(x), sep=""))
+    }
+
     glist[[i]] <- ggplot(data, aes(x=predicted, y=distance)) +
       geom_smooth(method="lm", color = "steelblue", fill = "steelblue") +
       geom_point(size=0.8, alpha=0.5) +
-      ggpubr::stat_regline_equation(label.x=min_axis_x+range_x*0.05, label.y=max_axis_y-range_y*0.05, size=ps/ggplot2::.pt) +
-      ggpubr::stat_cor(aes(label=..rr.label..), digits = 2, label.x=min_axis_x+range_x*0.05, label.y=max_axis_y-range_y*0.17, size=ps/ggplot2::.pt) +
+      annotate("text", x=min_axis_x+range_x*0.02, y=max_axis_y-range_y*0.05,
+               label=equationlab, size=ps/ggplot2::.pt, hjust = 0) +
+      annotate("text", x=min_axis_x+range_x*0.02, y=max_axis_y-range_y*0.17,
+               label=r2lab, size=ps/ggplot2::.pt, hjust = 0) +
       coord_cartesian(xlim=c(min_axis_x, max_axis_x), ylim=c(min_axis_y, max_axis_y), clip='on') +
       theme_plot2 +
       theme(plot.title = element_text(size=ps, face = "bold"),
@@ -208,11 +228,26 @@ lm_signal <- function(cell_list, mvtime,
     min_axis_y <- min(df$distance) - range_y*0.1
     max_axis_y <- max(df$distance) + range_y*0.1
 
+    model <- stats::lm(data$distance ~ data$predicted)
+
+    r2 <- format(summary(model)$r.squared, digits=2, nsmall = 2)
+    r2lab <- bquote(paste(italic(R^2), " = ", .(r2), sep=""))
+
+    intercept <- format(summary(model)$coefficients[1,1], digits=2, nsmall = 2)
+    coefficient <- format(summary(model)$coefficients[2,1], digits=2, nsmall = 2)
+    equationlab <- bquote(paste(italic(y), " = ", .(intercept), " + ", .(coefficient), " ", italic(x), sep=""))
+    if(as.numeric(coefficient) < 0){
+      coefficient <- format(-summary(model)$coefficients[2,1], digits=2, nsmall = 2)
+      equationlab <- bquote(paste(italic(y), " = ", .(intercept), " - ", .(coefficient), " ", italic(x), sep=""))
+    }
+
     glist[[length(cell_list) + 1]] <- ggplot(data, aes(x=predicted, y=distance)) +
       geom_smooth(method="lm", color = "steelblue", fill = "steelblue") +
       geom_point(size=0.8, alpha=0.5) +
-      ggpubr::stat_regline_equation(label.x=min_axis_x+range_x*0.05, label.y=max_axis_y-range_y*0.05, size=ps/ggplot2::.pt) +
-      ggpubr::stat_cor(aes(label=..rr.label..), digits = 2, label.x=min_axis_x+range_x*0.05, label.y=max_axis_y-range_y*0.17, size=ps/ggplot2::.pt) +
+      annotate("text", x=min_axis_x+range_x*0.02, y=max_axis_y-range_y*0.05,
+               label=equationlab, size=ps/ggplot2::.pt, hjust = 0) +
+      annotate("text", x=min_axis_x+range_x*0.02, y=max_axis_y-range_y*0.17,
+               label=r2lab, size=ps/ggplot2::.pt, hjust = 0) +
       coord_cartesian(xlim=c(min_axis_x, max_axis_x), ylim=c(min_axis_y, max_axis_y), clip='on') +
       theme_plot2 +
       theme(plot.title = element_text(size=ps, face = "bold"),

@@ -48,8 +48,8 @@
 #' g <- glist[[1]] + glist[[2]] + glist[[3]] + glist[[4]] + glist[[5]] +
 #'   patchwork::plot_layout(ncol = 3)
 #'
-#' ggplot2::ggsave(paste0(out, "/individual_chloroplast_lm_dist_start.pdf"),
-#'                 g, height = 110, width = 50*3, units = "mm")
+#' suppressWarnings(ggplot2::ggsave(paste0(out, "/individual_chloroplast_lm_dist_start.pdf"),
+#'                                  g, height = 110, width = 50*3, units = "mm"))
 #'
 #'
 #'
@@ -75,8 +75,8 @@
 #'
 #' # Save output
 #' g <- glist[[1]]
-#' ggplot2::ggsave(paste0(out, "/individual_Paramecium_lm_dist_start.pdf"),
-#'                 g, height = 50, width = 50, units = "mm")
+#' suppressWarnings(ggplot2::ggsave(paste0(out, "/individual_Paramecium_lm_dist_start.pdf"),
+#'                                  g, height = 50, width = 50, units = "mm"))
 #'
 #' @export
 #'
@@ -174,11 +174,27 @@ lm_dist_start <- function(cell_list, mvtime,
     min_axis_y <- min(df$predicted) - range_y*0.1
     max_axis_y <- max(df$predicted) + range_y*0.1
 
+    ##### Linear regression (x: distance, y: predicted) #####
+    model <- stats::lm(data$predicted ~ data$distance)
+
+    r2 <- format(summary(model)$r.squared, digits=2, nsmall = 2)
+    r2lab <- bquote(paste(italic(R^2), " = ", .(r2), sep=""))
+
+    intercept <- format(summary(model)$coefficients[1,1], digits=2, nsmall = 2)
+    coefficient <- format(summary(model)$coefficients[2,1], digits=2, nsmall = 2)
+    equationlab <- bquote(paste(italic(y), " = ", .(intercept), " + ", .(coefficient), " ", italic(x), sep=""))
+    if(as.numeric(coefficient) < 0){
+      coefficient <- format(-summary(model)$coefficients[2,1], digits=2, nsmall = 2)
+      equationlab <- bquote(paste(italic(y), " = ", .(intercept), " - ", .(coefficient), " ", italic(x), sep=""))
+    }
+
     glist[[i]] <- ggplot(data, aes(x=distance, y=predicted)) +
       geom_smooth(method="lm", color = "steelblue", fill = "steelblue") +
       geom_point(size=0.8, alpha=0.5) +
-      ggpubr::stat_regline_equation(label.x=min_axis_x+range_x*0.05, label.y=max_axis_y-range_y*0.05, size=ps/ggplot2::.pt) +
-      ggpubr::stat_cor(aes(label=..rr.label..), digits = 2, label.x=min_axis_x+range_x*0.05, label.y=max_axis_y-range_y*0.17, size=ps/ggplot2::.pt) +
+      annotate("text", x=min_axis_x+range_x*0.02, y=max_axis_y-range_y*0.05,
+               label=equationlab, size=ps/ggplot2::.pt, hjust = 0) +
+      annotate("text", x=min_axis_x+range_x*0.02, y=max_axis_y-range_y*0.17,
+               label=r2lab, size=ps/ggplot2::.pt, hjust = 0) +
       coord_cartesian(xlim=c(min_axis_x, max_axis_x), ylim=c(min_axis_y, max_axis_y), clip='on') +
       theme_plot2 +
       theme(plot.title = element_text(size=ps, face = "bold"),
@@ -206,11 +222,26 @@ lm_dist_start <- function(cell_list, mvtime,
     min_axis_y <- min(df$predicted) - range_y*0.1
     max_axis_y <- max(df$predicted) + range_y*0.1
 
+    model <- stats::lm(data$predicted ~ data$distance)
+
+    r2 <- format(summary(model)$r.squared, digits=2, nsmall = 2)
+    r2lab <- bquote(paste(italic(R^2), " = ", .(r2), sep=""))
+
+    intercept <- format(summary(model)$coefficients[1,1], digits=2, nsmall = 2)
+    coefficient <- format(summary(model)$coefficients[2,1], digits=2, nsmall = 2)
+    equationlab <- bquote(paste(italic(y), " = ", .(intercept), " + ", .(coefficient), " ", italic(x), sep=""))
+    if(as.numeric(coefficient) < 0){
+      coefficient <- format(-summary(model)$coefficients[2,1], digits=2, nsmall = 2)
+      equationlab <- bquote(paste(italic(y), " = ", .(intercept), " - ", .(coefficient), " ", italic(x), sep=""))
+    }
+
     glist[[length(cell_list) + 1]] <- ggplot(data, aes(x=distance, y=predicted)) +
       geom_smooth(method="lm", color = "steelblue", fill = "steelblue") +
       geom_point(size=0.8, alpha=0.5) +
-      ggpubr::stat_regline_equation(label.x=min_axis_x+range_x*0.05, label.y=max_axis_y-range_y*0.05, size=ps/ggplot2::.pt) +
-      ggpubr::stat_cor(aes(label=..rr.label..), digits = 2, label.x=min_axis_x+range_x*0.05, label.y=max_axis_y-range_y*0.17, size=ps/ggplot2::.pt) +
+      annotate("text", x=min_axis_x+range_x*0.02, y=max_axis_y-range_y*0.05,
+               label=equationlab, size=ps/ggplot2::.pt, hjust = 0) +
+      annotate("text", x=min_axis_x+range_x*0.02, y=max_axis_y-range_y*0.17,
+               label=r2lab, size=ps/ggplot2::.pt, hjust = 0) +
       coord_cartesian(xlim=c(min_axis_x, max_axis_x), ylim=c(min_axis_y, max_axis_y), clip='on') +
       theme_plot2 +
       theme(plot.title = element_text(size=ps, face = "bold"),

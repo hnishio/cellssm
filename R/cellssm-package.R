@@ -46,6 +46,5 @@
 #' @aliases cellssm
 #' @import ggplot2
 #' @import patchwork
-#' @import KFAS
 #'
 NULL

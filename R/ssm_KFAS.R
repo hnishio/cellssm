@@ -2,7 +2,7 @@
 #' Inference of the state-space model by the Kalman filter
 #'
 #' \code{ssm_KFAS} estimates the parameters of the state-space model to
-#' analyse the velocity of individual cells or organelles by the Kalman filter using the [KFAS] package.
+#' analyse the velocity of individual cells or organelles by the Kalman filter using the KFAS package.
 #' It estimates the credible intervals of the parameters and the start time of
 #' the influence of an explanatory variable in the regression model.
 #'
@@ -116,6 +116,12 @@ ssm_KFAS <- function(cell_list, visual = NULL, out,
                      res_name, ex_name, unit1, unit2,
                      shade = TRUE, start_line = TRUE, ps = 7, theme_plot = "bw"){
 
+  ## Dependency on KFAS
+  if(!requireNamespace("KFAS", quietly = TRUE)){
+    stop("Package \"KFAS\" must be installed to use this function.",
+         call. = FALSE)
+  }
+
 
   ## Binding variables locally to the function
   index <- time <- `alpha_2.5%` <- `alpha_97.5%` <- `alpha_50%` <-
@@ -148,7 +154,8 @@ ssm_KFAS <- function(cell_list, visual = NULL, out,
       # Definition of model
       ex = cell_list[[i]]$ex[-1]
       Y = diff(cell_list[[i]][,j+2])
-      modReg <- SSModel(
+      SSMregression <- KFAS::SSMregression
+      modReg <- KFAS::SSModel(
         H = NA,
         as.numeric(Y) ~
           SSMregression(~ ex, Q = NA, a1 = 0)
@@ -157,7 +164,7 @@ ssm_KFAS <- function(cell_list, visual = NULL, out,
       modReg["P1inf", 1,1] <- 0
 
       # Estimation of parameters
-      fitReg <- fitSSM(modReg, inits = c(0,0))
+      fitReg <- KFAS::fitSSM(modReg, inits = c(0,0))
 
       # System noise and observation error
       df_s <- data.frame(cell = i,
