@@ -208,6 +208,8 @@ dist_vis <- function(cell_list, df_name = "cell", res_name, ex_name, unit1, unit
            y = label_y)
 
     # for loop of response variable
+    viridis_test <- viridisLite::plasma(10)
+
     for(j in 1:(ncol(cell_list[[i]])-2)){
       if(col == "viridis"){
         g <- g + eval(parse(text = paste("geom_line(aes(y = cell_list[[", i, "]][,", j+2, "]), col = as.vector(viridisLite::viridis(", (ncol(cell_list[[i]])-2), "))[", j, "])", sep="")))

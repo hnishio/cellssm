@@ -1,4 +1,6 @@
 
+This is the first submission of the cellssm package
+
 ## Test environments
 * macOS 11.6.4, R 4.1.1
 * Windows 10, R 4.2.2
