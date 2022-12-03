@@ -6,18 +6,18 @@ library(cellssm)
 
 # Load data of chloroplast movements
 data("cell1", "cell2", "cell3", "cell4", "visual")
-cell_list <- list(cell1, cell2, cell3, cell4)
+cell_list <- list(cell1[,1:5])
 
 # Predict movement
 
 # When you want to compare the statistical and visual estimation of the start time
-nomodel(cell_list = cell_list, visual = visual, out = "04_nomodel",
+nomodel(cell_list = cell_list, visual = visual[1:3,], out = "04_nomodel",
         res_name = "chloroplast", ex_name = "microbeam",
         unit1 = "micrometer", unit2 = "min")
 
 # Test
 test_that("length of the output is correct", {
-  expect_equal(length(list.files("04_nomodel")), 51)
+  expect_equal(length(list.files("04_nomodel")), 4)
 })
 
 unlink("04_nomodel", recursive = T)
@@ -28,7 +28,7 @@ unlink("04_nomodel", recursive = T)
 
 # Load data
 data("Paramecium")
-cell_list <- list(Paramecium)
+cell_list <- list(Paramecium[,1:5])
 
 # Predict movement
 nomodel(cell_list = cell_list, out = "14_nomodel",
@@ -38,7 +38,7 @@ nomodel(cell_list = cell_list, out = "14_nomodel",
 
 # Test
 test_that("length of the output is correct", {
-  expect_equal(length(list.files("14_nomodel")), 11)
+  expect_equal(length(list.files("14_nomodel")), 4)
 })
 
 unlink("14_nomodel", recursive = T)

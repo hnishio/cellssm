@@ -5,19 +5,19 @@
 library(cellssm)
 
 # Load data of chloroplast movements
-data("cell1", "cell2", "cell3", "cell4", "visual")
-cell_list <- list(cell1, cell2, cell3, cell4)
+data("cell1", "visual")
+cell_list <- list(cell1[,1:5])
 
 # Execution of state-space modeling
 
 # Test
 test_that("length of the output is correct", {
   skip_if_not_installed("KFAS")
-  ssm_KFAS(cell_list = cell_list, visual = visual, out = "03_ssm_KFAS",
+  ssm_KFAS(cell_list = cell_list, visual = visual[1:3,], out = "03_ssm_KFAS",
            res_name = "chloroplast", ex_name = "microbeam",
            unit1 = "micrometer", unit2 = "min")
-  expect_equal(length(list.files("03_ssm_KFAS/csv")), 52)
-  expect_equal(length(list.files("03_ssm_KFAS/pdf")), 50)
+  expect_equal(length(list.files("03_ssm_KFAS/csv")), 5)
+  expect_equal(length(list.files("03_ssm_KFAS/pdf")), 3)
 })
 
 unlink("03_ssm_KFAS", recursive = T)
@@ -28,7 +28,7 @@ unlink("03_ssm_KFAS", recursive = T)
 
 # Load data
 data("Paramecium")
-cell_list <- list(Paramecium)
+cell_list <- list(Paramecium[,1:5])
 
 
 # Execution of state-space modeling
@@ -40,8 +40,8 @@ cell_list <- list(Paramecium)
              ex_sign = "positive", df_name = "experiment",
              res_name = "Paramecium", ex_name = "heat",
              unit1 = "millimeter", unit2 = "sec")
-    expect_equal(length(list.files("13_ssm_KFAS/csv")), 12)
-    expect_equal(length(list.files("13_ssm_KFAS/pdf")), 10)
+    expect_equal(length(list.files("13_ssm_KFAS/csv")), 5)
+    expect_equal(length(list.files("13_ssm_KFAS/pdf")), 3)
   })
 
 unlink("13_ssm_KFAS", recursive = T)

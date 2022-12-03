@@ -96,8 +96,9 @@ quantile99 <- function(x){
 #'
 #' ### Real data example of chloroplast accumulation responses to a blue microbeam ###
 #'
-#' # Load package
+#' # Load packages
 #' library(cellssm)
+#' library(cmdstanr)
 #'
 #' # Load data
 #' data("cell1", "cell2", "cell3", "cell4", "chloroplast_mvtime")
@@ -112,7 +113,7 @@ quantile99 <- function(x){
 #' if (require("cmdstanr")) {
 #'
 #'   # Set the path to which CmdStan was installed
-#'   cmdstanr::set_cmdstan_path("~/cmdstan/")
+#'   set_cmdstan_path("~/cmdstan/")
 #'
 #'   # With the data frame of the movement time. This is recommended.
 #'   ssm_common(cell_list = cell_list, mvtime = chloroplast_mvtime, out = "08_ssm_common",
@@ -132,6 +133,7 @@ quantile99 <- function(x){
 #'
 #' # Load package
 #' library(cellssm)
+#' library(cmdstanr)
 #'
 #' # Load data
 #' data("Paramecium", "Paramecium_mvtime")
@@ -146,7 +148,7 @@ quantile99 <- function(x){
 #' if (require("cmdstanr")) {
 #'
 #'   # Set the path where CmdStan was installed
-#'   cmdstanr::set_cmdstan_path("~/cmdstan/")
+#'   set_cmdstan_path("~/cmdstan/")
 #'
 #'   # With the data frame of the movement time. This is recommended
 #'   ssm_common(cell_list = cell_list, mvtime = Paramecium_mvtime, out = "18_ssm_common",
@@ -232,7 +234,7 @@ ssm_common <- function(cell_list, mvtime=NULL, out, warmup=1000, sampling=1000, 
   }else{
     stan_file <- system.file("extdata", "common_model.stan", package = "cellssm")
   }
-  model <- cmdstanr::cmdstan_model(stan_file)
+  model <- cmdstan_model(stan_file)
 
 
   ## Execution of the Bayesian inference
