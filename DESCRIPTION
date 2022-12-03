@@ -1,12 +1,12 @@
 Package: cellssm
-Title: State-space Modeling for the Directional Movement of Cells
+Title: State-Space Modeling for the Directional Movement of Cells
 Version: 1.0.0
 Authors@R: c(
     person("Haruki", "Nishio", , "harukin218@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-6124-782X")),
 	person("Satoyuki", "Hirano", , "mc226592@s.utsunomiya-u.ac.jp", role = c("ctb")),
 	person("Yutaka", "Kodama", , "kodama@cc.utsunomiya-u.ac.jp", role = c("ctb")))
-Description: cellssm provides an easy way to analyse the time series of distances of 
+Description: An easy way for molecular biologists to analyse the time series of distances of 
 	cells or organelles from an external stimulus. Using this package, one can estimate 
 	the true dynamics from noisy movement data, extract the common dynamics among 
 	multiple cells or organelles, and estimate the start time of the movements.
@@ -23,11 +23,11 @@ Imports:
     stringr (>= 1.4.0),
     RobustLinearReg (>= 1.2.0),
     viridisLite (>= 0.4.0),
-    stats,
-    cmdstanr
+    stats
 Depends: 
     R (>= 3.5.0)
 Suggests: 
+    cmdstanr (>= 0.5.2),
     KFAS (>= 1.4.6),
     knitr,
     rmarkdown,

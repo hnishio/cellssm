@@ -134,7 +134,8 @@ Install Git and execute a few commands in the Terminal app on Mac or
 the Git Bash app on Windows.
 }
 \examples{
-# For the first-time usage, install CmdStan
+# For the first-time usage, install the cmdstanr package (>= 0.5.2)
+# (https://mc-stan.org/cmdstanr/index.html) and CmdStan
 # (https://mc-stan.org/docs/cmdstan-guide/cmdstan-installation.html)
 
 

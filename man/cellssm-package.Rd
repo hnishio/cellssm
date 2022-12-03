@@ -4,7 +4,7 @@
 \name{cellssm-package}
 \alias{cellssm-package}
 \alias{cellssm}
-\title{cellssm: State-space Modelling for the Directional Movement of Cells}
+\title{cellssm: State-Space Modelling for the Directional Movement of Cells}
 \description{
 \code{cellssm} provides an easy way to analyse the time series of
 distances of cells or organelles from an external stimulus. Using this package,

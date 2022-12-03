@@ -1,5 +1,5 @@
 ---
-title: "cellssm: State-space Modelling for the Directional Movement of Cells"
+title: "cellssm: State-Space Modelling for the Directional Movement of Cells"
 author: "Haruki Nishio"
 date: "2022/12/01"
 output: 
@@ -7,7 +7,7 @@ output:
     toc: true
     toc_depth: 4
 vignette: >
-  %\VignetteIndexEntry{cellssm: State-space Modelling for the Directional Movement of Cells}
+  %\VignetteIndexEntry{cellssm: State-Space Modelling for the Directional Movement of Cells}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -21,7 +21,7 @@ knitr::opts_chunk$set(
 
 
 ## Overview
-The R package cellssm provides an easy way to analyse the time series of distances of cells or organelles from an external stimulus. Using this package, one can estimate the true dynamics from noisy movement data, extract the common dynamics among multiple cells or organelles, and estimate the start time of the movements.
+An easy way for molecular biologists to analyse the time series of distances of cells or organelles from an external stimulus. Using this package, one can estimate the true dynamics from noisy movement data, extract the common dynamics among multiple cells or organelles, and estimate the start time of the movements.
 
 
 ## Details
