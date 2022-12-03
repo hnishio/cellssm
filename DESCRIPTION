@@ -27,7 +27,7 @@ Imports:
 	stats
 Remotes: git::https://github.com/stan-dev/cmdstanr.git
 Depends: 
-    R (>= 3.4.0)
+    R (>= 3.5.0)
 Suggests: 
     KFAS (>= 1.4.6),
     knitr,
