@@ -27,7 +27,6 @@ Imports:
 Depends: 
     R (>= 3.5.0)
 Suggests: 
-    cmdstanr (>= 0.5.2),
     KFAS (>= 1.4.6),
     knitr,
     rmarkdown,

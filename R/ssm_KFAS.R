@@ -79,6 +79,7 @@
 #' cell_list
 #' visual
 #'
+#' \dontrun{
 #' # Execution of state-space modelling
 #'
 #' # When you do not want to compare the statistical and visual estimations of the start time
@@ -93,6 +94,7 @@
 #'   ssm_KFAS(cell_list = cell_list, visual = visual, out = "03_ssm_KFAS",
 #'            res_name = "chloroplast", ex_name = "microbeam",
 #'            unit1 = "micrometer", unit2 = "min")
+#' }
 #' }
 #'
 #'
@@ -109,6 +111,7 @@
 #' # Check the format of input data
 #' cell_list
 #'
+#' \dontrun{
 #' # Execution of state-space modelling
 #'
 #' if (require("KFAS")) {
@@ -116,6 +119,7 @@
 #'            ex_sign = "positive", df_name = "experiment",
 #'            res_name = "Paramecium", ex_name = "heat",
 #'            unit1 = "millimeter", unit2 = "sec")
+#' }
 #' }
 #'
 #' @export

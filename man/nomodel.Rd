@@ -111,6 +111,7 @@ cell_list <- list(cell1, cell2, cell3, cell4)
 cell_list
 visual
 
+\dontrun{
 # Predict movement
 
 # When you do not want to compare the statistical and visual estimations of the start time
@@ -122,6 +123,7 @@ nomodel(cell_list = cell_list, out = "04_nomodel",
 nomodel(cell_list = cell_list, visual = visual, out = "04_nomodel",
         res_name = "chloroplast", ex_name = "microbeam",
         unit1 = "micrometer", unit2 = "min")
+}
 
 
 
@@ -137,10 +139,12 @@ cell_list <- list(Paramecium)
 # Check the format of input data
 cell_list
 
+\dontrun{
 # Predict movement
 nomodel(cell_list = cell_list, out = "14_nomodel",
         ex_sign = "positive", fold = 1, df_name = "experiment",
         res_name = "Paramecium", ex_name = "heat",
         unit1 = "millimeter", unit2 = "sec")
+}
 
 }

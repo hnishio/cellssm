@@ -102,8 +102,9 @@ quantile99 <- function(x){
 #'
 #' ### Real data example of chloroplast accumulation responses to a blue microbeam ###
 #'
-#' # Load package
+#' # Load packages
 #' library(cellssm)
+#' library(cmdstanr)
 #'
 #' # Load data of chloroplast movements
 #' data("cell1", "cell2", "cell3", "cell4", "visual")
@@ -118,7 +119,7 @@ quantile99 <- function(x){
 #' if (require("cmdstanr")) {
 #'
 #'   # Set the path where CmdStan was installed
-#'   cmdstanr::set_cmdstan_path("~/cmdstan/")
+#'   set_cmdstan_path("~/cmdstan/")
 #'
 #'   # When you do not want to compare the statistical and visual estimations of the start time
 #'   ssm_individual(cell_list = cell_list, out = "02_ssm_individual",
@@ -136,8 +137,9 @@ quantile99 <- function(x){
 #'
 #' ### Simulated data example of Paramecium escape responses from laser heating ###
 #'
-#' # Load package
+#' # Load packages
 #' library(cellssm)
+#' library(cmdstanr)
 #'
 #' # Load data
 #' data("Paramecium")
@@ -151,7 +153,7 @@ quantile99 <- function(x){
 #' if (require("cmdstanr")) {
 #'
 #'   # Set the path where CmdStan was installed
-#'   cmdstanr::set_cmdstan_path("~/cmdstan/")
+#'   set_cmdstan_path("~/cmdstan/")
 #'
 #'   ssm_individual(cell_list = cell_list, out = "12_ssm_individual",
 #'                  warmup=1000, sampling=1000, thin=6,
@@ -206,7 +208,7 @@ ssm_individual <- function(cell_list, visual=NULL, out, warmup=1000, sampling=10
 
   # Compile stan file
   stan_file <- system.file("extdata", "individual_model.stan", package = "cellssm")
-  model <- cmdstanr::cmdstan_model(stan_file)
+  model <- cmdstan_model(stan_file)
 
 
   ## Execution of the Bayesian inference
