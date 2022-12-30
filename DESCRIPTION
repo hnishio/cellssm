@@ -1,6 +1,6 @@
 Package: cellssm
 Title: State-Space Modeling for the Directional Movement of Cells
-Version: 1.0.0
+Version: 0.1.0
 Authors@R: c(
     person("Haruki", "Nishio", , "harukin218@gmail.com", role = c("aut", "cre"),
            comment = c(ORCID = "0000-0002-6124-782X")),
