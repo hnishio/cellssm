@@ -143,7 +143,6 @@ the Git Bash app on Windows.
 
 # Load packages
 library(cellssm)
-library(cmdstanr)
 
 # Load data of chloroplast movements
 data("cell1", "cell2", "cell3", "cell4", "visual")
@@ -155,7 +154,6 @@ visual
 
 \dontrun{
 # Execution of state-space modelling
-if (require("cmdstanr")) {
 
   # Set the path where CmdStan was installed
   set_cmdstan_path("~/cmdstan/")
@@ -170,7 +168,6 @@ if (require("cmdstanr")) {
                  res_name = "chloroplast", ex_name = "microbeam",
                  unit1 = "micrometer", unit2 = "min")
 }
-}
 
 
 
@@ -178,7 +175,6 @@ if (require("cmdstanr")) {
 
 # Load packages
 library(cellssm)
-library(cmdstanr)
 
 # Load data
 data("Paramecium")
@@ -189,17 +185,15 @@ cell_list
 
 \dontrun{
 # Execution of state-space modelling
-if (require("cmdstanr")) {
 
   # Set the path where CmdStan was installed
-  set_cmdstan_path("~/cmdstan/")
+  cmdstanr::set_cmdstan_path("~/cmdstan/")
 
   ssm_individual(cell_list = cell_list, out = "12_ssm_individual",
                  warmup=1000, sampling=1000, thin=6,
                  start_sensitivity = 3, ex_sign = "positive", df_name = "experiment",
                  res_name = "Paramecium", ex_name = "heat",
                  unit1 = "millimeter", unit2 = "sec")
-}
 }
 
 }

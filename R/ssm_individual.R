@@ -104,7 +104,6 @@ quantile99 <- function(x){
 #'
 #' # Load packages
 #' library(cellssm)
-#' library(cmdstanr)
 #'
 #' # Load data of chloroplast movements
 #' data("cell1", "cell2", "cell3", "cell4", "visual")
@@ -116,7 +115,6 @@ quantile99 <- function(x){
 #'
 #' \dontrun{
 #' # Execution of state-space modelling
-#' if (require("cmdstanr")) {
 #'
 #'   # Set the path where CmdStan was installed
 #'   set_cmdstan_path("~/cmdstan/")
@@ -131,7 +129,6 @@ quantile99 <- function(x){
 #'                  res_name = "chloroplast", ex_name = "microbeam",
 #'                  unit1 = "micrometer", unit2 = "min")
 #' }
-#' }
 #'
 #'
 #'
@@ -139,7 +136,6 @@ quantile99 <- function(x){
 #'
 #' # Load packages
 #' library(cellssm)
-#' library(cmdstanr)
 #'
 #' # Load data
 #' data("Paramecium")
@@ -150,17 +146,15 @@ quantile99 <- function(x){
 #'
 #' \dontrun{
 #' # Execution of state-space modelling
-#' if (require("cmdstanr")) {
 #'
 #'   # Set the path where CmdStan was installed
-#'   set_cmdstan_path("~/cmdstan/")
+#'   cmdstanr::set_cmdstan_path("~/cmdstan/")
 #'
 #'   ssm_individual(cell_list = cell_list, out = "12_ssm_individual",
 #'                  warmup=1000, sampling=1000, thin=6,
 #'                  start_sensitivity = 3, ex_sign = "positive", df_name = "experiment",
 #'                  res_name = "Paramecium", ex_name = "heat",
 #'                  unit1 = "millimeter", unit2 = "sec")
-#' }
 #' }
 #'
 #' @export
@@ -208,7 +202,7 @@ ssm_individual <- function(cell_list, visual=NULL, out, warmup=1000, sampling=10
 
   # Compile stan file
   stan_file <- system.file("extdata", "individual_model.stan", package = "cellssm")
-  model <- cmdstan_model(stan_file)
+  model <- cmdstanr::cmdstan_model(stan_file)
 
 
   ## Execution of the Bayesian inference
