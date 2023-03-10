@@ -21,3 +21,6 @@
 ^17_lm_signal$
 ^18_ssm_common$
 ^CRAN-SUBMISSION$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$

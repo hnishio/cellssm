@@ -67,7 +67,7 @@ ssm_individual(cell_list = cell_list, out = "02_ssm_individual",
                unit1 = "micrometer", unit2 = "min")
 ```
 
-<img src="man/figures/ssm_individual_cell1_chloroplast1.jpg" width=40.0% />
+<img src="man/figures/ssm_individual_cell1_chloroplast1.jpg" style="width:40.0%" />
 
 This figure is an example of the output files. Dots, solid lines and
 shaded regions are the observed values, medians, and 95% credible

@@ -92,3 +92,4 @@ generated quantities {
   }
   dist = dist - sum(alpha[1:boundary1]);
 }
+
