@@ -160,7 +160,7 @@ quantile99 <- function(x){
 #'
 #' @export
 #'
-ssm_individual <- function(cell_list, visual=NULL, out, seed=12, warmup=1000, sampling=1000, thin=3,
+ssm_individual <- function(cell_list, visual=NULL, out, seed=123, warmup=1000, sampling=1000, thin=3,
                            start_sensitivity = 5, ex_sign = "negative", df_name = "cell",
                            res_name, ex_name, unit1, unit2,
                            shade = TRUE, start_line = TRUE, ps = 7, theme_plot = "bw"){

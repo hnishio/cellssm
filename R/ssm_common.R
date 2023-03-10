@@ -159,7 +159,7 @@ quantile99 <- function(x){
 #'
 #' @export
 #'
-ssm_common <- function(cell_list, mvtime=NULL, out, seed = 12, warmup=1000, sampling=1000, thin=3,
+ssm_common <- function(cell_list, mvtime=NULL, out, seed = 123, warmup=1000, sampling=1000, thin=3,
                        df_name = "cell", res_name, ex_name, unit1, unit2,
                        shade = TRUE, ps = 7, theme_plot = "bw"){
 

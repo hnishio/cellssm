@@ -8,7 +8,7 @@ ssm_individual(
   cell_list,
   visual = NULL,
   out,
-  seed = 12,
+  seed = 123,
   warmup = 1000,
   sampling = 1000,
   thin = 3,
