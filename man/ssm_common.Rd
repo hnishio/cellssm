@@ -8,7 +8,7 @@ ssm_common(
   cell_list,
   mvtime = NULL,
   out,
-  seed = 123,
+  seed = 12,
   warmup = 1000,
   sampling = 1000,
   thin = 3,
