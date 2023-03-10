@@ -8,6 +8,7 @@ ssm_common(
   cell_list,
   mvtime = NULL,
   out,
+  seed = 123,
   warmup = 1000,
   sampling = 1000,
   thin = 3,
@@ -45,6 +46,8 @@ the observed dynamics of all response variables in a data frame are assumed to b
 the common dynamics.}
 
 \item{out}{(character string) The path of the output directory.}
+
+\item{seed}{(positive integer) A seed for random number generation to pass to CmdStan.}
 
 \item{warmup}{(positive integer) The number of warmup iterations of MCMC sampling after thinning.
 The default is 1000.}

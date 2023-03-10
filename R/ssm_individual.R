@@ -29,6 +29,7 @@ quantile99 <- function(x){
 #' the influence of an explanatory variable. First column, cells (column name "cell");
 #' second column, index (column name "index"); third column, start time. The default is `NULL`.
 #' @param out (character string) The path of the output directory.
+#' @param seed (positive integer) A seed for random number generation to pass to CmdStan.
 #' @param warmup (positive integer) The number of warmup iterations of MCMC sampling after thinning.
 #' The default is 1000.
 #' @param sampling (positive integer) The number of post-warmup iterations of MCMC sampling after thinning.
@@ -159,7 +160,7 @@ quantile99 <- function(x){
 #'
 #' @export
 #'
-ssm_individual <- function(cell_list, visual=NULL, out, warmup=1000, sampling=1000, thin=3,
+ssm_individual <- function(cell_list, visual=NULL, out, seed=123, warmup=1000, sampling=1000, thin=3,
                            start_sensitivity = 5, ex_sign = "negative", df_name = "cell",
                            res_name, ex_name, unit1, unit2,
                            shade = TRUE, start_line = TRUE, ps = 7, theme_plot = "bw"){
@@ -237,7 +238,7 @@ ssm_individual <- function(cell_list, visual=NULL, out, warmup=1000, sampling=10
       # Execute MCMC
       fit <- model$sample(
         data = data_list,
-        seed = 1,
+        seed = seed,
         iter_warmup = warmup*thin,
         iter_sampling = sampling*thin,
         chains = 4,

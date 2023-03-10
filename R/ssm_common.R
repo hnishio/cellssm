@@ -38,6 +38,7 @@ quantile99 <- function(x){
 #' the observed dynamics of all response variables in a data frame are assumed to be produced from
 #' the common dynamics.
 #' @param out (character string) The path of the output directory.
+#' @param seed (positive integer) A seed for random number generation to pass to CmdStan.
 #' @param warmup (positive integer) The number of warmup iterations of MCMC sampling after thinning.
 #' The default is 1000.
 #' @param sampling (positive integer) The number of post-warmup iterations of MCMC sampling after thinning.
@@ -158,7 +159,7 @@ quantile99 <- function(x){
 #'
 #' @export
 #'
-ssm_common <- function(cell_list, mvtime=NULL, out, warmup=1000, sampling=1000, thin=3,
+ssm_common <- function(cell_list, mvtime=NULL, out, seed = 123, warmup=1000, sampling=1000, thin=3,
                        df_name = "cell", res_name, ex_name, unit1, unit2,
                        shade = TRUE, ps = 7, theme_plot = "bw"){
 
@@ -272,7 +273,7 @@ ssm_common <- function(cell_list, mvtime=NULL, out, warmup=1000, sampling=1000, 
     # Execute MCMC
     fit <- model$sample(
       data = data_list,
-      seed = 1,
+      seed = seed,
       iter_warmup = warmup*thin,
       iter_sampling = sampling*thin,
       chains = 4,

@@ -8,6 +8,7 @@ ssm_individual(
   cell_list,
   visual = NULL,
   out,
+  seed = 123,
   warmup = 1000,
   sampling = 1000,
   thin = 3,
@@ -37,6 +38,8 @@ the influence of an explanatory variable. First column, cells (column name "cell
 second column, index (column name "index"); third column, start time. The default is \code{NULL}.}
 
 \item{out}{(character string) The path of the output directory.}
+
+\item{seed}{(positive integer) A seed for random number generation to pass to CmdStan.}
 
 \item{warmup}{(positive integer) The number of warmup iterations of MCMC sampling after thinning.
 The default is 1000.}
