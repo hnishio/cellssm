@@ -24,5 +24,6 @@ These directories are created within functions or example codes.
 For ease of use, the main functions are designed to save output files 
 in the created directories. Thus, this is necessary for this package.
 
+
 ## Downstream dependencies
 There is no downstream dependencies for this package.
