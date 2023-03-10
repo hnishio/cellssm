@@ -58,6 +58,7 @@ Real data example of chloroplast accumulation responses to a blue microbeam:
 knitr::opts_chunk$set(eval = F, warning = F, message = F, results = "hide")
 ```
 
+
 ```{r example}
 # Load package
 library(cellssm)
