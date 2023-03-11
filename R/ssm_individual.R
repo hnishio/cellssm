@@ -51,6 +51,10 @@ quantile99 <- function(x){
 #' for file names and graph labels.
 #' @param ex_name (character string) The name of the explanatory variable. This is used
 #' for graph labels.
+#' @param df_idx (positive integer) An index of the data frame. This is used for
+#' file names and graph titles. The default is `NULL`.
+#' @param res_idx (positive integer) An index of the response variable. This is used for
+#' file names and graph titles. The default is `NULL`.
 #' @param unit1 (character string) The unit of the response variable. One of "meter",
 #' "centimeter", "millimeter", "micrometer", "nanometer". If another character
 #' string is given, it is used as it is. This is used for graph labels.
@@ -162,7 +166,7 @@ quantile99 <- function(x){
 #'
 ssm_individual <- function(cell_list, visual=NULL, out, seed=123, warmup=1000, sampling=1000, thin=3,
                            start_sensitivity = 5, ex_sign = "negative", df_name = "cell",
-                           res_name, ex_name, unit1, unit2,
+                           res_name, ex_name, df_idx = NULL, res_idx = NULL, unit1, unit2,
                            shade = TRUE, start_line = TRUE, ps = 7, theme_plot = "bw"){
 
   ## Dependency on cmdstanr
@@ -214,6 +218,13 @@ ssm_individual <- function(cell_list, visual=NULL, out, seed=123, warmup=1000, s
     # for loop of response variable
     for (j in 1:(ncol(cell_list[[i]])-2)){
 
+      # File name
+      if(!is.null(df_idx) & !is.null(res_idx)){
+        file_name <- paste0(df_name, df_idx, "_", res_name, res_idx)
+      }else{
+        file_name <- paste0(df_name, i, "_", res_name, j)
+      }
+
       # Prepare data_list
       data_list <- list(
         N = nrow(cell_list[[i]])-1,
@@ -247,14 +258,14 @@ ssm_individual <- function(cell_list, visual=NULL, out, seed=123, warmup=1000, s
         #show_messages = F,
         #sig_figs = 4,
         output_dir = output_dir,
-        output_basename = paste0("cell", i, "_", res_name, j),
+        output_basename = file_name,
         adapt_delta = 0.95,
         thin = thin
       )
 
       # 99% Bayesian credible intervals
       outcsv_name <- list.files(output_dir)
-      outcsv_name <- outcsv_name[grep(paste0("cell", i, "_", res_name, j, "-"), outcsv_name)]
+      outcsv_name <- outcsv_name[grep(paste0(file_name, "-"), outcsv_name)]
       tmp_csv_w <- NULL
       tmp_csv_b_ex <- NULL
       tmp_csv_alpha <- NULL
@@ -289,8 +300,8 @@ ssm_individual <- function(cell_list, visual=NULL, out, seed=123, warmup=1000, s
                              Y = diff(cell_list[[i]][,j+2])),
                   df_w, df_alpha,
                   as.data.frame(rbind(matrix(NA, nrow = data_list$boundary1, ncol = 21), as.matrix(df_b_ex), matrix(NA, nrow = data_list$N - data_list$boundary2 + 1, ncol = 21))))
-      data.table::fwrite(df, file = paste0(out, "/csv/ssm_individual_", df_name, i, "_", res_name, j, ".csv"))
-      data.table::fwrite(df_s, file = paste0(out, "/csv/ssm_individual_", df_name, i, "_", res_name, j, "_sd.csv"))
+      data.table::fwrite(df, file = paste0(out, "/csv/ssm_individual_", file_name, ".csv"))
+      data.table::fwrite(df_s, file = paste0(out, "/csv/ssm_individual_", file_name, "_sd.csv"))
 
 
       ## Movement time
@@ -532,7 +543,11 @@ ssm_individual <- function(cell_list, visual=NULL, out, seed=123, warmup=1000, s
 
       # Visual
       if(!is.null(visual)){
-        vis <- dplyr::filter(visual, cell == i & index == j)$time
+        if(!is.null(df_idx) & !is.null(res_idx)){
+          vis <- dplyr::filter(visual, cell == df_idx & index == res_idx)$time
+        }else{
+          vis <- dplyr::filter(visual, cell == i & index == j)$time
+        }
         label_statistical <- "Statistical"
         label_visual <- "Visual"
       }else{
@@ -610,8 +625,8 @@ ssm_individual <- function(cell_list, visual=NULL, out, seed=123, warmup=1000, s
       }
 
       # Title of the plots
-      if(length(cell_list) == 1){
-        titles <- paste(stringr::str_to_title(res_name), " ", j, sep="")
+      if(!is.null(df_idx) & !is.null(res_idx)){
+        titles <- paste(stringr::str_to_title(df_name), " ", df_idx, ", ", res_name, " ", res_idx, sep="")
       }else{
         titles <- paste(stringr::str_to_title(df_name), " ", i, ", ", res_name, " ", j, sep="")
       }
@@ -735,7 +750,7 @@ ssm_individual <- function(cell_list, visual=NULL, out, seed=123, warmup=1000, s
       g <- g_dist + g_alpha + g_b_ex + g_w +
         plot_layout(ncol = 1, heights = c(1, 1, 1, 1))
       suppressWarnings(
-        ggsave(paste0(out, "/pdf/ssm_individual_", df_name, i, "_", res_name, j, ".pdf"),
+        ggsave(paste0(out, "/pdf/ssm_individual_", file_name, ".pdf"),
                g, height = ps*20*4/4, width = ps*10*1.2, units = "mm")
       )
 
@@ -746,7 +761,7 @@ ssm_individual <- function(cell_list, visual=NULL, out, seed=123, warmup=1000, s
       bayesplot::color_scheme_set("viridisC")
       bayesplot::bayesplot_theme_set(bayesplot::theme_default(base_size = ps+2, base_family = "sans"))
       g <- bayesplot::mcmc_rhat(bayesplot::rhat(fit))
-      ggsave(paste0(out, "/diagnosis/ssm_individual_rhat_", df_name, i, "_", res_name, j, ".pdf"),
+      ggsave(paste0(out, "/diagnosis/ssm_individual_rhat_", file_name, ".pdf"),
              g, height = ps*20, width = ps*20, units = "mm")
       max_rhat <- names(which.max(bayesplot::rhat(fit)))
 
@@ -758,7 +773,7 @@ ssm_individual <- function(cell_list, visual=NULL, out, seed=123, warmup=1000, s
         pars = c("b_ex[1]", paste0("b_ex[", data_list$N_ex, "]"), "alpha[1]", paste0("alpha[", data_list$N, "]"), max_rhat),
         gg_theme = theme_classic(base_size = ps+2)
       )
-      ggsave(paste0(out, "/diagnosis/ssm_individual_combo_", df_name, i, "_", res_name, j, ".pdf"),
+      ggsave(paste0(out, "/diagnosis/ssm_individual_combo_", file_name, ".pdf"),
              g, height = ps*20, width = ps*20, units = "mm")
 
 

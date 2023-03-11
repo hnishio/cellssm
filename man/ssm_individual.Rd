@@ -17,6 +17,8 @@ ssm_individual(
   df_name = "cell",
   res_name,
   ex_name,
+  df_idx = NULL,
+  res_idx = NULL,
   unit1,
   unit2,
   shade = TRUE,
@@ -69,6 +71,12 @@ for file names and graph labels.}
 
 \item{ex_name}{(character string) The name of the explanatory variable. This is used
 for graph labels.}
+
+\item{df_idx}{(positive integer) An index of the data frame. This is used for
+file names and graph titles. The default is \code{NULL}.}
+
+\item{res_idx}{(positive integer) An index of the response variable. This is used for
+file names and graph titles. The default is \code{NULL}.}
 
 \item{unit1}{(character string) The unit of the response variable. One of "meter",
 "centimeter", "millimeter", "micrometer", "nanometer". If another character

@@ -51,6 +51,8 @@ quantile99 <- function(x){
 #' for file names and graph labels.
 #' @param ex_name (character string) The name of the explanatory variable. This is
 #' used for graph labels.
+#' @param df_idx (positive integer) An index of the data frame. This is used for
+#' file names and graph titles. The default is `NULL`.
 #' @param unit1 (character string) The unit of the response variable. One of "meter",
 #' "centimeter", "millimeter", "micrometer", "nanometer". If another character
 #' string is given, it is used as it is. This is used for graph labels.
@@ -160,7 +162,7 @@ quantile99 <- function(x){
 #' @export
 #'
 ssm_common <- function(cell_list, mvtime=NULL, out, seed = 123, warmup=1000, sampling=1000, thin=3,
-                       df_name = "cell", res_name, ex_name, unit1, unit2,
+                       df_name = "cell", res_name, ex_name, df_idx = NULL, unit1, unit2,
                        shade = TRUE, ps = 7, theme_plot = "bw"){
 
   ## Dependency on cmdstanr
@@ -237,6 +239,13 @@ ssm_common <- function(cell_list, mvtime=NULL, out, seed = 123, warmup=1000, sam
   # for loop of cells
   for(i in 1:length(cell_list)){
 
+    # File name
+    if(!is.null(df_idx)){
+      file_name <- paste0(df_name, df_idx)
+    }else{
+      file_name <- paste0(df_name, i)
+    }
+
     # Prepare data_list
     if(is.null(mvtime)){
       data_list <- list(
@@ -282,14 +291,14 @@ ssm_common <- function(cell_list, mvtime=NULL, out, seed = 123, warmup=1000, sam
       #show_messages = F,
       #sig_figs = 4,
       output_dir = output_dir,
-      output_basename = paste0("cell", i),
+      output_basename = file_name,
       adapt_delta = 0.95,
       thin = thin
     )
 
     # 99% Bayesian credible intervals
     outcsv_name <- list.files(output_dir)
-    outcsv_name <- outcsv_name[grep(paste0("cell", i), outcsv_name)]
+    outcsv_name <- outcsv_name[grep(paste0(file_name, "-"), outcsv_name)]
     tmp_csv_w <- NULL
     tmp_csv_b_ex <- NULL
     tmp_csv_alpha <- NULL
@@ -356,8 +365,8 @@ ssm_common <- function(cell_list, mvtime=NULL, out, seed = 123, warmup=1000, sam
       )))
     }
 
-    data.table::fwrite(dfs, file = paste0(out, "/csv/ssm_common_", df_name, i, ".csv"))
-    data.table::fwrite(df_s, file = paste0(out, "/csv/ssm_common_", df_name, i, "_sd.csv"))
+    data.table::fwrite(dfs, file = paste0(out, "/csv/ssm_common_", file_name, ".csv"))
+    data.table::fwrite(df_s, file = paste0(out, "/csv/ssm_common_", file_name, "_sd.csv"))
 
 
     ## Diagnosis of MCMC
@@ -366,7 +375,7 @@ ssm_common <- function(cell_list, mvtime=NULL, out, seed = 123, warmup=1000, sam
     bayesplot::color_scheme_set("viridisC")
     bayesplot::bayesplot_theme_set(bayesplot::theme_default(base_size = ps+2, base_family = "sans"))
     suppressWarnings(g <- bayesplot::mcmc_rhat(bayesplot::rhat(fit)))
-    suppressWarnings(ggsave(paste0(out, "/diagnosis/ssm_common_rhat_", df_name, i, ".pdf"),
+    suppressWarnings(ggsave(paste0(out, "/diagnosis/ssm_common_rhat_", file_name, ".pdf"),
                             g, height = ps*20, width = ps*20, units = "mm"))
     max_rhat <- names(which.max(bayesplot::rhat(fit)))
 
@@ -378,7 +387,7 @@ ssm_common <- function(cell_list, mvtime=NULL, out, seed = 123, warmup=1000, sam
       pars = c("b_ex[1]", paste0("b_ex[", data_list$N_ex, "]"), "alpha[1]", paste0("alpha[", data_list$N, "]"), max_rhat),
       gg_theme = theme_classic(base_size = ps+2)
     )
-    ggsave(paste0(out, "/diagnosis/ssm_common_combo_", df_name, i, ".pdf"),
+    ggsave(paste0(out, "/diagnosis/ssm_common_combo_", file_name, ".pdf"),
            g, height = ps*20, width = ps*20, units = "mm")
 
 
@@ -410,7 +419,7 @@ ssm_common <- function(cell_list, mvtime=NULL, out, seed = 123, warmup=1000, sam
   for(i in 1:length(cell_list)){
 
     # Load data
-    dfs <- data.table::fread(file = paste0(out, "/csv/ssm_common_", df_name, i, ".csv"))
+    dfs <- data.table::fread(file = paste0(out, "/csv/ssm_common_", file_name, ".csv"))
 
     ymax_dist <- max(dfs$`dist_97.5%`)
     ymax_dist_all <- cbind(ymax_dist_all, ymax_dist)
@@ -440,7 +449,7 @@ ssm_common <- function(cell_list, mvtime=NULL, out, seed = 123, warmup=1000, sam
   for(i in 1:length(cell_list)){
 
     # Load data
-    dfs <- data.table::fread(file = paste0(out, "/csv/ssm_common_", df_name, i, ".csv"))
+    dfs <- data.table::fread(file = paste0(out, "/csv/ssm_common_", file_name, ".csv"))
 
     # Shade
     if(shade == T){
@@ -502,8 +511,8 @@ ssm_common <- function(cell_list, mvtime=NULL, out, seed = 123, warmup=1000, sam
     }
 
     # Title of the plots
-    if(length(cell_list) == 1){
-      titles <- NULL
+    if(!is.null(df_idx)){
+      titles <- paste(stringr::str_to_title(df_name), " ", df_idx, sep="")
     }else{
       titles <- paste(stringr::str_to_title(df_name), " ", i, sep="")
     }
@@ -613,7 +622,7 @@ ssm_common <- function(cell_list, mvtime=NULL, out, seed = 123, warmup=1000, sam
     g <- g_dist + g_velocity + g_b_ex + g_w +
       plot_layout(ncol = 1, heights = c(1, 1, 1, 1))
     suppressWarnings(
-      ggsave(paste0(out, "/pdf/ssm_common_", df_name, i, ".pdf"),
+      ggsave(paste0(out, "/pdf/ssm_common_", file_name, ".pdf"),
              g, height = ps*20*4/4, width = ps*10*1.2, units = "mm")
     )
 
