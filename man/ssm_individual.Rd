@@ -72,11 +72,13 @@ for file names and graph labels.}
 \item{ex_name}{(character string) The name of the explanatory variable. This is used
 for graph labels.}
 
-\item{df_idx}{(positive integer) An index of the data frame. This is used for
-file names and graph titles. The default is \code{NULL}.}
+\item{df_idx}{(integer vector) Indexes of the data frame. This should be set
+only when you want to set the indexes manually. This is used for
+file names and graph titles. The default is \code{NULL} and the indexes are automatically set.}
 
-\item{res_idx}{(positive integer) An index of the response variable. This is used for
-file names and graph titles. The default is \code{NULL}.}
+\item{res_idx}{(integer vector) Indexes of the response variable. This should be set
+only when you want to set the indexes manually. This is used for
+file names and graph titles. The default is \code{NULL} and the indexes are automatically set.}
 
 \item{unit1}{(character string) The unit of the response variable. One of "meter",
 "centimeter", "millimeter", "micrometer", "nanometer". If another character

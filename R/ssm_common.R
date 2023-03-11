@@ -51,8 +51,9 @@ quantile99 <- function(x){
 #' for file names and graph labels.
 #' @param ex_name (character string) The name of the explanatory variable. This is
 #' used for graph labels.
-#' @param df_idx (positive integer) An index of the data frame. This is used for
-#' file names and graph titles. The default is `NULL`.
+#' @param df_idx (integer vector) Indexes of the data frame. This should be set
+#' only when you want to set the indexes manually. This is used for
+#' file names and graph titles. The default is `NULL` and the indexes are automatically set.
 #' @param unit1 (character string) The unit of the response variable. One of "meter",
 #' "centimeter", "millimeter", "micrometer", "nanometer". If another character
 #' string is given, it is used as it is. This is used for graph labels.
@@ -241,9 +242,11 @@ ssm_common <- function(cell_list, mvtime=NULL, out, seed = 123, warmup=1000, sam
 
     # File name
     if(!is.null(df_idx)){
-      file_name <- paste0(df_name, df_idx)
+      file_name <- paste0(df_name, df_idx[i])
+      start_time <- mvtime$predicted[mvtime$cell==df_idx[i]]
     }else{
       file_name <- paste0(df_name, i)
+      start_time <- mvtime$predicted[mvtime$cell==i]
     }
 
     # Prepare data_list
@@ -262,7 +265,7 @@ ssm_common <- function(cell_list, mvtime=NULL, out, seed = 123, warmup=1000, sam
         N_each = ncol(cell_list[[i]])-2,
         ex = cell_list[[i]]$ex[-1],
         Y = apply(cell_list[[i]][,-(1:2)], 2, diff),
-        start = mvtime$predicted[mvtime$cell==i]
+        start = start_time
       )
     }
 
@@ -512,7 +515,7 @@ ssm_common <- function(cell_list, mvtime=NULL, out, seed = 123, warmup=1000, sam
 
     # Title of the plots
     if(!is.null(df_idx)){
-      titles <- paste(stringr::str_to_title(df_name), " ", df_idx, sep="")
+      titles <- paste(stringr::str_to_title(df_name), " ", df_idx[i], sep="")
     }else{
       titles <- paste(stringr::str_to_title(df_name), " ", i, sep="")
     }
