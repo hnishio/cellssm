@@ -54,7 +54,33 @@ changed the location as a result. The state-space model to analyse the
 time-varying effect of the explanatory variable on the velocity of
 movement was defined by the equations:
 
-\$\$\$\$
+$\begin{align}
+  w[t] & \sim \text{Normal}(0,\sigma^{2}_w), \\
+
+  ex[t] & =
+  \begin{cases}
+  0 & (t_{start} \leq t \leq t_{on}-1)\\
+  1 & (t_{on} \leq t \leq t_{off})\\
+  0 & (t_{off}+1 \leq t \leq t_{end})
+  \end{cases}, \\
+
+  \beta_{ex}[t] & \sim
+  \begin{cases}
+  NULL & (t_{start} \leq t \leq t_{on}-1)\\
+  \text{Normal}(0,\sigma^{2}_{\beta{ex}}) & (t = t_{on})\\
+  \text{Normal}(\beta_{ex}[t-1],\sigma^{2}_{\beta{ex}}) & (t_{on}+1 \leq t \leq t_{off})\\
+  NULL & (t_{off}+1 \leq t \leq t_{end})
+  \end{cases}, \\
+
+  \alpha[t] & =
+  \begin{cases}
+  w[t] & (t_{start} \leq t \leq t_{on}-1)\\
+  w[t] + \beta_{ex}[t] \cdot ex[t] & (t_{on} \leq t \leq t_{off})\\
+  w[t] & (t_{off}+1 \leq t \leq t_{end})
+  \end{cases}, \\
+
+  y[t] & \sim \text{Normal}(\alpha[t],\sigma^{2}_y),
+\end{align}$
 
 where *w*\[*t*\] is the white noise at the time *t*, *ex*\[*t*\] is the
 absence and presence of the explanatory variable at the time *t*
@@ -81,7 +107,50 @@ chloroplasts followed the common dynamics after the start time estimated
 for each chloroplast by the “individual model”. The state-space
 representation of the “common model” is defined by the equations:
 
-\$\$
+$\begin{align}
+  w[t] & \sim \text{Normal}(0,\sigma^{2}_w), \\
+
+  ex[t] & =
+  \begin{cases}
+  0 & (t_{start} \leq t \leq t_{on}-1)\\
+  1 & (t_{on} \leq t \leq t_{off})\\
+  0 & (t_{off}+1 \leq t \leq t_{end})
+  \end{cases}, \\
+
+  \beta_{ex, common}[t] & \sim
+  \begin{cases}
+  NULL & (t_{start} \leq t \leq t_{on}-1)\\
+  \text{Normal}(0,\sigma^{2}_{\beta{ex}}) & (t = t_{on})\\
+  \text{Normal}(\beta_{ex, common}[t-1],\sigma^{2}_{\beta{ex}}) & (t_{on}+1 \leq t \leq t_{off})\\
+  NULL & (t_{off}+1 \leq t \leq t_{end})
+  \end{cases}, \\
+
+  \beta_{ex, each}[t, n] & \sim
+  \begin{cases}
+  NULL & (t_{start} \leq t \leq t_{on}-1)\\
+  0 & (t_{on} \leq t \leq (t_{on}-3 + start[n]))\\
+  \beta_{ex, common}[t-start[n]+2] & ((t_{on}-2+start[n]) \leq t \leq t_{off})\\
+  NULL & (t_{off}+1 \leq t \leq t_{end})
+  \end{cases}, \\
+
+  \alpha_{common}[t] & =
+  \begin{cases}
+  w[t] & (t_{start} \leq t \leq t_{on}-1)\\
+  w[t] + \beta_{ex, common}[t] \cdot ex[t] & (t_{on} \leq t \leq t_{off})\\
+  w[t] & (t_{off}+1 \leq t \leq t_{end})
+  \end{cases}, \\
+
+  \alpha_{each}[t, n] & =
+  \begin{cases}
+  w[t] & (t_{start} \leq t \leq t_{on}-1)\\
+  w[t] + \beta_{ex, each}[t, n] \cdot ex[t] & (t_{on} \leq t \leq t_{off})\\
+  w[t] & (t_{off}+1 \leq t \leq t_{end})
+  \end{cases}, \\
+
+  y[t, n] & \sim \text{Normal}(\alpha_{each}[t, n],\sigma^{2}_y), \\
+
+  dist_{common}[t] & = \sum_{i=1}^t \alpha_{common}[i] - \sum_{i=1}^{t_{on}-1} \alpha_{common}[i],
+\end{align}$
 
 where *w*\[*t*\] is the white noise at time *t*; *ex*\[*t*\] is the
 absence and presence of the explanatory variable at time *t* represented

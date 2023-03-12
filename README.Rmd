@@ -45,7 +45,7 @@ devtools::install_github("hnishio/cellssm")
 ## Model definition of the state-space model (individual model)
 We assumed that the distances of the target cells or organelles from the explanatory variable (light, heat, etc.) was broken down into their random walk and the effect of the explanatory variable. The explanatory variable was supposed to affect the velocity of the targets, which changed the location as a result. The state-space model to analyse the time-varying effect of the explanatory variable on the velocity of movement was defined by the equations:
 
-$$\begin{align}
+$\begin{align}
   w[t] & \sim \text{Normal}(0,\sigma^{2}_w), \\
 
   ex[t] & =
@@ -71,7 +71,7 @@ $$\begin{align}
   \end{cases}, \\
 
   y[t] & \sim \text{Normal}(\alpha[t],\sigma^{2}_y),
-\end{align}$$
+\end{align}$
 
 
 where *w*[*t*] is the white noise at the time *t*, *ex*[*t*] is the absence and presence of the explanatory variable at the time *t* represented by 0 and 1, respectively, $\beta$<sub>*ex*</sub>[*t*] is the time-varying regression coefficient of an explanatory variable at the time *t*, $\alpha$[*t*] is the true state of velocity of movement at the time *t*, *y*[t] is the observed velocity of movement at the time *t*, and $\sigma$<sup>2</sup> is the variance. *t*<sub>*start*</sub>, *t*<sub>*on*</sub>, *t*<sub>*off*</sub> and *t*<sub>*end*</sub> are time at the start of the time-course, the start of the explanatory variable, the end of the explanatory variable and the end of the time-course. *t* = (*t*<sub>*start*</sub>, ⋯ , *t*<sub>*on*</sub>, ⋯, *t*<sub>*off*</sub>, ⋯, *t*<sub>*end*</sub>) is the time point at one unit interval.
