@@ -44,137 +44,15 @@ You can install the development version of cellssm from
 devtools::install_github("hnishio/cellssm")
 ```
 
-## Model definition of the state-space model (individual model)
+## Workflow example (chloroplast accumulation responses to a blue microbeam)
+
+#### Bayesian inference of the state-space model (individual model)
 
 We assumed that the distances of the target cells or organelles from the
 explanatory variable (light, heat, etc.) was broken down into their
 random walk and the effect of the explanatory variable. The explanatory
 variable was supposed to affect the velocity of the targets, which
-changed the location as a result. The state-space model to analyse the
-time-varying effect of the explanatory variable on the velocity of
-movement was defined by the equations:
-
-$\begin{align}
-  w[t] & \sim \text{Normal}(0,\sigma^{2}_w), \\
-
-  ex[t] & =
-  \begin{cases}
-  0 & (t_{start} \leq t \leq t_{on}-1)\\
-  1 & (t_{on} \leq t \leq t_{off})\\
-  0 & (t_{off}+1 \leq t \leq t_{end})
-  \end{cases}, \\
-
-  \beta_{ex}[t] & \sim
-  \begin{cases}
-  NULL & (t_{start} \leq t \leq t_{on}-1)\\
-  \text{Normal}(0,\sigma^{2}_{\beta{ex}}) & (t = t_{on})\\
-  \text{Normal}(\beta_{ex}[t-1],\sigma^{2}_{\beta{ex}}) & (t_{on}+1 \leq t \leq t_{off})\\
-  NULL & (t_{off}+1 \leq t \leq t_{end})
-  \end{cases}, \\
-
-  \alpha[t] & =
-  \begin{cases}
-  w[t] & (t_{start} \leq t \leq t_{on}-1)\\
-  w[t] + \beta_{ex}[t] \cdot ex[t] & (t_{on} \leq t \leq t_{off})\\
-  w[t] & (t_{off}+1 \leq t \leq t_{end})
-  \end{cases}, \\
-
-  y[t] & \sim \text{Normal}(\alpha[t],\sigma^{2}_y),
-\end{align}$
-
-where *w*\[*t*\] is the white noise at the time *t*, *ex*\[*t*\] is the
-absence and presence of the explanatory variable at the time *t*
-represented by 0 and 1, respectively, $\beta$<sub>*ex*</sub>\[*t*\] is
-the time-varying regression coefficient of an explanatory variable at
-the time *t*, $\alpha$\[*t*\] is the true state of velocity of movement
-at the time *t*, *y*\[t\] is the observed velocity of movement at the
-time *t*, and $\sigma$<sup>2</sup> is the variance.
-*t*<sub>*start*</sub>, *t*<sub>*on*</sub>, *t*<sub>*off*</sub> and
-*t*<sub>*end*</sub> are time at the start of the time-course, the start
-of the explanatory variable, the end of the explanatory variable and the
-end of the time-course. *t* = (*t*<sub>*start*</sub>, ⋯ ,
-*t*<sub>*on*</sub>, ⋯, *t*<sub>*off*</sub>, ⋯, *t*<sub>*end*</sub>) is
-the time point at one unit interval.
-
-## Model definition of the state-space model (common model)
-
-In this model, we assumed an imaginary chloroplast which had a distance
-from the microbeam of zero, and dynamics referred to as the “common
-dynamics” for each cell. The state-space representation of the common
-dynamics is similar to that of the “individual model” explained in the
-previous section. We then assumed that the real dynamics of all
-chloroplasts followed the common dynamics after the start time estimated
-for each chloroplast by the “individual model”. The state-space
-representation of the “common model” is defined by the equations:
-
-$\begin{align}
-  w[t] & \sim \text{Normal}(0,\sigma^{2}_w), \\
-
-  ex[t] & =
-  \begin{cases}
-  0 & (t_{start} \leq t \leq t_{on}-1)\\
-  1 & (t_{on} \leq t \leq t_{off})\\
-  0 & (t_{off}+1 \leq t \leq t_{end})
-  \end{cases}, \\
-
-  \beta_{ex, common}[t] & \sim
-  \begin{cases}
-  NULL & (t_{start} \leq t \leq t_{on}-1)\\
-  \text{Normal}(0,\sigma^{2}_{\beta{ex}}) & (t = t_{on})\\
-  \text{Normal}(\beta_{ex, common}[t-1],\sigma^{2}_{\beta{ex}}) & (t_{on}+1 \leq t \leq t_{off})\\
-  NULL & (t_{off}+1 \leq t \leq t_{end})
-  \end{cases}, \\
-
-  \beta_{ex, each}[t, n] & \sim
-  \begin{cases}
-  NULL & (t_{start} \leq t \leq t_{on}-1)\\
-  0 & (t_{on} \leq t \leq (t_{on}-3 + start[n]))\\
-  \beta_{ex, common}[t-start[n]+2] & ((t_{on}-2+start[n]) \leq t \leq t_{off})\\
-  NULL & (t_{off}+1 \leq t \leq t_{end})
-  \end{cases}, \\
-
-  \alpha_{common}[t] & =
-  \begin{cases}
-  w[t] & (t_{start} \leq t \leq t_{on}-1)\\
-  w[t] + \beta_{ex, common}[t] \cdot ex[t] & (t_{on} \leq t \leq t_{off})\\
-  w[t] & (t_{off}+1 \leq t \leq t_{end})
-  \end{cases}, \\
-
-  \alpha_{each}[t, n] & =
-  \begin{cases}
-  w[t] & (t_{start} \leq t \leq t_{on}-1)\\
-  w[t] + \beta_{ex, each}[t, n] \cdot ex[t] & (t_{on} \leq t \leq t_{off})\\
-  w[t] & (t_{off}+1 \leq t \leq t_{end})
-  \end{cases}, \\
-
-  y[t, n] & \sim \text{Normal}(\alpha_{each}[t, n],\sigma^{2}_y), \\
-
-  dist_{common}[t] & = \sum_{i=1}^t \alpha_{common}[i] - \sum_{i=1}^{t_{on}-1} \alpha_{common}[i],
-\end{align}$
-
-where *w*\[*t*\] is the white noise at time *t*; *ex*\[*t*\] is the
-absence and presence of the explanatory variable at time *t* represented
-by 0 and 1, respectively; $\beta$<sub>*ex, common*</sub>\[*t*\] is the
-common time-varying regression coefficient of the explanatory variable
-at time *t*; $\beta$<sub>*ex, each*</sub>\[*t, n*\] is the time-varying
-regression coefficient of the explanatory variable at time *t* in the
-response variable *n*; $\alpha$<sub>*common*</sub>\[*t*\] is the common
-velocity of movement at time *t*; $\alpha$<sub>*each*</sub>\[*t, n*\] is
-the estimated velocity of movement at time *t* in the response variable
-*n*; *y*\[*t, n*\] is the observed velocity of movement at time *t* in
-the response variable *n*; *dist*<sub>*common*</sub>\[*t*\] is the
-distance of the response variable from the explanatory variable at time
-*t*; and $\sigma$<sup>2</sup> is the variance. *t*<sub>*start*</sub>,
-*t*<sub>*on*</sub>, *t*<sub>*off*</sub>, and *t*<sub>*end*</sub> are
-time at the start of the time-course, the start of the explanatory
-variable, the end of the explanatory variable, and the end of the
-time-course. *t* = (*t*<sub>*start*</sub>, ⋯ , *t*<sub>*on*</sub>, ⋯,
-*t*<sub>*off*</sub>, ⋯, *t*<sub>*end*</sub>) is the time point at one
-unit interval.
-
-## Workflow example (chloroplast accumulation responses to a blue microbeam)
-
-#### Bayesian inference of the state-space model (individual model)
+changed the location as a result.
 
 ``` r
 # Load package
@@ -209,7 +87,7 @@ ssm_individual(cell_list = cell_list, out = "02_ssm_individual",
                unit1 = "micrometer", unit2 = "min")
 ```
 
-<img src="man/figures/ssm_individual_cell1_chloroplast1.jpg" style="width:50.0%" />
+<img src="man/figures/ssm_individual_cell1_chloroplast1.jpg" width="50.0%" />
 
 This figure is an example of the output files: Bayesian inference of the
 state-space model for a chloroplast in cell 1. The observed distance of
@@ -289,6 +167,14 @@ and 95% confidence intervals, respectively.
 
 #### Bayesian inference of the state-space model (common model)
 
+In this model, we assumed an imaginary chloroplast which had a distance
+from the microbeam of zero, and dynamics referred to as the “common
+dynamics” for each cell. The state-space representation of the common
+dynamics is similar to that of the “individual model” explained in the
+previous section. We then assumed that the real dynamics of all
+chloroplasts followed the common dynamics after the start time estimated
+for each chloroplast by the “individual model”.
+
 ``` r
 # Load data of chloroplast movements
 data("cell1", "cell2", "cell3", "cell4", "chloroplast_mvtime")
@@ -305,7 +191,7 @@ ssm_common(cell_list = cell_list, mvtime = chloroplast_mvtime, out = "08_ssm_com
           unit1 = "micrometer", unit2 = "min")
 ```
 
-<img src="man/figures/ssm_common_cell1.jpg" style="width:50.0%" />
+<img src="man/figures/ssm_common_cell1.jpg" width="50.0%" />
 
 This figure is an example of the output files: Bayesian inference of the
 state-space model assuming the common dynamics between chloroplasts for
