@@ -8,7 +8,6 @@ ssm_common(
   cell_list,
   mvtime = NULL,
   out,
-  obs = NULL,
   seed = 123,
   warmup = 1000,
   sampling = 1000,
@@ -48,9 +47,6 @@ the observed dynamics of all response variables in a data frame are assumed to b
 the common dynamics.}
 
 \item{out}{(character string) The path of the output directory.}
-
-\item{obs}{(positive real) An observation error. The default is \code{NULL} and
-the observation error is estimated from the data.}
 
 \item{seed}{(positive integer) A seed for random number generation to pass to CmdStan.}
 

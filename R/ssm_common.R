@@ -38,8 +38,6 @@ quantile99 <- function(x){
 #' the observed dynamics of all response variables in a data frame are assumed to be produced from
 #' the common dynamics.
 #' @param out (character string) The path of the output directory.
-#' @param obs (positive real) An observation error. The default is `NULL` and
-#' the observation error is estimated from the data.
 #' @param seed (positive integer) A seed for random number generation to pass to CmdStan.
 #' @param warmup (positive integer) The number of warmup iterations of MCMC sampling after thinning.
 #' The default is 1000.
@@ -163,7 +161,7 @@ quantile99 <- function(x){
 #'
 #' @export
 #'
-ssm_common <- function(cell_list, mvtime=NULL, out, obs=NULL, seed = 123, warmup=1000, sampling=1000, thin=3,
+ssm_common <- function(cell_list, mvtime=NULL, out, seed = 123, warmup=1000, sampling=1000, thin=3,
                        df_name = "cell", res_name, ex_name, df_idx = NULL, unit1, unit2,
                        shade = TRUE, ps = 7, theme_plot = "bw"){
 
@@ -235,21 +233,6 @@ ssm_common <- function(cell_list, mvtime=NULL, out, obs=NULL, seed = 123, warmup
   }
   model <- cmdstanr::cmdstan_model(stan_file)
 
-  # Estimation of observation error
-  if(is.null(obs)){
-    sd_vel_all <- NULL
-    for(i in 1:length(cell_list)){
-      for (j in 1:(ncol(cell_list[[i]])-2)){
-        vel <- diff(cell_list[[i]][,j+2])
-        sp_vel <- stats::smooth.spline(1:length(vel), vel)
-        pred_vel <- stats::predict(sp_vel, 1:length(vel))
-        sd_vel <- stats::sd(vel - pred_vel$y)
-        sd_vel_all <- c(sd_vel_all, sd_vel)
-      }
-    }
-    obs <- stats::median(sd_vel_all)
-  }
-
 
   ## Execution of the Bayesian inference
 
@@ -264,6 +247,17 @@ ssm_common <- function(cell_list, mvtime=NULL, out, obs=NULL, seed = 123, warmup
       file_name <- paste0(df_name, i)
       start_time <- mvtime$predicted[mvtime$cell==i]
     }
+
+    # Estimation of observation error
+    sd_vel_all <- NULL
+    for (j in 1:(ncol(cell_list[[i]])-2)){
+      vel <- diff(cell_list[[i]][,j+2])
+      sp_vel <- stats::smooth.spline(1:length(vel), vel)
+      pred_vel <- stats::predict(sp_vel, 1:length(vel))
+      sd_vel <- stats::sd(vel - pred_vel$y)
+      sd_vel_all <- c(sd_vel_all, sd_vel)
+    }
+    obs <- stats::median(sd_vel_all)
 
     # Prepare data_list
     if(is.null(mvtime)){

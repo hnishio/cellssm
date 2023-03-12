@@ -114,7 +114,6 @@ lm_dist_beta <- function(cell_list, mvtime, ssm_path,
     vec_mean_w <- numeric()
     vec_s_w <- numeric()
     vec_s_b_ex <- numeric()
-    vec_s_Y <- numeric()
 
 
     ## Get values
@@ -151,10 +150,8 @@ lm_dist_beta <- function(cell_list, mvtime, ssm_path,
 
       s_w <- df_", i, "_", j, "_sd$`50%`[df_", i, "_", j, "_sd$s_name=='s_w']
       s_b_ex <- df_", i, "_", j, "_sd$`50%`[df_", i, "_", j, "_sd$s_name=='s_b_ex']
-      s_Y <- df_", i, "_", j, "_sd$`50%`[df_", i, "_", j, "_sd$s_name=='s_Y']
       vec_s_w <- c(vec_s_w, s_w)
-      vec_s_b_ex <- c(vec_s_b_ex, s_b_ex)
-      vec_s_Y <- c(vec_s_Y, s_Y)"
+      vec_s_b_ex <- c(vec_s_b_ex, s_b_ex)"
           )))
 
         }
@@ -193,10 +190,8 @@ lm_dist_beta <- function(cell_list, mvtime, ssm_path,
 
       s_w <- df_", i, "_", j, "_sd$`50%`[df_", i, "_", j, "_sd$s_name=='s_w']
       s_b_ex <- df_", i, "_", j, "_sd$`50%`[df_", i, "_", j, "_sd$s_name=='s_b_ex']
-      s_Y <- df_", i, "_", j, "_sd$`50%`[df_", i, "_", j, "_sd$s_name=='s_Y']
       vec_s_w <- c(vec_s_w, s_w)
-      vec_s_b_ex <- c(vec_s_b_ex, s_b_ex)
-      vec_s_Y <- c(vec_s_Y, s_Y)"
+      vec_s_b_ex <- c(vec_s_b_ex, s_b_ex)"
           )))
 
         }
@@ -212,8 +207,7 @@ lm_dist_beta <- function(cell_list, mvtime, ssm_path,
                                mean_alpha = vec_mean_alpha,
                                mean_w = vec_mean_w,
                                s_w = vec_s_w,
-                               s_b_ex = vec_s_b_ex,
-                               s_Y = vec_s_Y)
+                               s_b_ex = vec_s_b_ex)
     )
 
 
@@ -549,8 +543,7 @@ lm_dist_beta <- function(cell_list, mvtime, ssm_path,
     df_new <- cbind(mvtime,
                     data.frame(most_b = vec_most_b,
                                mean_b = vec_mean_b,
-                               s_b_ex = df_sd$s_b_ex,
-                               s_Y = df_sd$s_Y)
+                               s_b_ex = df_sd$s_b_ex)
     )
 
 
