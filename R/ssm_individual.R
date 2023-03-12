@@ -38,7 +38,7 @@ quantile99 <- function(x){
 #' reducing the autocorrelation of the MCMC samples and improving the convergence of
 #' MCMC. The default is 3.
 #' @param start_sensitivity (positive integer) The sensitivity to detect the start time
-#' of movements. Larger values indicate a higher sensitivity. The default is 5.
+#' of movements. Larger values indicate a higher sensitivity. The default is 1.
 #' @param ex_sign (character string) "positive" or "negative". This is used to
 #' estimate the start time of the positive or negative influence of the explanatory
 #' variable on the distances of cells or organelles.
@@ -166,7 +166,7 @@ quantile99 <- function(x){
 #' @export
 #'
 ssm_individual <- function(cell_list, visual=NULL, out, seed=123, warmup=1000, sampling=1000, thin=3,
-                           start_sensitivity = 5, ex_sign = "negative", df_name = "cell",
+                           start_sensitivity = 1, ex_sign = "negative", df_name = "cell",
                            res_name, ex_name, df_idx = NULL, res_idx = NULL, unit1, unit2,
                            shade = TRUE, start_line = TRUE, ps = 7, theme_plot = "bw"){
 

@@ -8,7 +8,7 @@ ssm_KFAS(
   cell_list,
   visual = NULL,
   out,
-  start_sensitivity = 5,
+  start_sensitivity = 1,
   ex_sign = "negative",
   df_name = "cell",
   res_name,
@@ -36,7 +36,7 @@ second column, index (column name "index"); third column, the start time. The de
 \item{out}{(character string) The path of the output directory.}
 
 \item{start_sensitivity}{(positive integer) The sensitivity to detect the start time
-of movements. Larger values indicate a higher sensitivity. The default is 5.}
+of movements. Larger values indicate a higher sensitivity. The default is 1.}
 
 \item{ex_sign}{(character string) "positive" or "negative". This is used to
 estimate the start time of the positive or negative influence of the explanatory

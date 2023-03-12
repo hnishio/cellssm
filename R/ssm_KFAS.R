@@ -17,7 +17,7 @@
 #' second column, index (column name "index"); third column, the start time. The default is `NULL`.
 #' @param out (character string) The path of the output directory.
 #' @param start_sensitivity (positive integer) The sensitivity to detect the start time
-#' of movements. Larger values indicate a higher sensitivity. The default is 5.
+#' of movements. Larger values indicate a higher sensitivity. The default is 1.
 #' @param ex_sign (character string) "positive" or "negative". This is used to
 #' estimate the start time of the positive or negative influence of the explanatory
 #' variable on the distances of cells or organelles.
@@ -125,7 +125,7 @@
 #' @export
 #'
 ssm_KFAS <- function(cell_list, visual = NULL, out,
-                     start_sensitivity = 5, ex_sign = "negative", df_name = "cell",
+                     start_sensitivity = 1, ex_sign = "negative", df_name = "cell",
                      res_name, ex_name, unit1, unit2,
                      shade = TRUE, start_line = TRUE, ps = 7, theme_plot = "bw"){
 
