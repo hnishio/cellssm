@@ -67,12 +67,6 @@ explanatory variable
 # Load package
 library(cellssm)
 
-# Create an output directory
-out <- "01_dist_vis"
-if(file.exists(out)==FALSE){
-  dir.create(out, recursive=TRUE)
-}
-
 # Load real data of chloroplast movements
 data("cell1", "cell2", "cell3", "cell4")
 cell_list <- list(cell1, cell2, cell3, cell4)
@@ -87,8 +81,18 @@ glist <- dist_vis(cell_list = cell_list,
 
 g <- glist[[1]] + glist[[2]] + glist[[3]] + glist[[4]] +
  patchwork::plot_layout(ncol = 2, heights = c(1, 1))
+
+\dontrun{
+# Create an output directory
+out <- "01_dist_vis"
+if(file.exists(out)==FALSE){
+  dir.create(out, recursive=TRUE)
+}
+
+# Save output
 ggplot2::ggsave(paste0(out, "/distance_chloroplast.pdf"),
                 g, height = 120, width = 180, units = "mm")
+}
 
 
 
@@ -96,12 +100,6 @@ ggplot2::ggsave(paste0(out, "/distance_chloroplast.pdf"),
 
 # Load package
 library(cellssm)
-
-# Create an output directory
-out <- "11_dist_vis"
-if(file.exists(out)==FALSE){
-  dir.create(out, recursive=TRUE)
-}
 
 # Load simulated data of Paramecium movement
 data("Paramecium")
@@ -116,7 +114,17 @@ glist <- dist_vis(cell_list = cell_list,
                   unit1 = "millimeter", unit2 = "sec")
 
 g <- glist[[1]]
+
+\dontrun{
+# Create an output directory
+out <- "11_dist_vis"
+if(file.exists(out)==FALSE){
+  dir.create(out, recursive=TRUE)
+}
+
+# Save output
 ggplot2::ggsave(paste0(out, "/distance_paramecium.pdf"),
                 g, height = 60, width = 90, units = "mm")
+}
 
 }

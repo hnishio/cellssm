@@ -38,6 +38,8 @@ quantile99 <- function(x){
 #' the observed dynamics of all response variables in a data frame are assumed to be produced from
 #' the common dynamics.
 #' @param out (character string) The path of the output directory.
+#' @param obs (positive real) An observation error. The default is `NULL` and
+#' the observation error is estimated from the data.
 #' @param seed (positive integer) A seed for random number generation to pass to CmdStan.
 #' @param warmup (positive integer) The number of warmup iterations of MCMC sampling after thinning.
 #' The default is 1000.
@@ -74,8 +76,7 @@ quantile99 <- function(x){
 #' the true state of each velocity, and "b_ex_each" is the true state of each
 #' time-varying coefficient. "ssm_common_cell `j` _sd.csv"
 #' contains the Bayesian credible intervals of non-time-varying parameters, where
-#' "s_w", "s_b_ex", and "s_Y" are the white noise, system noise, and observation error
-#' as standard deviations, respectively.
+#' "s_w" and "s_b_ex" are the white noise and system noise, respectively.
 #' * A subdirectory "pdf" includes "ssm_common_cell `j` .pdf".
 #' This is the visualised results of the model. The figure consists of four panels:
 #' (1) observed distance of `res_name` from `ex_name`, (2) velocity of `res_name`,
@@ -162,7 +163,7 @@ quantile99 <- function(x){
 #'
 #' @export
 #'
-ssm_common <- function(cell_list, mvtime=NULL, out, seed = 123, warmup=1000, sampling=1000, thin=3,
+ssm_common <- function(cell_list, mvtime=NULL, out, obs=NULL, seed = 123, warmup=1000, sampling=1000, thin=3,
                        df_name = "cell", res_name, ex_name, df_idx = NULL, unit1, unit2,
                        shade = TRUE, ps = 7, theme_plot = "bw"){
 
@@ -234,6 +235,21 @@ ssm_common <- function(cell_list, mvtime=NULL, out, seed = 123, warmup=1000, sam
   }
   model <- cmdstanr::cmdstan_model(stan_file)
 
+  # Estimation of observation error
+  if(is.null(obs)){
+    sd_vel_all <- NULL
+    for(i in 1:length(cell_list)){
+      for (j in 1:(ncol(cell_list[[i]])-2)){
+        vel <- diff(cell_list[[i]][,j+2])
+        sp_vel <- stats::smooth.spline(1:length(vel), vel)
+        pred_vel <- stats::predict(sp_vel, 1:length(vel))
+        sd_vel <- stats::sd(vel - pred_vel$y)
+        sd_vel_all <- c(sd_vel_all, sd_vel)
+      }
+    }
+    obs <- stats::median(sd_vel_all)
+  }
+
 
   ## Execution of the Bayesian inference
 
@@ -256,7 +272,8 @@ ssm_common <- function(cell_list, mvtime=NULL, out, seed = 123, warmup=1000, sam
         N_ex = length(which(cell_list[[i]]$ex==1)),
         N_each = ncol(cell_list[[i]])-2,
         ex = cell_list[[i]]$ex[-1],
-        Y = apply(cell_list[[i]][,-(1:2)], 2, diff)
+        Y = apply(cell_list[[i]][,-(1:2)], 2, diff),
+        obs = obs
       )
     }else{
       data_list <- list(
@@ -265,6 +282,7 @@ ssm_common <- function(cell_list, mvtime=NULL, out, seed = 123, warmup=1000, sam
         N_each = ncol(cell_list[[i]])-2,
         ex = cell_list[[i]]$ex[-1],
         Y = apply(cell_list[[i]][,-(1:2)], 2, diff),
+        obs = obs,
         start = start_time
       )
     }
@@ -310,7 +328,6 @@ ssm_common <- function(cell_list, mvtime=NULL, out, seed = 123, warmup=1000, sam
     tmp_csv_dist <- NULL
     tmp_csv_s_w <- NULL
     tmp_csv_s_b_ex <- NULL
-    tmp_csv_s_Y <- NULL
 
     for(k in 1:length(outcsv_name)){
       tmp_csv <- as.data.frame(data.table::fread(cmd = paste0("grep -v '^#' ", output_dir, "/", outcsv_name[k])))
@@ -322,7 +339,6 @@ ssm_common <- function(cell_list, mvtime=NULL, out, seed = 123, warmup=1000, sam
       tmp_csv_dist <- rbind(tmp_csv_dist, tmp_csv[,stringr::str_starts(names(tmp_csv), "dist")])
       tmp_csv_s_w <- c(tmp_csv_s_w, tmp_csv[,stringr::str_starts(names(tmp_csv), "s_w")])
       tmp_csv_s_b_ex <- c(tmp_csv_s_b_ex, tmp_csv[,stringr::str_starts(names(tmp_csv), "s_b_ex")])
-      tmp_csv_s_Y <- c(tmp_csv_s_Y, tmp_csv[,stringr::str_starts(names(tmp_csv), "s_Y")])
     }
 
     df_w <- as.data.frame(t(apply(tmp_csv_w, 2, quantile99)))
@@ -332,8 +348,7 @@ ssm_common <- function(cell_list, mvtime=NULL, out, seed = 123, warmup=1000, sam
     df_alpha_each <- as.data.frame(t(apply(tmp_csv_alpha_each, 2, quantile99)))
     df_dist <- as.data.frame(t(apply(tmp_csv_dist, 2, quantile99)))
     df_s <- t(data.frame(s_w = quantile99(tmp_csv_s_w),
-                         s_b_ex = quantile99(tmp_csv_s_b_ex),
-                         s_Y = quantile99(tmp_csv_s_Y)))
+                         s_b_ex = quantile99(tmp_csv_s_b_ex)))
     df_s <- cbind(data.frame(s_name = row.names(df_s)), df_s)
 
     # Save output
@@ -399,7 +414,7 @@ ssm_common <- function(cell_list, mvtime=NULL, out, seed = 123, warmup=1000, sam
 
     rm(fit, tmp_csv, tmp_csv_w, tmp_csv_b_ex, tmp_csv_alpha, tmp_csv_dist,
        tmp_csv_b_ex_each, tmp_csv_alpha_each,
-       tmp_csv_s_w, tmp_csv_s_b_ex, tmp_csv_s_Y,
+       tmp_csv_s_w, tmp_csv_s_b_ex,
        dfs)
   }
 
@@ -643,9 +658,6 @@ ssm_common <- function(cell_list, mvtime=NULL, out, seed = 123, warmup=1000, sam
              g, height = ps*20*4/4, width = ps*10*1.2, units = "mm")
     )
 
-
-    ## Release memory
-    gc(reset = T);gc(reset = T)
   }
 
 }

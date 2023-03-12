@@ -31,12 +31,6 @@
 #' # Load package
 #' library(cellssm)
 #'
-#' # Create an output directory
-#' out <- "07_lm_signal"
-#' if(file.exists(out)==FALSE){
-#'   dir.create(out, recursive=TRUE)
-#' }
-#'
 #' # Load data
 #' data("cell1", "cell2", "cell3", "cell4", "chloroplast_mvtime")
 #' cell_list <- list(cell1, cell2, cell3, cell4)
@@ -44,13 +38,20 @@
 #' # Linear regression
 #' glist <- lm_signal(cell_list = cell_list, mvtime = chloroplast_mvtime,
 #'                    ex_name = "microbeam", unit1 = "micrometer", unit2 = "min")
-#'
-#' # Save output
 #' g <- glist[[1]] + glist[[2]] + glist[[3]] + glist[[4]] + glist[[5]] + glist[[6]] +
 #'   patchwork::plot_layout(ncol = 3)
 #'
+#' \dontrun{
+#' # Create an output directory
+#' out <- "07_lm_signal"
+#' if(file.exists(out)==FALSE){
+#'   dir.create(out, recursive=TRUE)
+#' }
+#'
+#' # Save output
 #' suppressWarnings(ggplot2::ggsave(paste0(out, "/individual_chloroplast_lm_signal.pdf"),
 #'                                  g, height = 110, width = 50*3, units = "mm"))
+#' }
 #'
 #'
 #'
@@ -58,12 +59,6 @@
 #'
 #' # Load package
 #' library(cellssm)
-#'
-#' # Create an output directory
-#' out <- "17_lm_signal"
-#' if(file.exists(out)==FALSE){
-#'   dir.create(out, recursive=TRUE)
-#' }
 #'
 #' # Load data
 #' data("Paramecium", "Paramecium_mvtime")
@@ -73,12 +68,20 @@
 #' glist <- lm_signal(cell_list = cell_list, mvtime = Paramecium_mvtime,
 #'                    df_name = "experiment", ex_name = "heat",
 #'                    unit1 = "millimeter", unit2 = "sec")
-#'
-#' # Save output
 #' g <- glist[[1]] + glist[[2]] +
 #'   patchwork::plot_layout(nrow = 1)
+#'
+#' \dontrun{
+#' # Create an output directory
+#' out <- "17_lm_signal"
+#' if(file.exists(out)==FALSE){
+#'   dir.create(out, recursive=TRUE)
+#' }
+#'
+#'  # Save output
 #' suppressWarnings(ggplot2::ggsave(paste0(out, "/individual_Paramecium_lm_signal.pdf"),
 #'                                  g, height = 50, width = 50*1.6, units = "mm"))
+#' }
 #'
 #' @export
 #'

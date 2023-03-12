@@ -57,12 +57,6 @@ influence of an explanatory variable obtained by the state-space model.
 # Load package
 library(cellssm)
 
-# Create an output directory
-out <- "06_lm_dist_start"
-if(file.exists(out)==FALSE){
-  dir.create(out, recursive=TRUE)
-}
-
 # Load data
 data("cell1", "cell2", "cell3", "cell4", "chloroplast_mvtime")
 cell_list <- list(cell1, cell2, cell3, cell4)
@@ -74,8 +68,17 @@ glist <- lm_dist_start(cell_list = cell_list, mvtime = chloroplast_mvtime,
 g <- glist[[1]] + glist[[2]] + glist[[3]] + glist[[4]] + glist[[5]] +
   patchwork::plot_layout(ncol = 3)
 
+\dontrun{
+# Create an output directory
+out <- "06_lm_dist_start"
+if(file.exists(out)==FALSE){
+  dir.create(out, recursive=TRUE)
+}
+
+# Save output
 suppressWarnings(ggplot2::ggsave(paste0(out, "/individual_chloroplast_lm_dist_start.pdf"),
                                  g, height = 110, width = 50*3, units = "mm"))
+}
 
 
 
@@ -83,12 +86,6 @@ suppressWarnings(ggplot2::ggsave(paste0(out, "/individual_chloroplast_lm_dist_st
 
 # Load package
 library(cellssm)
-
-# Create an output directory
-out <- "16_lm_dist_start"
-if(file.exists(out)==FALSE){
-  dir.create(out, recursive=TRUE)
-}
 
 # Load data of chloroplast movements
 data("Paramecium", "Paramecium_mvtime")
@@ -99,9 +96,17 @@ glist <- lm_dist_start(cell_list = cell_list, mvtime = Paramecium_mvtime,
                        df_name = "experiment", ex_name = "heat",
                        unit1 = "millimeter", unit2 = "sec")
 
+\dontrun{
+# Create an output directory
+out <- "16_lm_dist_start"
+if(file.exists(out)==FALSE){
+  dir.create(out, recursive=TRUE)
+}
+
 # Save output
 g <- glist[[1]]
 suppressWarnings(ggplot2::ggsave(paste0(out, "/individual_Paramecium_lm_dist_start.pdf"),
                                  g, height = 50, width = 50, units = "mm"))
+}
 
 }

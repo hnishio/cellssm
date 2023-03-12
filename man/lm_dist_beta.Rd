@@ -78,12 +78,6 @@ obtained by the state-space model.
 # Load package
 library(cellssm)
 
-# Create an output directory
-out <- "05_lm_dist_beta"
-if(file.exists(out)==FALSE){
-  dir.create(out, recursive=TRUE)
-}
-
 ## Bayes
 # Load data
 data("cell1", "cell2", "cell3", "cell4", "chloroplast_mvtime")
@@ -104,7 +98,17 @@ glist <- lm_dist_beta(cell_list = cell_list, mvtime = chloroplast_mvtime,
 # Save output
 g <- glist[[1]] + glist[[2]] + glist[[3]] + glist[[4]] + glist[[5]] +
   patchwork::plot_layout(nrow = 2)
+
+\dontrun{
+# Create an output directory
+out <- "05_lm_dist_beta"
+if(file.exists(out)==FALSE){
+  dir.create(out, recursive=TRUE)
+}
+
+# Save output
 suppressWarnings(ggplot2::ggsave(paste0(out, "/individual_chloroplast_lm_dist_beta.pdf"),
                                  g, height = 104, width = 168, units = "mm"))
+}
 
 }

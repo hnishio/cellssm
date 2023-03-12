@@ -113,8 +113,7 @@ intervals of time-varying parameters, where "Y" is the observed velocity, "w" is
 the white noise, "alpha" is the true state of velocity, and "b_ex" is
 the time-varying coefficient of the explanatory variable. "ssm_individual_cell \code{i} _ \code{res_name} \code{j} _sd.csv"
 contains the Bayesian credible intervals of non-time-varying parameters, where
-"s_w", "s_b_ex" and "s_Y" are the white noise, system noise, and observation error
-as standard deviations, respectively.
+"s_w" and "s_b_ex" are the white noise and system noise, respectively.
 "ssm_individual_mvtime.csv" contains the estimated start time, end time, and period of
 the directional movement.
 \item A subdirectory "pdf" includes "ssm_individual_cell \code{i} _ \code{res_name} \code{j} .pdf".

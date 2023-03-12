@@ -80,8 +80,7 @@ quantile99 <- function(x){
 #' the white noise, "alpha" is the true state of velocity, and "b_ex" is
 #' the time-varying coefficient of the explanatory variable. "ssm_individual_cell `i` _ `res_name` `j` _sd.csv"
 #' contains the Bayesian credible intervals of non-time-varying parameters, where
-#' "s_w", "s_b_ex" and "s_Y" are the white noise, system noise, and observation error
-#' as standard deviations, respectively.
+#' "s_w" and "s_b_ex" are the white noise and system noise, respectively.
 #' "ssm_individual_mvtime.csv" contains the estimated start time, end time, and period of
 #' the directional movement.
 #' * A subdirectory "pdf" includes "ssm_individual_cell `i` _ `res_name` `j` .pdf".
@@ -800,9 +799,8 @@ ssm_individual <- function(cell_list, visual=NULL, out, obs=NULL, seed=123, warm
 
       ## Release memory
       rm(fit, tmp_csv, tmp_csv_w, tmp_csv_b_ex, tmp_csv_alpha,
-         tmp_csv_s_w, tmp_csv_s_b_ex, tmp_csv_s_Y,
+         tmp_csv_s_w, tmp_csv_s_b_ex,
          df)
-      gc(reset = T);gc(reset = T)
     }
   }
 

@@ -5,6 +5,7 @@ data {
   int N_each;
   vector[N] ex;
   matrix[N,N_each] Y;
+  real obs;
   int boundary1;
   int boundary2;
 }
@@ -15,7 +16,6 @@ parameters {
   vector[N_ex] b_ex;
   real<lower=0> s_w;
   real<lower=0> s_b_ex;
-  real<lower=0> s_Y;
 }
 
 
@@ -63,7 +63,7 @@ model {
   // Observation equation of Y
   for (n in 1:N_each) {
     for (t in 1:N) {
-      Y[t,n] ~ normal(alpha_each[t,n], s_Y);
+      Y[t,n] ~ normal(alpha_each[t,n], obs);
     }
   }
 }

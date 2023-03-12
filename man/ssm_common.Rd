@@ -8,6 +8,7 @@ ssm_common(
   cell_list,
   mvtime = NULL,
   out,
+  obs = NULL,
   seed = 123,
   warmup = 1000,
   sampling = 1000,
@@ -47,6 +48,9 @@ the observed dynamics of all response variables in a data frame are assumed to b
 the common dynamics.}
 
 \item{out}{(character string) The path of the output directory.}
+
+\item{obs}{(positive real) An observation error. The default is \code{NULL} and
+the observation error is estimated from the data.}
 
 \item{seed}{(positive integer) A seed for random number generation to pass to CmdStan.}
 
@@ -99,8 +103,7 @@ the common time-varying coefficient of an explanatory variable, "alpha_each" is
 the true state of each velocity, and "b_ex_each" is the true state of each
 time-varying coefficient. "ssm_common_cell \code{j} _sd.csv"
 contains the Bayesian credible intervals of non-time-varying parameters, where
-"s_w", "s_b_ex", and "s_Y" are the white noise, system noise, and observation error
-as standard deviations, respectively.
+"s_w" and "s_b_ex" are the white noise and system noise, respectively.
 \item A subdirectory "pdf" includes "ssm_common_cell \code{j} .pdf".
 This is the visualised results of the model. The figure consists of four panels:
 (1) observed distance of \code{res_name} from \code{ex_name}, (2) velocity of \code{res_name},
