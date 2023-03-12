@@ -228,7 +228,7 @@ ssm_individual <- function(cell_list, visual=NULL, out, seed=123, warmup=1000, s
 
       # Estimation of observation error
       vel <- diff(cell_list[[i]][,j+2])
-      sp_vel <- stats::smooth.spline(1:length(vel), vel)
+      sp_vel <- stats::smooth.spline(1:length(vel), vel, spar=0)
       pred_vel <- stats::predict(sp_vel, 1:length(vel))
       obs <- stats::sd(vel - pred_vel$y)
 

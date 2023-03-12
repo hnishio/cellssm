@@ -279,9 +279,7 @@ lm_dist_beta <- function(cell_list, mvtime, ssm_path,
 
     ##### Linear regression (x: distance, y: mean_b) #####
     model <- RobustLinearReg::siegel_regression(mean_b ~ distance, data = df_new)
-
-    newx = seq(min(df_new$distance), max(df_new$distance), by = 0.1)
-    suppressWarnings(conf_interval <- stats::predict(model, newdata=data.frame(x=newx), interval="confidence", level = 0.95))
+    suppressWarnings(conf_interval <- stats::predict(model, interval="confidence", level = 0.95))
     conf_interval2 <- as.data.frame(cbind(df_new$distance, conf_interval)[order(df_new$distance, decreasing = F),])
     names(conf_interval2)[1] <- "distance"
 
@@ -320,9 +318,7 @@ lm_dist_beta <- function(cell_list, mvtime, ssm_path,
     ##### Linear regression (x: distance, y: most_b) #####
     model <- RobustLinearReg::siegel_regression(most_b ~ distance, data = df_new)
     #summary(model)
-
-    newx = seq(min(df_new$distance), max(df_new$distance), by = 1)
-    suppressWarnings(conf_interval <- stats::predict(model, newdata=data.frame(x=newx), interval="confidence", level = 0.95))
+    suppressWarnings(conf_interval <- stats::predict(model, interval="confidence", level = 0.95))
     conf_interval2 <- as.data.frame(cbind(df_new$distance, conf_interval)[order(df_new$distance, decreasing = F),])
     names(conf_interval2)[1] <- "distance"
 
@@ -360,9 +356,7 @@ lm_dist_beta <- function(cell_list, mvtime, ssm_path,
     ##### Linear regression (x: distance, y: s_b_ex) #####
     model <- RobustLinearReg::siegel_regression(s_b_ex ~ distance, data = df_new)
     #summary(model)
-
-    newx = seq(min(df_new$distance), max(df_new$distance), by = 1)
-    suppressWarnings(conf_interval <- stats::predict(model, newdata=data.frame(x=newx), interval="confidence", level = 0.95))
+    suppressWarnings(conf_interval <- stats::predict(model, interval="confidence", level = 0.95))
     conf_interval2 <- as.data.frame(cbind(df_new$distance, conf_interval)[order(df_new$distance, decreasing = F),])
     names(conf_interval2)[1] <- "distance"
 
@@ -401,9 +395,7 @@ lm_dist_beta <- function(cell_list, mvtime, ssm_path,
     ##### Linear regression (x: distance, y: mean_alpha) #####
     model <- RobustLinearReg::siegel_regression(mean_alpha ~ distance, data = df_new)
     summary(model)
-
-    newx = seq(min(df_new$distance), max(df_new$distance), by = 1)
-    suppressWarnings(conf_interval <- stats::predict(model, newdata=data.frame(x=newx), interval="confidence", level = 0.95))
+    suppressWarnings(conf_interval <- stats::predict(model, interval="confidence", level = 0.95))
     conf_interval2 <- as.data.frame(cbind(df_new$distance, conf_interval)[order(df_new$distance, decreasing = F),])
     names(conf_interval2)[1] <- "distance"
 
@@ -442,9 +434,7 @@ lm_dist_beta <- function(cell_list, mvtime, ssm_path,
     ##### Linear regression (x: distance, y: most_alpha) #####
     model <- RobustLinearReg::siegel_regression(most_alpha ~ distance, data = df_new)
     summary(model)
-
-    newx = seq(min(df_new$distance), max(df_new$distance), by = 1)
-    suppressWarnings(conf_interval <- stats::predict(model, newdata=data.frame(x=newx), interval="confidence", level = 0.95))
+    suppressWarnings(conf_interval <- stats::predict(model, interval="confidence", level = 0.95))
     conf_interval2 <- as.data.frame(cbind(df_new$distance, conf_interval)[order(df_new$distance, decreasing = F),])
     names(conf_interval2)[1] <- "distance"
 
@@ -604,9 +594,7 @@ lm_dist_beta <- function(cell_list, mvtime, ssm_path,
     ##### Linear regression (x: distance, y: mean_b) #####
     model <- RobustLinearReg::siegel_regression(mean_b ~ distance, data = df_new)
     #summary(model)
-
-    newx = seq(min(df_new$distance), max(df_new$distance), by = 1)
-    suppressWarnings(conf_interval <- stats::predict(model, newdata=data.frame(x=newx), interval="confidence", level = 0.95))
+    suppressWarnings(conf_interval <- stats::predict(model, interval="confidence", level = 0.95))
     conf_interval2 <- as.data.frame(cbind(df_new$distance, conf_interval)[order(df_new$distance, decreasing = F),])
     names(conf_interval2)[1] <- "distance"
 
@@ -645,9 +633,7 @@ lm_dist_beta <- function(cell_list, mvtime, ssm_path,
     ##### Linear regression (x: distance, y: most_b) #####
     model <- RobustLinearReg::siegel_regression(most_b ~ distance, data = df_new)
     #summary(model)
-
-    newx = seq(min(df_new$distance), max(df_new$distance), by = 1)
-    suppressWarnings(conf_interval <- stats::predict(model, newdata=data.frame(x=newx), interval="confidence", level = 0.95))
+    suppressWarnings(conf_interval <- stats::predict(model, interval="confidence", level = 0.95))
     conf_interval2 <- as.data.frame(cbind(df_new$distance, conf_interval)[order(df_new$distance, decreasing = F),])
     names(conf_interval2)[1] <- "distance"
 
@@ -685,9 +671,7 @@ lm_dist_beta <- function(cell_list, mvtime, ssm_path,
     ##### Linear regression (x: distance, y: s_b_ex) #####
     model <- RobustLinearReg::siegel_regression(s_b_ex ~ distance, data = df_new)
     #summary(model)
-
-    newx = seq(min(df_new$distance), max(df_new$distance), by = 1)
-    suppressWarnings(conf_interval <- stats::predict(model, newdata=data.frame(x=newx), interval="confidence", level = 0.95))
+    suppressWarnings(conf_interval <- stats::predict(model, interval="confidence", level = 0.95))
     conf_interval2 <- as.data.frame(cbind(df_new$distance, conf_interval)[order(df_new$distance, decreasing = F),])
     names(conf_interval2)[1] <- "distance"
 

@@ -1,7 +1,7 @@
 
-#' Estimation of signal transfer speed by linear regression (x: start time, y: distance at time 0)
+#' Estimation of signal transfer speed by robust linear regression (x: start time, y: distance at time 0)
 #'
-#' \code{lm_signal} estimates the speed of signal transfer by linear regression
+#' \code{lm_signal} estimates the speed of signal transfer by robust linear regression
 #' between the distance at time 0 and the start time of the
 #' influence of an explanatory variable obtained by the state-space model.
 #'
@@ -92,7 +92,7 @@ lm_signal <- function(cell_list, mvtime,
 
 
   ## Binding variables locally to the function
-  predicted <- ..rr.label.. <- NULL
+  fit <- lwr <- upr <- predicted <- ..rr.label.. <- NULL
 
 
   ## Error message
@@ -180,12 +180,13 @@ lm_signal <- function(cell_list, mvtime,
     max_axis_y <- max(df$distance) + range_y*0.1
 
     ##### Linear regression (x: predicted, y: distance) #####
-    model <- stats::lm(data$distance ~ data$predicted)
-    #newx = seq(min(data$predicted), max(data$predicted), by = 0.1)
-    #suppressWarnings(conf_interval <- stats::predict(model, newdata=data.frame(x=newx), interval="confidence", level = 0.95))
-    #conf_interval2 <- as.data.frame(cbind(data$predicted, conf_interval)[order(data$predicted, decreasing = F),])
-    #names(conf_interval2)[1] <- "predicted"
+    #model <- stats::lm(data$distance ~ data$predicted)
+    model <- RobustLinearReg::siegel_regression(distance ~ predicted, data = data)
+    suppressWarnings(conf_interval <- stats::predict(model, interval="confidence", level = 0.95))
+    conf_interval2 <- as.data.frame(cbind(data$predicted, conf_interval)[order(data$predicted, decreasing = F),])
+    names(conf_interval2)[1] <- "predicted"
 
+    ## Plotting
     r2 <- format(summary(model)$r.squared, digits=2, nsmall = 2)
     r2lab <- bquote(paste(italic(R^2), " = ", .(r2), sep=""))
 
@@ -197,9 +198,10 @@ lm_signal <- function(cell_list, mvtime,
       equationlab <- bquote(paste(italic(y), " = ", .(intercept), " - ", .(coefficient), " ", italic(x), sep=""))
     }
 
-    glist[[i]] <- ggplot(data, aes(x=predicted, y=distance)) +
-      geom_smooth(method="lm", color = "steelblue", fill = "steelblue") +
-      geom_point(size=0.8, alpha=0.5) +
+    glist[[i]] <- ggplot() +
+      geom_line(data = conf_interval2, aes(x=predicted, y=fit), color = "steelblue", linewidth = 1) +
+      geom_ribbon(data = conf_interval2, aes(x=predicted, ymin = lwr, ymax = upr), alpha = 0.4, fill = "steelblue") +
+      geom_point(data = data, aes(x=predicted, y=distance), size=0.8, alpha=0.5) +
       annotate("text", x=min_axis_x+range_x*0.02, y=max_axis_y-range_y*0.05,
                label=equationlab, size=ps/ggplot2::.pt, hjust = 0) +
       annotate("text", x=min_axis_x+range_x*0.02, y=max_axis_y-range_y*0.17,
@@ -231,8 +233,13 @@ lm_signal <- function(cell_list, mvtime,
     min_axis_y <- min(df$distance) - range_y*0.1
     max_axis_y <- max(df$distance) + range_y*0.1
 
-    model <- stats::lm(data$distance ~ data$predicted)
+    #model <- stats::lm(data$distance ~ data$predicted)
+    model <- RobustLinearReg::siegel_regression(distance ~ predicted, data = data)
+    suppressWarnings(conf_interval <- stats::predict(model, interval="confidence", level = 0.95))
+    conf_interval2 <- as.data.frame(cbind(data$predicted, conf_interval)[order(data$predicted, decreasing = F),])
+    names(conf_interval2)[1] <- "predicted"
 
+    ## Plotting
     r2 <- format(summary(model)$r.squared, digits=2, nsmall = 2)
     r2lab <- bquote(paste(italic(R^2), " = ", .(r2), sep=""))
 
@@ -244,9 +251,10 @@ lm_signal <- function(cell_list, mvtime,
       equationlab <- bquote(paste(italic(y), " = ", .(intercept), " - ", .(coefficient), " ", italic(x), sep=""))
     }
 
-    glist[[length(cell_list) + 1]] <- ggplot(data, aes(x=predicted, y=distance)) +
-      geom_smooth(method="lm", color = "steelblue", fill = "steelblue") +
-      geom_point(size=0.8, alpha=0.5) +
+    glist[[length(cell_list) + 1]] <- ggplot() +
+      geom_line(data = conf_interval2, aes(x=predicted, y=fit), color = "steelblue", linewidth = 1) +
+      geom_ribbon(data = conf_interval2, aes(x=predicted, ymin = lwr, ymax = upr), alpha = 0.4, fill = "steelblue") +
+      geom_point(data = data, aes(x=predicted, y=distance), size=0.8, alpha=0.5) +
       annotate("text", x=min_axis_x+range_x*0.02, y=max_axis_y-range_y*0.05,
                label=equationlab, size=ps/ggplot2::.pt, hjust = 0) +
       annotate("text", x=min_axis_x+range_x*0.02, y=max_axis_y-range_y*0.17,
@@ -269,14 +277,14 @@ lm_signal <- function(cell_list, mvtime,
   if(length(cell_list) != 1){
 
     # Speed of all cells
-    lm_allcells <- stats::lm(formula = distance~predicted, data = df)
+    lm_allcells <- RobustLinearReg::siegel_regression(distance ~ predicted, data = df)
 
     # Speed of each cell
     ydiff <- 1 / (length(cell_list) + 1)
     g_speed <- ggplot() + theme_void()
 
     for(i in 1:length(cell_list)){
-      lm_cell <- stats::lm(formula = distance~predicted, data = df[df[,1]==i,])
+      lm_cell <- RobustLinearReg::siegel_regression(formula = distance~predicted, data = df[df[,1]==i,])
 
       # label
       title_all <- paste0("All ", stringr::str_to_lower(df_name), "s")
@@ -321,7 +329,7 @@ lm_signal <- function(cell_list, mvtime,
 
   }else{
     g_speed <- ggplot() + theme_void()
-    lm_cell <- stats::lm(formula = distance~predicted, data = df)
+    lm_cell <- RobustLinearReg::siegel_regression(formula = distance~predicted, data = df)
 
     if(unit1=="meter"){
       label_each <- bquote(paste(.(round(lm_cell$coefficients[2], 2)), " ", (m/.(unit2)), sep = ""))

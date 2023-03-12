@@ -1,7 +1,7 @@
 
-#' Linear regression (x: distance at time 0, y: start time)
+#' Robust linear regression (x: distance at time 0, y: start time)
 #'
-#' \code{lm_dist_start} performs linear regression to analyse the
+#' \code{lm_dist_start} performs robust linear regression to analyse the
 #' relationship between the distance at time 0 and the start time of the
 #' influence of an explanatory variable obtained by the state-space model.
 #'
@@ -92,7 +92,7 @@ lm_dist_start <- function(cell_list, mvtime,
 
 
   ## Binding variables locally to the function
-  predicted <- ..rr.label.. <- NULL
+  fit <- lwr <- upr <- predicted <- ..rr.label.. <- NULL
 
 
   ## Error message
@@ -180,7 +180,11 @@ lm_dist_start <- function(cell_list, mvtime,
     max_axis_y <- max(df$predicted) + range_y*0.1
 
     ##### Linear regression (x: distance, y: predicted) #####
-    model <- stats::lm(data$predicted ~ data$distance)
+    #model <- stats::lm(data$predicted ~ data$distance)
+    model <- RobustLinearReg::siegel_regression(predicted ~ distance, data = data)
+    suppressWarnings(conf_interval <- stats::predict(model, interval="confidence", level = 0.95))
+    conf_interval2 <- as.data.frame(cbind(data$distance, conf_interval)[order(data$distance, decreasing = F),])
+    names(conf_interval2)[1] <- "distance"
 
     r2 <- format(summary(model)$r.squared, digits=2, nsmall = 2)
     r2lab <- bquote(paste(italic(R^2), " = ", .(r2), sep=""))
@@ -193,9 +197,10 @@ lm_dist_start <- function(cell_list, mvtime,
       equationlab <- bquote(paste(italic(y), " = ", .(intercept), " - ", .(coefficient), " ", italic(x), sep=""))
     }
 
-    glist[[i]] <- ggplot(data, aes(x=distance, y=predicted)) +
-      geom_smooth(method="lm", color = "steelblue", fill = "steelblue") +
-      geom_point(size=0.8, alpha=0.5) +
+    glist[[i]] <- ggplot() +
+      geom_line(data = conf_interval2, aes(x=distance, y=fit), color = "steelblue", linewidth = 1) +
+      geom_ribbon(data = conf_interval2, aes(x=distance, ymin = lwr, ymax = upr), alpha = 0.4, fill = "steelblue") +
+      geom_point(data = data, aes(x=distance, y=predicted), size=0.8, alpha=0.5) +
       annotate("text", x=min_axis_x+range_x*0.02, y=max_axis_y-range_y*0.05,
                label=equationlab, size=ps/ggplot2::.pt, hjust = 0) +
       annotate("text", x=min_axis_x+range_x*0.02, y=max_axis_y-range_y*0.17,
@@ -227,7 +232,11 @@ lm_dist_start <- function(cell_list, mvtime,
     min_axis_y <- min(df$predicted) - range_y*0.1
     max_axis_y <- max(df$predicted) + range_y*0.1
 
-    model <- stats::lm(data$predicted ~ data$distance)
+    #model <- stats::lm(data$predicted ~ data$distance)
+    model <- RobustLinearReg::siegel_regression(predicted ~ distance, data = data)
+    suppressWarnings(conf_interval <- stats::predict(model, interval="confidence", level = 0.95))
+    conf_interval2 <- as.data.frame(cbind(data$distance, conf_interval)[order(data$distance, decreasing = F),])
+    names(conf_interval2)[1] <- "distance"
 
     r2 <- format(summary(model)$r.squared, digits=2, nsmall = 2)
     r2lab <- bquote(paste(italic(R^2), " = ", .(r2), sep=""))
@@ -240,9 +249,10 @@ lm_dist_start <- function(cell_list, mvtime,
       equationlab <- bquote(paste(italic(y), " = ", .(intercept), " - ", .(coefficient), " ", italic(x), sep=""))
     }
 
-    glist[[length(cell_list) + 1]] <- ggplot(data, aes(x=distance, y=predicted)) +
-      geom_smooth(method="lm", color = "steelblue", fill = "steelblue") +
-      geom_point(size=0.8, alpha=0.5) +
+    glist[[length(cell_list) + 1]] <- ggplot() +
+      geom_line(data = conf_interval2, aes(x=distance, y=fit), color = "steelblue", linewidth = 1) +
+      geom_ribbon(data = conf_interval2, aes(x=distance, ymin = lwr, ymax = upr), alpha = 0.4, fill = "steelblue") +
+      geom_point(data = data, aes(x=distance, y=predicted), size=0.8, alpha=0.5) +
       annotate("text", x=min_axis_x+range_x*0.02, y=max_axis_y-range_y*0.05,
                label=equationlab, size=ps/ggplot2::.pt, hjust = 0) +
       annotate("text", x=min_axis_x+range_x*0.02, y=max_axis_y-range_y*0.17,
