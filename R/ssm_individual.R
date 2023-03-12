@@ -29,6 +29,8 @@ quantile99 <- function(x){
 #' the influence of an explanatory variable. First column, cells (column name "cell");
 #' second column, index (column name "index"); third column, start time. The default is `NULL`.
 #' @param out (character string) The path of the output directory.
+#' @param obs (positive real) An observation error. The default is `NULL` and
+#' the observation error is estimated from the data.
 #' @param seed (positive integer) A seed for random number generation to pass to CmdStan.
 #' @param warmup (positive integer) The number of warmup iterations of MCMC sampling after thinning.
 #' The default is 1000.
@@ -166,7 +168,7 @@ quantile99 <- function(x){
 #'
 #' @export
 #'
-ssm_individual <- function(cell_list, visual=NULL, out, seed=123, warmup=1000, sampling=1000, thin=3,
+ssm_individual <- function(cell_list, visual=NULL, out, obs=NULL, seed=123, warmup=1000, sampling=1000, thin=3,
                            start_sensitivity = 5, ex_sign = "negative", df_name = "cell",
                            res_name, ex_name, df_idx = NULL, res_idx = NULL, unit1, unit2,
                            shade = TRUE, start_line = TRUE, ps = 7, theme_plot = "bw"){
@@ -208,8 +210,23 @@ ssm_individual <- function(cell_list, visual=NULL, out, seed=123, warmup=1000, s
   df_mv <- data.frame(NULL)
 
   # Compile stan file
-  stan_file <- system.file("extdata", "individual_model.stan", package = "cellssm")
+  stan_file <- system.file("extdata", "individual_model2.stan", package = "cellssm")
   model <- cmdstanr::cmdstan_model(stan_file)
+
+  # Estimation of observation error
+  if(is.null(obs)){
+    sd_vel_all <- NULL
+    for(i in 1:length(cell_list)){
+      for (j in 1:(ncol(cell_list[[i]])-2)){
+        vel <- diff(cell_list[[i]][,j+2])
+        sp_vel <- stats::smooth.spline(1:length(vel), vel)
+        pred_vel <- stats::predict(sp_vel, 1:length(vel))
+        sd_vel <- stats::sd(vel - pred_vel$y)
+        sd_vel_all <- c(sd_vel_all, sd_vel)
+      }
+    }
+    obs <- stats::median(sd_vel_all)
+  }
 
 
   ## Execution of the Bayesian inference
@@ -232,7 +249,8 @@ ssm_individual <- function(cell_list, visual=NULL, out, seed=123, warmup=1000, s
         N = nrow(cell_list[[i]])-1,
         N_ex = length(which(cell_list[[i]]$ex==1)),
         ex = cell_list[[i]]$ex[-1],
-        Y = diff(cell_list[[i]][,j+2])
+        Y = diff(cell_list[[i]][,j+2]),
+        obs = obs
       )
 
       # Get the boundary indexes of ex
@@ -273,7 +291,6 @@ ssm_individual <- function(cell_list, visual=NULL, out, seed=123, warmup=1000, s
       tmp_csv_alpha <- NULL
       tmp_csv_s_w <- NULL
       tmp_csv_s_b_ex <- NULL
-      tmp_csv_s_Y <- NULL
 
       for(k in 1:length(outcsv_name)){
         tmp_csv <- as.data.frame(data.table::fread(cmd = paste0("grep -v '^#' ", output_dir, "/", outcsv_name[k])))
@@ -282,15 +299,13 @@ ssm_individual <- function(cell_list, visual=NULL, out, seed=123, warmup=1000, s
         tmp_csv_alpha <- rbind(tmp_csv_alpha, tmp_csv[,stringr::str_starts(names(tmp_csv), "alpha")])
         tmp_csv_s_w <- c(tmp_csv_s_w, tmp_csv[,stringr::str_starts(names(tmp_csv), "s_w")])
         tmp_csv_s_b_ex <- c(tmp_csv_s_b_ex, tmp_csv[,stringr::str_starts(names(tmp_csv), "s_b_ex")])
-        tmp_csv_s_Y <- c(tmp_csv_s_Y, tmp_csv[,stringr::str_starts(names(tmp_csv), "s_Y")])
       }
 
       df_w <- as.data.frame(t(apply(tmp_csv_w, 2, quantile99)))
       df_b_ex <- as.data.frame(t(apply(tmp_csv_b_ex, 2, quantile99)))
       df_alpha <- as.data.frame(t(apply(tmp_csv_alpha, 2, quantile99)))
       df_s <- t(data.frame(s_w = quantile99(tmp_csv_s_w),
-                           s_b_ex = quantile99(tmp_csv_s_b_ex),
-                           s_Y = quantile99(tmp_csv_s_Y)))
+                           s_b_ex = quantile99(tmp_csv_s_b_ex)))
       df_s <- cbind(data.frame(s_name = row.names(df_s)), df_s)
 
       # Save output

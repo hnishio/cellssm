@@ -421,6 +421,13 @@ ssm_common <- function(cell_list, mvtime=NULL, out, seed = 123, warmup=1000, sam
   # for loop of cells
   for(i in 1:length(cell_list)){
 
+    # File name
+    if(!is.null(df_idx)){
+      file_name <- paste0(df_name, df_idx[i])
+    }else{
+      file_name <- paste0(df_name, i)
+    }
+
     # Load data
     dfs <- data.table::fread(file = paste0(out, "/csv/ssm_common_", file_name, ".csv"))
 
@@ -450,6 +457,13 @@ ssm_common <- function(cell_list, mvtime=NULL, out, seed = 123, warmup=1000, sam
 
   # for loop of cells
   for(i in 1:length(cell_list)){
+
+    # File name
+    if(!is.null(df_idx)){
+      file_name <- paste0(df_name, df_idx[i])
+    }else{
+      file_name <- paste0(df_name, i)
+    }
 
     # Load data
     dfs <- data.table::fread(file = paste0(out, "/csv/ssm_common_", file_name, ".csv"))

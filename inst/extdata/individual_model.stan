@@ -6,6 +6,7 @@ data {
   vector[N] Y;
   int boundary1;
   int boundary2;
+  real obs;
 }
 
 
@@ -14,7 +15,6 @@ parameters {
   vector[N_ex] b_ex;
   real<lower=0> s_w;
   real<lower=0> s_b_ex;
-  real<lower=0> s_Y;
 }
 
 
@@ -48,7 +48,7 @@ model {
 
   // Observation equation of Y
   for (t in 1:N) {
-    Y[t] ~ normal(alpha[t], s_Y);
+    Y[t] ~ normal(alpha[t], obs);
   }
 }
 

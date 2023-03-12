@@ -8,6 +8,7 @@ ssm_individual(
   cell_list,
   visual = NULL,
   out,
+  obs = NULL,
   seed = 123,
   warmup = 1000,
   sampling = 1000,
@@ -40,6 +41,9 @@ the influence of an explanatory variable. First column, cells (column name "cell
 second column, index (column name "index"); third column, start time. The default is \code{NULL}.}
 
 \item{out}{(character string) The path of the output directory.}
+
+\item{obs}{(positive real) An observation error. The default is \code{NULL} and
+the observation error is estimated from the data.}
 
 \item{seed}{(positive integer) A seed for random number generation to pass to CmdStan.}
 
