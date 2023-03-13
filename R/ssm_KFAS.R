@@ -16,8 +16,16 @@
 #' the influence of an explanatory variable. First column, cells (column name "cell");
 #' second column, index (column name "index"); third column, the start time. The default is `NULL`.
 #' @param out (character string) The path of the output directory.
-#' @param start_sensitivity (positive integer) The sensitivity to detect the start time
-#' of movements. Larger values indicate a higher sensitivity. The default is 1.
+#' @param stepwise (logical) Whether to estimate the start time of the movement stepwise.
+#' When `FALSE`, the start of the movement was estimated from the 95 % confidence
+#' interval of the time-varying coefficient of the explanatory variable.
+#' When `TRUE` and the start time can not be estimated with the 95 % confidence
+#' interval, the threshold is sequentially lowered to the 90 %, 80 %, 70 %, 60 %,
+#' and 50 % confidence intervals until the start time is determined. If the start
+#' time is still not able to be determined, it is set to infinity. The default is `TRUE`.
+#' @param start_sensitivity (positive integer) The sensitivity to estimate the start time
+#' of the movement. Larger values indicate a higher sensitivity and adopt the earlier
+#' start time estimated with lower confidence intervals. The default is 1.
 #' @param ex_sign (character string) "positive" or "negative". This is used to
 #' estimate the start time of the positive or negative influence of the explanatory
 #' variable on the distances of cells or organelles.
@@ -125,7 +133,8 @@
 #' @export
 #'
 ssm_KFAS <- function(cell_list, visual = NULL, out,
-                     start_sensitivity = 1, ex_sign = "negative", df_name = "cell",
+                     stepwise = TRUE, start_sensitivity = 1,
+                     ex_sign = "negative", df_name = "cell",
                      res_name, ex_name, unit1, unit2,
                      shade = TRUE, start_line = TRUE, ps = 7, theme_plot = "bw"){
 
@@ -251,7 +260,7 @@ ssm_KFAS <- function(cell_list, visual = NULL, out,
             move_time <- end_time - start_time
           }
 
-        }else if(length(which(df$`b_ex_5%` > 0)) > 0){
+        }else if(stepwise == TRUE & length(which(df$`b_ex_5%` > 0)) > 0){
           start_time <- df$time[which(df$`b_ex_5%` > 0)][1]
           end_time <- df$time[which(df$`b_ex_5%` > 0)][length(which(df$`b_ex_5%` > 0))] + 1
           move_time <- end_time - start_time
@@ -276,7 +285,7 @@ ssm_KFAS <- function(cell_list, visual = NULL, out,
             move_time <- end_time - start_time
           }
 
-        }else if(length(which(df$`b_ex_10%` > 0)) > 0){
+        }else if(stepwise == TRUE & length(which(df$`b_ex_10%` > 0)) > 0){
           start_time <- df$time[which(df$`b_ex_10%` > 0)][1]
           end_time <- df$time[which(df$`b_ex_10%` > 0)][length(which(df$`b_ex_10%` > 0))] + 1
           move_time <- end_time - start_time
@@ -296,7 +305,7 @@ ssm_KFAS <- function(cell_list, visual = NULL, out,
             move_time <- end_time - start_time
           }
 
-        }else if(length(which(df$`b_ex_15%` > 0)) > 0){
+        }else if(stepwise == TRUE & length(which(df$`b_ex_15%` > 0)) > 0){
           start_time <- df$time[which(df$`b_ex_15%` > 0)][1]
           end_time <- df$time[which(df$`b_ex_15%` > 0)][length(which(df$`b_ex_15%` > 0))] + 1
           move_time <- end_time - start_time
@@ -311,7 +320,7 @@ ssm_KFAS <- function(cell_list, visual = NULL, out,
             move_time <- end_time - start_time
           }
 
-        }else if(length(which(df$`b_ex_20%` > 0)) > 0){
+        }else if(stepwise == TRUE & length(which(df$`b_ex_20%` > 0)) > 0){
           start_time <- df$time[which(df$`b_ex_20%` > 0)][1]
           end_time <- df$time[which(df$`b_ex_20%` > 0)][length(which(df$`b_ex_20%` > 0))] + 1
           move_time <- end_time - start_time
@@ -321,7 +330,7 @@ ssm_KFAS <- function(cell_list, visual = NULL, out,
             move_time <- end_time - start_time
           }
 
-        }else if(length(which(df$`b_ex_25%` > 0)) > 0){
+        }else if(stepwise == TRUE & length(which(df$`b_ex_25%` > 0)) > 0){
           start_time <- df$time[which(df$`b_ex_25%` > 0)][1]
           end_time <- df$time[which(df$`b_ex_25%` > 0)][length(which(df$`b_ex_25%` > 0))] + 1
           move_time <- end_time - start_time
@@ -364,7 +373,7 @@ ssm_KFAS <- function(cell_list, visual = NULL, out,
             move_time <- end_time - start_time
           }
 
-        }else if(length(which(df$`b_ex_95%` < 0)) > 0){
+        }else if(stepwise == TRUE & length(which(df$`b_ex_95%` < 0)) > 0){
           start_time <- df$time[which(df$`b_ex_95%` < 0)][1]
           end_time <- df$time[which(df$`b_ex_95%` < 0)][length(which(df$`b_ex_95%` < 0))] + 1
           move_time <- end_time - start_time
@@ -389,7 +398,7 @@ ssm_KFAS <- function(cell_list, visual = NULL, out,
             move_time <- end_time - start_time
           }
 
-        }else if(length(which(df$`b_ex_90%` < 0)) > 0){
+        }else if(stepwise == TRUE & length(which(df$`b_ex_90%` < 0)) > 0){
           start_time <- df$time[which(df$`b_ex_90%` < 0)][1]
           end_time <- df$time[which(df$`b_ex_90%` < 0)][length(which(df$`b_ex_90%` < 0))] + 1
           move_time <- end_time - start_time
@@ -409,7 +418,7 @@ ssm_KFAS <- function(cell_list, visual = NULL, out,
             move_time <- end_time - start_time
           }
 
-        }else if(length(which(df$`b_ex_85%` < 0)) > 0){
+        }else if(stepwise == TRUE & length(which(df$`b_ex_85%` < 0)) > 0){
           start_time <- df$time[which(df$`b_ex_85%` < 0)][1]
           end_time <- df$time[which(df$`b_ex_85%` < 0)][length(which(df$`b_ex_85%` < 0))] + 1
           move_time <- end_time - start_time
@@ -424,7 +433,7 @@ ssm_KFAS <- function(cell_list, visual = NULL, out,
             move_time <- end_time - start_time
           }
 
-        }else if(length(which(df$`b_ex_80%` < 0)) > 0){
+        }else if(stepwise == TRUE & length(which(df$`b_ex_80%` < 0)) > 0){
           start_time <- df$time[which(df$`b_ex_80%` < 0)][1]
           end_time <- df$time[which(df$`b_ex_80%` < 0)][length(which(df$`b_ex_80%` < 0))] + 1
           move_time <- end_time - start_time
@@ -434,7 +443,7 @@ ssm_KFAS <- function(cell_list, visual = NULL, out,
             move_time <- end_time - start_time
           }
 
-        }else if(length(which(df$`b_ex_75%` < 0)) > 0){
+        }else if(stepwise == TRUE & length(which(df$`b_ex_75%` < 0)) > 0){
           start_time <- df$time[which(df$`b_ex_75%` < 0)][1]
           end_time <- df$time[which(df$`b_ex_75%` < 0)][length(which(df$`b_ex_75%` < 0))] + 1
           move_time <- end_time - start_time
