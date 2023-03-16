@@ -36,8 +36,8 @@ minor tasks.
 \itemize{
 \item \link{dist_vis} : Visualisation of the distance from an explanatory variable
 \item \link{lm_dist_beta} : Robust linear regression (x: distance at time 0, y: coefficient of explanatory variable)
-\item \link{lm_dist_start} : Linear regression (x: distance at time 0, y: start time)
-\item \link{lm_signal} : Estimation of signal transfer speed by linear regression (x: start time, y: distance at time 0)
+\item \link{lm_dist_start} : Robust linear regression (x: distance at time 0, y: start time)
+\item \link{lm_signal} : Estimation of signal transfer speed by robust linear regression (x: start time, y: distance at time 0)
 }
 }
 
