@@ -34,6 +34,17 @@ state-space modelling, and sub-functions to perform minor tasks.
     dynamics using Kalman filter
 -   nomodel : Estimation of movement without the state-space model
 
+#### Sub-functions:
+
+-   dist_vis : Visualisation of the distance from an explanatory
+    variable
+-   lm_dist_beta : Robust linear regression (x: distance at time 0, y:
+    coefficient of explanatory variable)
+-   lm_dist_start : Robust linear regression (x: distance at time 0, y:
+    start time)
+-   lm_signal : Estimation of signal transfer speed by robust linear
+    regression (x: start time, y: distance at time 0)
+
 ## Installation
 
 You can install the development version of cellssm from
@@ -147,7 +158,7 @@ the blue microbeam at the start of irradiation. In **A**–**E**, dots,
 solid lines and shaded regions are the observed values, regression lines
 and 95% confidence intervals, respectively.
 
-#### Estimation of the signal transfer speed by linear regression (x: start time, y: distance at time 0)
+#### Estimation of the signal transfer speed by robust linear regression (x: start time, y: distance at time 0)
 
 ``` r
 # Linear regression

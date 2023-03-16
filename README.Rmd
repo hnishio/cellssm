@@ -33,6 +33,12 @@ minor tasks.
 * ssm_KFAS : Inference of the state-space model for individual dynamics using Kalman filter
 * nomodel : Estimation of movement without the state-space model
 
+#### Sub-functions:
+* dist_vis : Visualisation of the distance from an explanatory variable
+* lm_dist_beta : Robust linear regression (x: distance at time 0, y: coefficient of explanatory variable)
+* lm_dist_start : Robust linear regression (x: distance at time 0, y: start time)
+* lm_signal : Estimation of signal transfer speed by robust linear regression (x: start time, y: distance at time 0)
+
 
 ## Installation
 You can install the development version of cellssm from [GitHub](https://github.com/) with:
@@ -102,7 +108,7 @@ glist <- lm_dist_beta(cell_list = cell_list, mvtime = chloroplast_mvtime,
 **A**–**E** Repeated median regression of the mean coefficient of microbeam during the time course (**A**), the most negative coefficient of microbeam (**B**), the standard deviation of coefficient of microbeam (**C**), the mean velocity of movement (**D**), and the most negative velocity of movement (**E**), against the distances of chloroplasts from the blue microbeam at the start of irradiation. In **A**–**E**, dots, solid lines and shaded regions are the observed values, regression lines and 95% confidence intervals, respectively.
 
 
-#### Estimation of the signal transfer speed by linear regression (x: start time, y: distance at time 0)
+#### Estimation of the signal transfer speed by robust linear regression (x: start time, y: distance at time 0)
 
 ```{r lm_signal, eval = F}
 # Linear regression

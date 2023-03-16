@@ -23,8 +23,8 @@
 #' @section Sub-functions:
 #' * [dist_vis] : Visualisation of the distance from an explanatory variable
 #' * [lm_dist_beta] : Robust linear regression (x: distance at time 0, y: coefficient of explanatory variable)
-#' * [lm_dist_start] : Linear regression (x: distance at time 0, y: start time)
-#' * [lm_signal] : Estimation of signal transfer speed by linear regression (x: start time, y: distance at time 0)
+#' * [lm_dist_start] : Robust linear regression (x: distance at time 0, y: start time)
+#' * [lm_signal] : Estimation of signal transfer speed by robust linear regression (x: start time, y: distance at time 0)
 #'
 #' @section Datasets:
 #' * [cell1] : Time series of chloroplast accumulation responses in cell 1
