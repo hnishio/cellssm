@@ -13,7 +13,7 @@ ssm_individual(
   sampling = 1000,
   thin = 3,
   stepwise = TRUE,
-  start_sensitivity = 1,
+  start_sensitivity = 5,
   ex_sign = "negative",
   df_name = "cell",
   res_name,
@@ -64,7 +64,14 @@ time is still not able to be determined, it is set to infinity. The default is \
 
 \item{start_sensitivity}{(positive integer) The sensitivity to estimate the start time
 of the movement. Larger values indicate a higher sensitivity and adopt the earlier
-start time estimated with lower confidence intervals. The default is 1.}
+start time estimated with lower confidence intervals. In detail, this parameter
+relates to how much earlier the start time estimated by the lower threshold of
+confidence intervals is than that estimated by the 95 \% confidence interval.
+When this difference is larger than the value obtained by dividing the period of
+the explanatory variable by \code{start_sensitivity}, the start time estimated with
+lower confidence intervals is adopted. When \code{start_sensitivity} is set to the
+value lower than 1, no threshold lower than the 95 \% confidence interval is
+considerred. The default is 5.}
 
 \item{ex_sign}{(character string) "positive" or "negative". This is used to
 estimate the start time of the positive or negative influence of the explanatory
@@ -178,7 +185,7 @@ visual
 # Execution of state-space modelling
 
   # Set the path where CmdStan was installed
-  set_cmdstan_path("~/cmdstan/")
+  cmdstanr::set_cmdstan_path("~/cmdstan/")
 
   # When you do not want to compare the statistical and visual estimations of the start time
   ssm_individual(cell_list = cell_list, out = "02_ssm_individual",

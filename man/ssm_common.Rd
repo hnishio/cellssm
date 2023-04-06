@@ -151,7 +151,7 @@ chloroplast_mvtime
 # Execution of state-space modeling
 
   # Set the path to which CmdStan was installed
-  set_cmdstan_path("~/cmdstan/")
+  cmdstanr::set_cmdstan_path("~/cmdstan/")
 
   # With the data frame of the movement time. This is recommended.
   ssm_common(cell_list = cell_list, mvtime = chloroplast_mvtime, out = "08_ssm_common",
@@ -183,7 +183,7 @@ Paramecium_mvtime
 # Execution of state-space modelling
 
   # Set the path where CmdStan was installed
-  set_cmdstan_path("~/cmdstan/")
+  cmdstanr::set_cmdstan_path("~/cmdstan/")
 
   # With the data frame of the movement time. This is recommended
   ssm_common(cell_list = cell_list, mvtime = Paramecium_mvtime, out = "18_ssm_common",

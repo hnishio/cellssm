@@ -46,7 +46,14 @@ quantile99 <- function(x){
 #' time is still not able to be determined, it is set to infinity. The default is `TRUE`.
 #' @param start_sensitivity (positive integer) The sensitivity to estimate the start time
 #' of the movement. Larger values indicate a higher sensitivity and adopt the earlier
-#' start time estimated with lower confidence intervals. The default is 1.
+#' start time estimated with lower confidence intervals. In detail, this parameter
+#' relates to how much earlier the start time estimated by the lower threshold of
+#' confidence intervals is than that estimated by the 95 % confidence interval.
+#' When this difference is larger than the value obtained by dividing the period of
+#' the explanatory variable by `start_sensitivity`, the start time estimated with
+#' lower confidence intervals is adopted. When `start_sensitivity` is set to the
+#' value lower than 1, no threshold lower than the 95 % confidence interval is
+#' considerred. The default is 5.
 #' @param ex_sign (character string) "positive" or "negative". This is used to
 #' estimate the start time of the positive or negative influence of the explanatory
 #' variable on the distances of cells or organelles.
@@ -131,7 +138,7 @@ quantile99 <- function(x){
 #' # Execution of state-space modelling
 #'
 #'   # Set the path where CmdStan was installed
-#'   set_cmdstan_path("~/cmdstan/")
+#'   cmdstanr::set_cmdstan_path("~/cmdstan/")
 #'
 #'   # When you do not want to compare the statistical and visual estimations of the start time
 #'   ssm_individual(cell_list = cell_list, out = "02_ssm_individual",
@@ -174,7 +181,7 @@ quantile99 <- function(x){
 #' @export
 #'
 ssm_individual <- function(cell_list, visual=NULL, out, seed=123, warmup=1000,
-                           sampling=1000, thin=3, stepwise = TRUE, start_sensitivity = 1,
+                           sampling=1000, thin=3, stepwise = TRUE, start_sensitivity = 5,
                            ex_sign = "negative", df_name = "cell",
                            res_name, ex_name, df_idx = NULL, res_idx = NULL, unit1, unit2,
                            shade = TRUE, start_line = TRUE, ps = 7, theme_plot = "bw"){
