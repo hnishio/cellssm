@@ -424,7 +424,7 @@ ssm_KFAS <- function(cell_list, visual = NULL, out,
           start_time <- df$time[which(df$`b_ex_99.5%` < 0)][1]
           end_time <- df$time[which(df$`b_ex_99.5%` < 0)][length(which(df$`b_ex_99.5%` < 0))] + 1
           move_time <- end_time - start_time
-          if(stepwise[2] <= 95 & length(which(df$`b_ex_97.5%` < 0)) > 0){
+          if(stepwise[2] <= 95 & (start_time - df$time[which(df$`b_ex_97.5%` < 0)][1]) > ex_period/start_sensitivity){
             start_time <- df$time[which(df$`b_ex_97.5%` < 0)][1]
             end_time <- df$time[which(df$`b_ex_97.5%` < 0)][length(which(df$`b_ex_97.5%` < 0))] + 1
             move_time <- end_time - start_time
