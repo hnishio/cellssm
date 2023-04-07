@@ -1,5 +1,5 @@
 
 # ssm_individual
 .onAttach <- function(libname, pkgname) {
-  packageStartupMessage("Welcome to cellssm")
+  packageStartupMessage("To read the manual, use: help(\"cellssm\")")
 }

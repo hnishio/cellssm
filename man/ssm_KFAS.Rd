@@ -8,12 +8,14 @@ ssm_KFAS(
   cell_list,
   visual = NULL,
   out,
-  stepwise = 90,
+  stepwise = c(95, 90),
   start_sensitivity = 5,
   ex_sign = "negative",
   df_name = "cell",
-  res_name,
+  res_name = "organelle",
   ex_name,
+  df_idx = NULL,
+  res_idx = NULL,
   unit1,
   unit2,
   shade = TRUE,
@@ -36,14 +38,15 @@ second column, index (column name "index"); third column, the start time. The de
 
 \item{out}{(character string) The path of the output directory.}
 
-\item{stepwise}{(one of (95, 90, 80, 70, 60, 50)) The extent of stepwise
-estimation of the start time of the movement.
-When this is set to 95, the start of the movement was estimated from the 95 \%
-confidence interval of the time-varying coefficient of the explanatory variable.
-When this is set to the lower values and the start time can not be estimated
-with the 95 \% confidence interval, the threshold is sequentially lowered to the
-values until the start time is determined. If the start
-time is still not able to be determined, it is set to infinity. The default is 90.}
+\item{stepwise}{(integer vector of length two chosen from (95, 90, 80, 70, 60, 50))
+The confidence intervals for stepwise estimation of the start time of the movement.
+For example, when the first value is set to 95, the start of the movement is
+estimated from the 95 \% confidence interval of the time-varying coefficient of
+the explanatory variable. When the second value is set to the lower values and
+the start time can not be estimated with the 95 \% confidence interval, the
+threshold is sequentially lowered to the second value until the start time is
+determined. If the start time is still not able to be determined, it is set to
+infinity. The default is c(95, 90).}
 
 \item{start_sensitivity}{(positive integer) The sensitivity to estimate the start time
 of the movement. Larger values indicate a higher sensitivity and adopt the earlier
@@ -67,10 +70,24 @@ variable, \code{ex_sign} should be "negative".}
 file names and graph titles. The default is "cell".}
 
 \item{res_name}{(character string) The name of the response variable. This is used
-for file names and graph labels.}
+for file names and graph labels. The default is "organelle".}
 
 \item{ex_name}{(character string) The name of the explanatory variable. This is
 used for graph labels.}
+
+\item{df_idx}{(integer vector) Indexes of the data frame. This should be set
+only when you want to set the indexes manually. This is used for
+file names and graph titles. For example, setting "\code{df_idx} = c(1,3) and \code{res_idx}
+= c(2,8)" with the default \code{df_name} and \code{res_name} results in the file names
+including "cell1_organelle2" and "cell3_organelle8". The default is \code{NULL} and
+the indexes are automatically set.}
+
+\item{res_idx}{(integer vector) Indexes of the response variable. This should be set
+only when you want to set the indexes manually. This is used for
+file names and graph titles. For example, setting "\code{df_idx} = c(1,3) and \code{res_idx}
+= c(2,8)" with the default \code{df_name} and \code{res_name} results in the file names
+including "cell1_organelle2" and "cell3_organelle8". The default is \code{NULL} and
+the indexes are automatically set.}
 
 \item{unit1}{(character string) The unit of the response variable. One of "meter",
 "centimeter", "millimeter", "micrometer", "nanometer". If another character

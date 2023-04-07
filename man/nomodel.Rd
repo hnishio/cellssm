@@ -12,8 +12,10 @@ nomodel(
   sma_period = 10,
   fold = 2,
   df_name = "cell",
-  res_name,
+  res_name = "organelle",
   ex_name,
+  df_idx = NULL,
+  res_idx = NULL,
   unit1,
   unit2,
   shade = TRUE,
@@ -53,10 +55,24 @@ than the average change rate. The default is 2.}
 file names and graph titles. The default is "cell".}
 
 \item{res_name}{(character string) The name of the response variable. This is used
-for file names and graph labels.}
+for file names and graph labels. The default is "organelle".}
 
 \item{ex_name}{(character string) The name of the explanatory variable. This is
 used for graph labels.}
+
+\item{df_idx}{(integer vector) Indexes of the data frame. This should be set
+only when you want to set the indexes manually. This is used for
+file names and graph titles. For example, setting "\code{df_idx} = c(1,3) and \code{res_idx}
+= c(2,8)" with the default \code{df_name} and \code{res_name} results in the file names
+including "cell1_organelle2" and "cell3_organelle8". The default is \code{NULL} and
+the indexes are automatically set.}
+
+\item{res_idx}{(integer vector) Indexes of the response variable. This should be set
+only when you want to set the indexes manually. This is used for
+file names and graph titles. For example, setting "\code{df_idx} = c(1,3) and \code{res_idx}
+= c(2,8)" with the default \code{df_name} and \code{res_name} results in the file names
+including "cell1_organelle2" and "cell3_organelle8". The default is \code{NULL} and
+the indexes are automatically set.}
 
 \item{unit1}{(character string) The unit of the response variable. One of "meter",
 "centimeter", "millimeter", "micrometer", "nanometer". If another character

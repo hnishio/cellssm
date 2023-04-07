@@ -29,9 +29,21 @@
 #' @param df_name (character string) The name of the data frame. This is used for
 #' file names and graph titles. The default is "cell".
 #' @param res_name (character string) The name of the response variable. This is used
-#' for file names and graph labels.
+#' for file names and graph labels. The default is "organelle".
 #' @param ex_name (character string) The name of the explanatory variable. This is
 #' used for graph labels.
+#' @param df_idx (integer vector) Indexes of the data frame. This should be set
+#' only when you want to set the indexes manually. This is used for
+#' file names and graph titles. For example, setting "`df_idx` = c(1,3) and `res_idx`
+#' = c(2,8)" with the default `df_name` and `res_name` results in the file names
+#' including "cell1_organelle2" and "cell3_organelle8". The default is `NULL` and
+#' the indexes are automatically set.
+#' @param res_idx (integer vector) Indexes of the response variable. This should be set
+#' only when you want to set the indexes manually. This is used for
+#' file names and graph titles. For example, setting "`df_idx` = c(1,3) and `res_idx`
+#' = c(2,8)" with the default `df_name` and `res_name` results in the file names
+#' including "cell1_organelle2" and "cell3_organelle8". The default is `NULL` and
+#' the indexes are automatically set.
 #' @param unit1 (character string) The unit of the response variable. One of "meter",
 #' "centimeter", "millimeter", "micrometer", "nanometer". If another character
 #' string is given, it is used as it is. This is used for graph labels.
@@ -111,7 +123,8 @@
 #'
 nomodel <- function(cell_list, visual = NULL, out,
                     ex_sign = "negative", sma_period = 10, fold = 2,
-                    df_name = "cell", res_name, ex_name, unit1, unit2,
+                    df_name = "cell", res_name = "organelle", ex_name,
+                    df_idx = NULL, res_idx = NULL, unit1, unit2,
                     shade = TRUE, start_line = TRUE, ps = 7, theme_plot = "bw"){
 
 
@@ -138,6 +151,14 @@ nomodel <- function(cell_list, visual = NULL, out,
     # for loop of the response variable
     for(j in 1:(ncol(cell_list[[i]])-2)){
 
+      # File name
+      if(!is.null(df_idx) & !is.null(res_idx)){
+        file_name <- paste0(df_name, df_idx[j], "_", res_name, res_idx[j])
+      }else{
+        file_name <- paste0(df_name, i, "_", res_name, j)
+      }
+
+      # Distance
       Y = cell_list[[i]][,j+2]
 
       if(ex_sign == "positive"){  # positive
@@ -216,7 +237,11 @@ nomodel <- function(cell_list, visual = NULL, out,
 
       # Visual
       if(!is.null(visual)){
-        vis <- dplyr::filter(visual, cell == i & index == j)$time
+        if(!is.null(df_idx) & !is.null(res_idx)){
+          vis <- dplyr::filter(visual, cell == df_idx[j] & index == res_idx[j])$time
+        }else{
+          vis <- dplyr::filter(visual, cell == i & index == j)$time
+        }
         label_statistical <- "Statistical"
         label_visual <- "Visual"
       }else{
@@ -276,8 +301,8 @@ nomodel <- function(cell_list, visual = NULL, out,
       }
 
       # Title of the plots
-      if(length(cell_list) == 1){
-        titles <- paste(stringr::str_to_title(res_name), " ", j, sep="")
+      if(!is.null(df_idx) & !is.null(res_idx)){
+        titles <- paste(stringr::str_to_title(df_name), " ", df_idx[j], ", ", res_name, " ", res_idx[j], sep="")
       }else{
         titles <- paste(stringr::str_to_title(df_name), " ", i, ", ", res_name, " ", j, sep="")
       }
@@ -325,7 +350,7 @@ nomodel <- function(cell_list, visual = NULL, out,
 
       # Integrate plots
       suppressWarnings(
-        ggsave(paste0(out, "/nomodel_", df_name, i, "_", res_name, j, ".pdf"),
+        ggsave(paste0(out, "/nomodel_", file_name, ".pdf"),
                g_dist, height = ps*20*1/4, width = ps*10*1.2, units = "mm")
       )
 

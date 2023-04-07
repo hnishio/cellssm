@@ -37,14 +37,15 @@ quantile99 <- function(x){
 #' @param thin (positive integer) Intervals of MCMC samples. This is useful for
 #' reducing the autocorrelation of the MCMC samples and improving the convergence of
 #' MCMC. The default is 3.
-#' @param stepwise (one of (95, 90, 80, 70, 60, 50)) The extent of stepwise
-#' estimation of the start time of the movement.
-#' When this is set to 95, the start of the movement was estimated from the 95 %
-#' confidence interval of the time-varying coefficient of the explanatory variable.
-#' When this is set to the lower values and the start time can not be estimated
-#' with the 95 % confidence interval, the threshold is sequentially lowered to the
-#' values until the start time is determined. If the start
-#' time is still not able to be determined, it is set to infinity. The default is 90.
+#' @param stepwise (integer vector of length two chosen from (95, 90, 80, 70, 60, 50))
+#' The confidence intervals for stepwise estimation of the start time of the movement.
+#' For example, when the first value is set to 95, the start of the movement is
+#' estimated from the 95 % confidence interval of the time-varying coefficient of
+#' the explanatory variable. When the second value is set to the lower values and
+#' the start time can not be estimated with the 95 % confidence interval, the
+#' threshold is sequentially lowered to the second value until the start time is
+#' determined. If the start time is still not able to be determined, it is set to
+#' infinity. The default is c(95, 90).
 #' @param start_sensitivity (positive integer) The sensitivity to estimate the start time
 #' of the movement. Larger values indicate a higher sensitivity and adopt the earlier
 #' start time estimated with lower confidence intervals. In detail, this parameter
@@ -64,15 +65,21 @@ quantile99 <- function(x){
 #' @param df_name (character string) The name of the data frame. This is used for
 #' file names and graph titles. The default is "cell".
 #' @param res_name (character string) The name of the response variable. This is used
-#' for file names and graph labels.
+#' for file names and graph labels. The default is "organelle".
 #' @param ex_name (character string) The name of the explanatory variable. This is used
 #' for graph labels.
 #' @param df_idx (integer vector) Indexes of the data frame. This should be set
 #' only when you want to set the indexes manually. This is used for
-#' file names and graph titles. The default is `NULL` and the indexes are automatically set.
+#' file names and graph titles. For example, setting "`df_idx` = c(1,3) and `res_idx`
+#' = c(2,8)" with the default `df_name` and `res_name` results in the file names
+#' including "cell1_organelle2" and "cell3_organelle8". The default is `NULL` and
+#' the indexes are automatically set.
 #' @param res_idx (integer vector) Indexes of the response variable. This should be set
 #' only when you want to set the indexes manually. This is used for
-#' file names and graph titles. The default is `NULL` and the indexes are automatically set.
+#' file names and graph titles. For example, setting "`df_idx` = c(1,3) and `res_idx`
+#' = c(2,8)" with the default `df_name` and `res_name` results in the file names
+#' including "cell1_organelle2" and "cell3_organelle8". The default is `NULL` and
+#' the indexes are automatically set.
 #' @param unit1 (character string) The unit of the response variable. One of "meter",
 #' "centimeter", "millimeter", "micrometer", "nanometer". If another character
 #' string is given, it is used as it is. This is used for graph labels.
@@ -182,9 +189,9 @@ quantile99 <- function(x){
 #' @export
 #'
 ssm_individual <- function(cell_list, visual=NULL, out, seed=123, warmup=1000,
-                           sampling=1000, thin=3, stepwise = 90, start_sensitivity = 5,
+                           sampling=1000, thin=3, stepwise = c(95, 90), start_sensitivity = 5,
                            ex_sign = "negative", df_name = "cell",
-                           res_name, ex_name, df_idx = NULL, res_idx = NULL, unit1, unit2,
+                           res_name = "organelle", ex_name, df_idx = NULL, res_idx = NULL, unit1, unit2,
                            shade = TRUE, start_line = TRUE, ps = 7, theme_plot = "bw"){
 
   ## Dependency on cmdstanr
@@ -195,8 +202,15 @@ ssm_individual <- function(cell_list, visual=NULL, out, seed=123, warmup=1000,
 
 
   ## Warning of stepwise option
-  if(!stepwise%in%c(95, 90, 80, 70, 60, 50)){
-    stop("\"stepwise\" must be one of [95, 90, 80, 70, 60, 50].",
+  if(!stepwise[1]%in%c(99, 95, 90, 80, 70, 60, 50) |
+     !stepwise[2]%in%c(99, 95, 90, 80, 70, 60, 50)){
+    stop("\"stepwise\" must be the combination of [99, 95, 90, 80, 70, 60, 50].
+         \nFor example, \"stepwise = c(95, 95)\", \"stepwise = c(95, 50)\", etc.",
+         call. = FALSE)
+  }
+  if(stepwise[1] < stepwise[2]){
+    stop("\"stepwise[1]\" must be larger than \"stepwise[2].
+         \nFor example, \"stepwise = c(95, 95)\", \"stepwise = c(95, 50)\", etc.",
          call. = FALSE)
   }
 
@@ -338,107 +352,142 @@ ssm_individual <- function(cell_list, visual=NULL, out, seed=123, warmup=1000,
 
       if(ex_sign == "positive"){  # ex_sign == "positive"
 
-        if(length(which(df$`b_ex_2.5%` > 0)) > 0){
-          start_time <- df$time[which(df$`b_ex_2.5%` > 0)][1]
-          end_time <- df$time[which(df$`b_ex_2.5%` > 0)][length(which(df$`b_ex_2.5%` > 0))] + 1
+        if(stepwise[1] >= 99 & stepwise[2] <= 99 & length(which(df$`b_ex_0.5%` > 0)) > 0){
+          start_time <- df$time[which(df$`b_ex_0.5%` > 0)][1]
+          end_time <- df$time[which(df$`b_ex_0.5%` > 0)][length(which(df$`b_ex_0.5%` > 0))] + 1
           move_time <- end_time - start_time
-          if(stepwise <= 90 & (start_time - df$time[which(df$`b_ex_5%` > 0)][1]) > ex_period/start_sensitivity){
+          if(stepwise[2] <= 95 & (start_time - df$time[which(df$`b_ex_2.5%` > 0)][1]) > ex_period/start_sensitivity){
+            start_time <- df$time[which(df$`b_ex_2.5%` > 0)][1]
+            end_time <- df$time[which(df$`b_ex_2.5%` > 0)][length(which(df$`b_ex_2.5%` > 0))] + 1
+            move_time <- end_time - start_time
+          }
+          if(stepwise[2] <= 90 & (start_time - df$time[which(df$`b_ex_5%` > 0)][1]) > ex_period/start_sensitivity){
             start_time <- df$time[which(df$`b_ex_5%` > 0)][1]
             end_time <- df$time[which(df$`b_ex_5%` > 0)][length(which(df$`b_ex_5%` > 0))] + 1
             move_time <- end_time - start_time
           }
-          if(stepwise <= 80 & (start_time - df$time[which(df$`b_ex_10%` > 0)][1]) > ex_period/start_sensitivity){
+          if(stepwise[2] <= 80 & (start_time - df$time[which(df$`b_ex_10%` > 0)][1]) > ex_period/start_sensitivity){
             start_time <- df$time[which(df$`b_ex_10%` > 0)][1]
             end_time <- df$time[which(df$`b_ex_10%` > 0)][length(which(df$`b_ex_10%` > 0))] + 1
             move_time <- end_time - start_time
           }
-          if(stepwise <= 70 & (start_time - df$time[which(df$`b_ex_15%` > 0)][1]) > ex_period/start_sensitivity){
+          if(stepwise[2] <= 70 & (start_time - df$time[which(df$`b_ex_15%` > 0)][1]) > ex_period/start_sensitivity){
             start_time <- df$time[which(df$`b_ex_15%` > 0)][1]
             end_time <- df$time[which(df$`b_ex_15%` > 0)][length(which(df$`b_ex_15%` > 0))] + 1
             move_time <- end_time - start_time
           }
-          if(stepwise <= 60 & (start_time - df$time[which(df$`b_ex_20%` > 0)][1]) > ex_period/start_sensitivity){
+          if(stepwise[2] <= 60 & (start_time - df$time[which(df$`b_ex_20%` > 0)][1]) > ex_period/start_sensitivity){
             start_time <- df$time[which(df$`b_ex_20%` > 0)][1]
             end_time <- df$time[which(df$`b_ex_20%` > 0)][length(which(df$`b_ex_20%` > 0))] + 1
             move_time <- end_time - start_time
           }
-          if(stepwise <= 50 & (start_time - df$time[which(df$`b_ex_25%` > 0)][1]) > ex_period/start_sensitivity){
+          if(stepwise[2] <= 50 & (start_time - df$time[which(df$`b_ex_25%` > 0)][1]) > ex_period/start_sensitivity){
             start_time <- df$time[which(df$`b_ex_25%` > 0)][1]
             end_time <- df$time[which(df$`b_ex_25%` > 0)][length(which(df$`b_ex_25%` > 0))] + 1
             move_time <- end_time - start_time
           }
 
-        }else if(stepwise <= 90 & length(which(df$`b_ex_5%` > 0)) > 0){
+        }else if(stepwise[1] >= 95 & stepwise[2] <= 95 & length(which(df$`b_ex_2.5%` > 0)) > 0){
+          start_time <- df$time[which(df$`b_ex_2.5%` > 0)][1]
+          end_time <- df$time[which(df$`b_ex_2.5%` > 0)][length(which(df$`b_ex_2.5%` > 0))] + 1
+          move_time <- end_time - start_time
+          if(stepwise[2] <= 90 & (start_time - df$time[which(df$`b_ex_5%` > 0)][1]) > ex_period/start_sensitivity){
+            start_time <- df$time[which(df$`b_ex_5%` > 0)][1]
+            end_time <- df$time[which(df$`b_ex_5%` > 0)][length(which(df$`b_ex_5%` > 0))] + 1
+            move_time <- end_time - start_time
+          }
+          if(stepwise[2] <= 80 & (start_time - df$time[which(df$`b_ex_10%` > 0)][1]) > ex_period/start_sensitivity){
+            start_time <- df$time[which(df$`b_ex_10%` > 0)][1]
+            end_time <- df$time[which(df$`b_ex_10%` > 0)][length(which(df$`b_ex_10%` > 0))] + 1
+            move_time <- end_time - start_time
+          }
+          if(stepwise[2] <= 70 & (start_time - df$time[which(df$`b_ex_15%` > 0)][1]) > ex_period/start_sensitivity){
+            start_time <- df$time[which(df$`b_ex_15%` > 0)][1]
+            end_time <- df$time[which(df$`b_ex_15%` > 0)][length(which(df$`b_ex_15%` > 0))] + 1
+            move_time <- end_time - start_time
+          }
+          if(stepwise[2] <= 60 & (start_time - df$time[which(df$`b_ex_20%` > 0)][1]) > ex_period/start_sensitivity){
+            start_time <- df$time[which(df$`b_ex_20%` > 0)][1]
+            end_time <- df$time[which(df$`b_ex_20%` > 0)][length(which(df$`b_ex_20%` > 0))] + 1
+            move_time <- end_time - start_time
+          }
+          if(stepwise[2] <= 50 & (start_time - df$time[which(df$`b_ex_25%` > 0)][1]) > ex_period/start_sensitivity){
+            start_time <- df$time[which(df$`b_ex_25%` > 0)][1]
+            end_time <- df$time[which(df$`b_ex_25%` > 0)][length(which(df$`b_ex_25%` > 0))] + 1
+            move_time <- end_time - start_time
+          }
+
+        }else if(stepwise[1] >= 90 & stepwise[2] <= 90  & length(which(df$`b_ex_5%` > 0)) > 0){
           start_time <- df$time[which(df$`b_ex_5%` > 0)][1]
           end_time <- df$time[which(df$`b_ex_5%` > 0)][length(which(df$`b_ex_5%` > 0))] + 1
           move_time <- end_time - start_time
-          if(stepwise <= 80 & (start_time - df$time[which(df$`b_ex_10%` > 0)][1]) > ex_period/start_sensitivity){
+          if(stepwise[2] <= 80 & (start_time - df$time[which(df$`b_ex_10%` > 0)][1]) > ex_period/start_sensitivity){
             start_time <- df$time[which(df$`b_ex_10%` > 0)][1]
             end_time <- df$time[which(df$`b_ex_10%` > 0)][length(which(df$`b_ex_10%` > 0))] + 1
             move_time <- end_time - start_time
           }
-          if(stepwise <= 70 & (start_time - df$time[which(df$`b_ex_15%` > 0)][1]) > ex_period/start_sensitivity){
+          if(stepwise[2] <= 70 & (start_time - df$time[which(df$`b_ex_15%` > 0)][1]) > ex_period/start_sensitivity){
             start_time <- df$time[which(df$`b_ex_15%` > 0)][1]
             end_time <- df$time[which(df$`b_ex_15%` > 0)][length(which(df$`b_ex_15%` > 0))] + 1
             move_time <- end_time - start_time
           }
-          if(stepwise <= 60 & (start_time - df$time[which(df$`b_ex_20%` > 0)][1]) > ex_period/start_sensitivity){
+          if(stepwise[2] <= 60 & (start_time - df$time[which(df$`b_ex_20%` > 0)][1]) > ex_period/start_sensitivity){
             start_time <- df$time[which(df$`b_ex_20%` > 0)][1]
             end_time <- df$time[which(df$`b_ex_20%` > 0)][length(which(df$`b_ex_20%` > 0))] + 1
             move_time <- end_time - start_time
           }
-          if(stepwise <= 50 & (start_time - df$time[which(df$`b_ex_25%` > 0)][1]) > ex_period/start_sensitivity){
+          if(stepwise[2] <= 50 & (start_time - df$time[which(df$`b_ex_25%` > 0)][1]) > ex_period/start_sensitivity){
             start_time <- df$time[which(df$`b_ex_25%` > 0)][1]
             end_time <- df$time[which(df$`b_ex_25%` > 0)][length(which(df$`b_ex_25%` > 0))] + 1
             move_time <- end_time - start_time
           }
 
-        }else if(stepwise <= 80 & length(which(df$`b_ex_10%` > 0)) > 0){
+        }else if(stepwise[1] >= 80 & stepwise[2] <= 80 & length(which(df$`b_ex_10%` > 0)) > 0){
           start_time <- df$time[which(df$`b_ex_10%` > 0)][1]
           end_time <- df$time[which(df$`b_ex_10%` > 0)][length(which(df$`b_ex_10%` > 0))] + 1
           move_time <- end_time - start_time
-          if(stepwise <= 70 & (start_time - df$time[which(df$`b_ex_15%` > 0)][1]) > ex_period/start_sensitivity){
+          if(stepwise[2] <= 70 & (start_time - df$time[which(df$`b_ex_15%` > 0)][1]) > ex_period/start_sensitivity){
             start_time <- df$time[which(df$`b_ex_15%` > 0)][1]
             end_time <- df$time[which(df$`b_ex_15%` > 0)][length(which(df$`b_ex_15%` > 0))] + 1
             move_time <- end_time - start_time
           }
-          if(stepwise <= 60 & (start_time - df$time[which(df$`b_ex_20%` > 0)][1]) > ex_period/start_sensitivity){
+          if(stepwise[2] <= 60 & (start_time - df$time[which(df$`b_ex_20%` > 0)][1]) > ex_period/start_sensitivity){
             start_time <- df$time[which(df$`b_ex_20%` > 0)][1]
             end_time <- df$time[which(df$`b_ex_20%` > 0)][length(which(df$`b_ex_20%` > 0))] + 1
             move_time <- end_time - start_time
           }
-          if(stepwise <= 50 & (start_time - df$time[which(df$`b_ex_25%` > 0)][1]) > ex_period/start_sensitivity){
+          if(stepwise[2] <= 50 & (start_time - df$time[which(df$`b_ex_25%` > 0)][1]) > ex_period/start_sensitivity){
             start_time <- df$time[which(df$`b_ex_25%` > 0)][1]
             end_time <- df$time[which(df$`b_ex_25%` > 0)][length(which(df$`b_ex_25%` > 0))] + 1
             move_time <- end_time - start_time
           }
 
-        }else if(stepwise <= 70 & length(which(df$`b_ex_15%` > 0)) > 0){
+        }else if(stepwise[1] >= 70 & stepwise[2] <= 70 & length(which(df$`b_ex_15%` > 0)) > 0){
           start_time <- df$time[which(df$`b_ex_15%` > 0)][1]
           end_time <- df$time[which(df$`b_ex_15%` > 0)][length(which(df$`b_ex_15%` > 0))] + 1
           move_time <- end_time - start_time
-          if(stepwise <= 60 & (start_time - df$time[which(df$`b_ex_20%` > 0)][1]) > ex_period/start_sensitivity){
+          if(stepwise[2] <= 60 & (start_time - df$time[which(df$`b_ex_20%` > 0)][1]) > ex_period/start_sensitivity){
             start_time <- df$time[which(df$`b_ex_20%` > 0)][1]
             end_time <- df$time[which(df$`b_ex_20%` > 0)][length(which(df$`b_ex_20%` > 0))] + 1
             move_time <- end_time - start_time
           }
-          if(stepwise <= 50 & (start_time - df$time[which(df$`b_ex_25%` > 0)][1]) > ex_period/start_sensitivity){
+          if(stepwise[2] <= 50 & (start_time - df$time[which(df$`b_ex_25%` > 0)][1]) > ex_period/start_sensitivity){
             start_time <- df$time[which(df$`b_ex_25%` > 0)][1]
             end_time <- df$time[which(df$`b_ex_25%` > 0)][length(which(df$`b_ex_25%` > 0))] + 1
             move_time <- end_time - start_time
           }
 
-        }else if(stepwise <= 60 & length(which(df$`b_ex_20%` > 0)) > 0){
+        }else if(stepwise[1] >= 60 & stepwise[2] <= 60 & length(which(df$`b_ex_20%` > 0)) > 0){
           start_time <- df$time[which(df$`b_ex_20%` > 0)][1]
           end_time <- df$time[which(df$`b_ex_20%` > 0)][length(which(df$`b_ex_20%` > 0))] + 1
           move_time <- end_time - start_time
-          if(stepwise <= 50 & (start_time - df$time[which(df$`b_ex_25%` > 0)][1]) > ex_period/start_sensitivity){
+          if(stepwise[2] <= 50 & (start_time - df$time[which(df$`b_ex_25%` > 0)][1]) > ex_period/start_sensitivity){
             start_time <- df$time[which(df$`b_ex_25%` > 0)][1]
             end_time <- df$time[which(df$`b_ex_25%` > 0)][length(which(df$`b_ex_25%` > 0))] + 1
             move_time <- end_time - start_time
           }
 
-        }else if(stepwise <= 50 & length(which(df$`b_ex_25%` > 0)) > 0){
+        }else if(stepwise[1] >= 50 & stepwise[2] <= 50 & length(which(df$`b_ex_25%` > 0)) > 0){
           start_time <- df$time[which(df$`b_ex_25%` > 0)][1]
           end_time <- df$time[which(df$`b_ex_25%` > 0)][length(which(df$`b_ex_25%` > 0))] + 1
           move_time <- end_time - start_time
@@ -451,107 +500,142 @@ ssm_individual <- function(cell_list, visual=NULL, out, seed=123, warmup=1000,
 
       }else{  # ex_sign == "negative"
 
-        if(length(which(df$`b_ex_97.5%` < 0)) > 0){
-          start_time <- df$time[which(df$`b_ex_97.5%` < 0)][1]
-          end_time <- df$time[which(df$`b_ex_97.5%` < 0)][length(which(df$`b_ex_97.5%` < 0))] + 1
+        if(stepwise[1] >= 99 & stepwise[2] <= 99 & length(which(df$`b_ex_99.5%` < 0)) > 0){
+          start_time <- df$time[which(df$`b_ex_99.5%` < 0)][1]
+          end_time <- df$time[which(df$`b_ex_99.5%` < 0)][length(which(df$`b_ex_99.5%` < 0))] + 1
           move_time <- end_time - start_time
-          if(stepwise <= 90 & (start_time - df$time[which(df$`b_ex_95%` < 0)][1]) > ex_period/start_sensitivity){
+          if(stepwise[2] <= 95 & length(which(df$`b_ex_97.5%` < 0)) > 0){
+            start_time <- df$time[which(df$`b_ex_97.5%` < 0)][1]
+            end_time <- df$time[which(df$`b_ex_97.5%` < 0)][length(which(df$`b_ex_97.5%` < 0))] + 1
+            move_time <- end_time - start_time
+          }
+          if(stepwise[2] <= 90 & (start_time - df$time[which(df$`b_ex_95%` < 0)][1]) > ex_period/start_sensitivity){
             start_time <- df$time[which(df$`b_ex_95%` < 0)][1]
             end_time <- df$time[which(df$`b_ex_95%` < 0)][length(which(df$`b_ex_95%` < 0))] + 1
             move_time <- end_time - start_time
           }
-          if(stepwise <= 80 & (start_time - df$time[which(df$`b_ex_90%` < 0)][1]) > ex_period/start_sensitivity){
+          if(stepwise[2] <= 80 & (start_time - df$time[which(df$`b_ex_90%` < 0)][1]) > ex_period/start_sensitivity){
             start_time <- df$time[which(df$`b_ex_90%` < 0)][1]
             end_time <- df$time[which(df$`b_ex_90%` < 0)][length(which(df$`b_ex_90%` < 0))] + 1
             move_time <- end_time - start_time
           }
-          if(stepwise <= 70 & (start_time - df$time[which(df$`b_ex_85%` < 0)][1]) > ex_period/start_sensitivity){
+          if(stepwise[2] <= 70 & (start_time - df$time[which(df$`b_ex_85%` < 0)][1]) > ex_period/start_sensitivity){
             start_time <- df$time[which(df$`b_ex_85%` < 0)][1]
             end_time <- df$time[which(df$`b_ex_85%` < 0)][length(which(df$`b_ex_85%` < 0))] + 1
             move_time <- end_time - start_time
           }
-          if(stepwise <= 60 & (start_time - df$time[which(df$`b_ex_80%` < 0)][1]) > ex_period/start_sensitivity){
+          if(stepwise[2] <= 60 & (start_time - df$time[which(df$`b_ex_80%` < 0)][1]) > ex_period/start_sensitivity){
             start_time <- df$time[which(df$`b_ex_80%` < 0)][1]
             end_time <- df$time[which(df$`b_ex_80%` < 0)][length(which(df$`b_ex_80%` < 0))] + 1
             move_time <- end_time - start_time
           }
-          if(stepwise <= 50 & (start_time - df$time[which(df$`b_ex_75%` < 0)][1]) > ex_period/start_sensitivity){
+          if(stepwise[2] <= 50 & (start_time - df$time[which(df$`b_ex_75%` < 0)][1]) > ex_period/start_sensitivity){
             start_time <- df$time[which(df$`b_ex_75%` < 0)][1]
             end_time <- df$time[which(df$`b_ex_75%` < 0)][length(which(df$`b_ex_75%` < 0))] + 1
             move_time <- end_time - start_time
           }
 
-        }else if(stepwise <= 90 & length(which(df$`b_ex_95%` < 0)) > 0){
+        }else if(stepwise[1] >= 95 & stepwise[2] <= 95 & length(which(df$`b_ex_97.5%` < 0)) > 0){
+          start_time <- df$time[which(df$`b_ex_97.5%` < 0)][1]
+          end_time <- df$time[which(df$`b_ex_97.5%` < 0)][length(which(df$`b_ex_97.5%` < 0))] + 1
+          move_time <- end_time - start_time
+          if(stepwise[2] <= 90 & (start_time - df$time[which(df$`b_ex_95%` < 0)][1]) > ex_period/start_sensitivity){
+            start_time <- df$time[which(df$`b_ex_95%` < 0)][1]
+            end_time <- df$time[which(df$`b_ex_95%` < 0)][length(which(df$`b_ex_95%` < 0))] + 1
+            move_time <- end_time - start_time
+          }
+          if(stepwise[2] <= 80 & (start_time - df$time[which(df$`b_ex_90%` < 0)][1]) > ex_period/start_sensitivity){
+            start_time <- df$time[which(df$`b_ex_90%` < 0)][1]
+            end_time <- df$time[which(df$`b_ex_90%` < 0)][length(which(df$`b_ex_90%` < 0))] + 1
+            move_time <- end_time - start_time
+          }
+          if(stepwise[2] <= 70 & (start_time - df$time[which(df$`b_ex_85%` < 0)][1]) > ex_period/start_sensitivity){
+            start_time <- df$time[which(df$`b_ex_85%` < 0)][1]
+            end_time <- df$time[which(df$`b_ex_85%` < 0)][length(which(df$`b_ex_85%` < 0))] + 1
+            move_time <- end_time - start_time
+          }
+          if(stepwise[2] <= 60 & (start_time - df$time[which(df$`b_ex_80%` < 0)][1]) > ex_period/start_sensitivity){
+            start_time <- df$time[which(df$`b_ex_80%` < 0)][1]
+            end_time <- df$time[which(df$`b_ex_80%` < 0)][length(which(df$`b_ex_80%` < 0))] + 1
+            move_time <- end_time - start_time
+          }
+          if(stepwise[2] <= 50 & (start_time - df$time[which(df$`b_ex_75%` < 0)][1]) > ex_period/start_sensitivity){
+            start_time <- df$time[which(df$`b_ex_75%` < 0)][1]
+            end_time <- df$time[which(df$`b_ex_75%` < 0)][length(which(df$`b_ex_75%` < 0))] + 1
+            move_time <- end_time - start_time
+          }
+
+        }else if(stepwise[1] >= 90 & stepwise[2] <= 90 & length(which(df$`b_ex_95%` < 0)) > 0){
           start_time <- df$time[which(df$`b_ex_95%` < 0)][1]
           end_time <- df$time[which(df$`b_ex_95%` < 0)][length(which(df$`b_ex_95%` < 0))] + 1
           move_time <- end_time - start_time
-          if(stepwise <= 80 & (start_time - df$time[which(df$`b_ex_90%` < 0)][1]) > ex_period/start_sensitivity){
+          if(stepwise[2] <= 80 & (start_time - df$time[which(df$`b_ex_90%` < 0)][1]) > ex_period/start_sensitivity){
             start_time <- df$time[which(df$`b_ex_90%` < 0)][1]
             end_time <- df$time[which(df$`b_ex_90%` < 0)][length(which(df$`b_ex_90%` < 0))] + 1
             move_time <- end_time - start_time
           }
-          if(stepwise <= 70 & (start_time - df$time[which(df$`b_ex_85%` < 0)][1]) > ex_period/start_sensitivity){
+          if(stepwise[2] <= 70 & (start_time - df$time[which(df$`b_ex_85%` < 0)][1]) > ex_period/start_sensitivity){
             start_time <- df$time[which(df$`b_ex_85%` < 0)][1]
             end_time <- df$time[which(df$`b_ex_85%` < 0)][length(which(df$`b_ex_85%` < 0))] + 1
             move_time <- end_time - start_time
           }
-          if(stepwise <= 60 & (start_time - df$time[which(df$`b_ex_80%` < 0)][1]) > ex_period/start_sensitivity){
+          if(stepwise[2] <= 60 & (start_time - df$time[which(df$`b_ex_80%` < 0)][1]) > ex_period/start_sensitivity){
             start_time <- df$time[which(df$`b_ex_80%` < 0)][1]
             end_time <- df$time[which(df$`b_ex_80%` < 0)][length(which(df$`b_ex_80%` < 0))] + 1
             move_time <- end_time - start_time
           }
-          if(stepwise <= 50 & (start_time - df$time[which(df$`b_ex_75%` < 0)][1]) > ex_period/start_sensitivity){
+          if(stepwise[2] <= 50 & (start_time - df$time[which(df$`b_ex_75%` < 0)][1]) > ex_period/start_sensitivity){
             start_time <- df$time[which(df$`b_ex_75%` < 0)][1]
             end_time <- df$time[which(df$`b_ex_75%` < 0)][length(which(df$`b_ex_75%` < 0))] + 1
             move_time <- end_time - start_time
           }
 
-        }else if(stepwise <= 80 & length(which(df$`b_ex_90%` < 0)) > 0){
+        }else if(stepwise[1] >= 80 & stepwise[2] <= 80 & length(which(df$`b_ex_90%` < 0)) > 0){
           start_time <- df$time[which(df$`b_ex_90%` < 0)][1]
           end_time <- df$time[which(df$`b_ex_90%` < 0)][length(which(df$`b_ex_90%` < 0))] + 1
           move_time <- end_time - start_time
-          if(stepwise <= 70 & (start_time - df$time[which(df$`b_ex_85%` < 0)][1]) > ex_period/start_sensitivity){
+          if(stepwise[2] <= 70 & (start_time - df$time[which(df$`b_ex_85%` < 0)][1]) > ex_period/start_sensitivity){
             start_time <- df$time[which(df$`b_ex_85%` < 0)][1]
             end_time <- df$time[which(df$`b_ex_85%` < 0)][length(which(df$`b_ex_85%` < 0))] + 1
             move_time <- end_time - start_time
           }
-          if(stepwise <= 60 & (start_time - df$time[which(df$`b_ex_80%` < 0)][1]) > ex_period/start_sensitivity){
+          if(stepwise[2] <= 60 & (start_time - df$time[which(df$`b_ex_80%` < 0)][1]) > ex_period/start_sensitivity){
             start_time <- df$time[which(df$`b_ex_80%` < 0)][1]
             end_time <- df$time[which(df$`b_ex_80%` < 0)][length(which(df$`b_ex_80%` < 0))] + 1
             move_time <- end_time - start_time
           }
-          if(stepwise <= 50 & (start_time - df$time[which(df$`b_ex_75%` < 0)][1]) > ex_period/start_sensitivity){
+          if(stepwise[2] <= 50 & (start_time - df$time[which(df$`b_ex_75%` < 0)][1]) > ex_period/start_sensitivity){
             start_time <- df$time[which(df$`b_ex_75%` < 0)][1]
             end_time <- df$time[which(df$`b_ex_75%` < 0)][length(which(df$`b_ex_75%` < 0))] + 1
             move_time <- end_time - start_time
           }
 
-        }else if(stepwise <= 70 & length(which(df$`b_ex_85%` < 0)) > 0){
+        }else if(stepwise[1] >= 70 & stepwise[2] <= 70 & length(which(df$`b_ex_85%` < 0)) > 0){
           start_time <- df$time[which(df$`b_ex_85%` < 0)][1]
           end_time <- df$time[which(df$`b_ex_85%` < 0)][length(which(df$`b_ex_85%` < 0))] + 1
           move_time <- end_time - start_time
-          if(stepwise <= 60 & (start_time - df$time[which(df$`b_ex_80%` < 0)][1]) > ex_period/start_sensitivity){
+          if(stepwise[2] <= 60 & (start_time - df$time[which(df$`b_ex_80%` < 0)][1]) > ex_period/start_sensitivity){
             start_time <- df$time[which(df$`b_ex_80%` < 0)][1]
             end_time <- df$time[which(df$`b_ex_80%` < 0)][length(which(df$`b_ex_80%` < 0))] + 1
             move_time <- end_time - start_time
           }
-          if(stepwise <= 50 & (start_time - df$time[which(df$`b_ex_75%` < 0)][1]) > ex_period/start_sensitivity){
+          if(stepwise[2] <= 50 & (start_time - df$time[which(df$`b_ex_75%` < 0)][1]) > ex_period/start_sensitivity){
             start_time <- df$time[which(df$`b_ex_75%` < 0)][1]
             end_time <- df$time[which(df$`b_ex_75%` < 0)][length(which(df$`b_ex_75%` < 0))] + 1
             move_time <- end_time - start_time
           }
 
-        }else if(stepwise <= 60 & length(which(df$`b_ex_80%` < 0)) > 0){
+        }else if(stepwise[1] >= 60 & stepwise[2] <= 60 & length(which(df$`b_ex_80%` < 0)) > 0){
           start_time <- df$time[which(df$`b_ex_80%` < 0)][1]
           end_time <- df$time[which(df$`b_ex_80%` < 0)][length(which(df$`b_ex_80%` < 0))] + 1
           move_time <- end_time - start_time
-          if(stepwise <= 50 & (start_time - df$time[which(df$`b_ex_75%` < 0)][1]) > ex_period/start_sensitivity){
+          if(stepwise[2] <= 50 & (start_time - df$time[which(df$`b_ex_75%` < 0)][1]) > ex_period/start_sensitivity){
             start_time <- df$time[which(df$`b_ex_75%` < 0)][1]
             end_time <- df$time[which(df$`b_ex_75%` < 0)][length(which(df$`b_ex_75%` < 0))] + 1
             move_time <- end_time - start_time
           }
 
-        }else if(stepwise <= 50 & length(which(df$`b_ex_75%` < 0)) > 0){
+        }else if(stepwise[1] >= 50 & stepwise[2] <= 50 & length(which(df$`b_ex_75%` < 0)) > 0){
           start_time <- df$time[which(df$`b_ex_75%` < 0)][1]
           end_time <- df$time[which(df$`b_ex_75%` < 0)][length(which(df$`b_ex_75%` < 0))] + 1
           move_time <- end_time - start_time
@@ -673,6 +757,58 @@ ssm_individual <- function(cell_list, visual=NULL, out, seed=123, warmup=1000,
       text_x1 <- max(cell_list[[i]]$time) - (max(cell_list[[i]]$time) - min(cell_list[[i]]$time)) * 0.13
       text_x2 <- max(cell_list[[i]]$time) - (max(cell_list[[i]]$time) - min(cell_list[[i]]$time)) * 0.16
 
+      # Confidence interval
+      if(stepwise[1] == 99){
+        conf_low_alpha <- df$`alpha_0.5%`
+        conf_high_alpha <- df$`alpha_99.5%`
+        conf_low_b_ex <- df$`b_ex_0.5%`
+        conf_high_b_ex <- df$`b_ex_99.5%`
+        conf_low_w <- df$`w_0.5%`
+        conf_high_w <- df$`w_99.5%`
+      }else if(stepwise[1] == 95){
+        conf_low_alpha <- df$`alpha_2.5%`
+        conf_high_alpha <- df$`alpha_97.5%`
+        conf_low_b_ex <- df$`b_ex_2.5%`
+        conf_high_b_ex <- df$`b_ex_97.5%`
+        conf_low_w <- df$`w_2.5%`
+        conf_high_w <- df$`w_97.5%`
+      }else if(stepwise[1] == 90){
+        conf_low_alpha <- df$`alpha_5%`
+        conf_high_alpha <- df$`alpha_95%`
+        conf_low_b_ex <- df$`b_ex_5%`
+        conf_high_b_ex <- df$`b_ex_95%`
+        conf_low_w <- df$`w_5%`
+        conf_high_w <- df$`w_95%`
+      }else if(stepwise[1] == 80){
+        conf_low_alpha <- df$`alpha_10%`
+        conf_high_alpha <- df$`alpha_90%`
+        conf_low_b_ex <- df$`b_ex_10%`
+        conf_high_b_ex <- df$`b_ex_90%`
+        conf_low_w <- df$`w_10%`
+        conf_high_w <- df$`w_90%`
+      }else if(stepwise[1] == 70){
+        conf_low_alpha <- df$`alpha_15%`
+        conf_high_alpha <- df$`alpha_85%`
+        conf_low_b_ex <- df$`b_ex_15%`
+        conf_high_b_ex <- df$`b_ex_85%`
+        conf_low_w <- df$`w_15%`
+        conf_high_w <- df$`w_85%`
+      }else if(stepwise[1] == 60){
+        conf_low_alpha <- df$`alpha_20%`
+        conf_high_alpha <- df$`alpha_80%`
+        conf_low_b_ex <- df$`b_ex_20%`
+        conf_high_b_ex <- df$`b_ex_80%`
+        conf_low_w <- df$`w_20%`
+        conf_high_w <- df$`w_80%`
+      }else if(stepwise[1] == 50){
+        conf_low_alpha <- df$`alpha_25%`
+        conf_high_alpha <- df$`alpha_75%`
+        conf_low_b_ex <- df$`b_ex_25%`
+        conf_high_b_ex <- df$`b_ex_75%`
+        conf_low_w <- df$`w_25%`
+        conf_high_w <- df$`w_75%`
+      }
+
       # Distance
       ymax <- max(cell_list[[i]][,j+2])
       ymin <- min(cell_list[[i]][,j+2])
@@ -709,7 +845,7 @@ ssm_individual <- function(cell_list, visual=NULL, out, seed=123, warmup=1000,
       g_alpha <- ggplot(data = df, aes(x = time)) +
         annotate("rect", xmin = shade_xmin, xmax = shade_xmax,
                  ymin = yfloor, ymax = yceiling, alpha = alpha, fill = "gray50") +
-        geom_ribbon(aes(ymin = `alpha_2.5%`, ymax = `alpha_97.5%`), alpha = 0.5) +
+        geom_ribbon(aes(ymin = conf_low_alpha, ymax = conf_high_alpha), alpha = 0.5) +
         geom_line(aes(y = `alpha_50%`), linewidth = 0.5) +
         geom_point(aes(y = Y), alpha = 0.5, size=0.5) +
         geom_vline(xintercept = mv_time$start_time, linetype="solid", col = col1) +
@@ -735,7 +871,7 @@ ssm_individual <- function(cell_list, visual=NULL, out, seed=123, warmup=1000,
       g_b_ex <- ggplot(data = df, aes(x = time)) +
         annotate("rect", xmin = shade_xmin, xmax = shade_xmax,
                  ymin = yfloor, ymax = yceiling, alpha = alpha, fill = "gray50") +
-        geom_ribbon(aes(ymin = `b_ex_2.5%`, ymax = `b_ex_97.5%`), alpha = 0.5) +
+        geom_ribbon(aes(ymin = conf_low_b_ex, ymax = conf_high_b_ex), alpha = 0.5) +
         geom_line(aes(y = `b_ex_50%`), linewidth = 0.5) +
         geom_vline(xintercept = mv_time$start_time, linetype="solid", col = col1) +
         geom_vline(xintercept = vis, linetype="dashed", col = col2) +
@@ -760,7 +896,7 @@ ssm_individual <- function(cell_list, visual=NULL, out, seed=123, warmup=1000,
       g_w <- ggplot(data = df, aes(x = time)) +
         annotate("rect", xmin = shade_xmin, xmax = shade_xmax,
                  ymin = yfloor, ymax = yceiling, alpha = alpha, fill = "gray50") +
-        geom_ribbon(aes(ymin = `w_2.5%`, ymax = `w_97.5%`), alpha = 0.5) +
+        geom_ribbon(aes(ymin = conf_low_w, ymax = conf_high_w), alpha = 0.5) +
         geom_line(aes(y = `w_50%`), linewidth = 0.5) +
         geom_vline(xintercept = mv_time$start_time, linetype="solid", col = col1) +
         geom_vline(xintercept = vis, linetype="dashed", col = col2) +
