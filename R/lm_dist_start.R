@@ -11,6 +11,8 @@
 #' any column names are accepted). See the following \strong{Examples} for further details.
 #' @param mvtime (data frame) The movement time estimated by [ssm_individual]
 #' ("ssm_individual_mvtime.csv") or [ssm_KFAS] ("ssm_KFAS_mvtime.csv").
+#' @param robust (logical) When `TRUE`, performs robust regression using repeated medians
+#' (Siegel regression). When `FALSE`, performs linear regression. The default is `FALSE`.
 #' @param df_name (character string) The name of data frame. This is used for graph labels.
 #' The default is "cell".
 #' @param ex_name (character string) The name of the explanatory variable. This is used for graph labels.
@@ -85,7 +87,7 @@
 #'
 #' @export
 #'
-lm_dist_start <- function(cell_list, mvtime,
+lm_dist_start <- function(cell_list, mvtime, robust = FALSE,
                           df_name = "cell", ex_name,
                           unit1, unit2, ps = 7,
                           theme_plot = "bw"){
@@ -180,8 +182,11 @@ lm_dist_start <- function(cell_list, mvtime,
     max_axis_y <- max(df$predicted) + range_y*0.1
 
     ##### Linear regression (x: distance, y: predicted) #####
-    #model <- stats::lm(data$predicted ~ data$distance)
-    model <- RobustLinearReg::siegel_regression(predicted ~ distance, data = data)
+    if(robust == T){
+      model <- RobustLinearReg::siegel_regression(predicted ~ distance, data = data)
+    }else{
+      model <- stats::lm(predicted ~ distance, data = data)
+    }
     suppressWarnings(conf_interval <- stats::predict(model, interval="confidence", level = 0.95))
     conf_interval2 <- as.data.frame(cbind(data$distance, conf_interval)[order(data$distance, decreasing = F),])
     names(conf_interval2)[1] <- "distance"
@@ -232,8 +237,12 @@ lm_dist_start <- function(cell_list, mvtime,
     min_axis_y <- min(df$predicted) - range_y*0.1
     max_axis_y <- max(df$predicted) + range_y*0.1
 
-    #model <- stats::lm(data$predicted ~ data$distance)
-    model <- RobustLinearReg::siegel_regression(predicted ~ distance, data = data)
+    ##### Linear regression (x: distance, y: predicted) #####
+    if(robust == T){
+      model <- RobustLinearReg::siegel_regression(predicted ~ distance, data = data)
+    }else{
+      model <- stats::lm(predicted ~ distance, data = data)
+    }
     suppressWarnings(conf_interval <- stats::predict(model, interval="confidence", level = 0.95))
     conf_interval2 <- as.data.frame(cbind(data$distance, conf_interval)[order(data$distance, decreasing = F),])
     names(conf_interval2)[1] <- "distance"

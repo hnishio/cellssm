@@ -10,6 +10,7 @@ lm_dist_beta(
   ssm_path,
   ex_sign = "negative",
   ssm_method,
+  robust = FALSE,
   df_name = "cell",
   res_name,
   ex_name,
@@ -42,6 +43,9 @@ should be "positive". If cells or organelles are approaching to the explanatory
 variable, \code{ex_sign} should be "negative".}
 
 \item{ssm_method}{(character string) "Bayes" or "KFAS".}
+
+\item{robust}{(logical) When \code{TRUE}, performs robust regression using repeated medians
+(Siegel regression). When \code{FALSE}, performs linear regression. The default is \code{FALSE}.}
 
 \item{df_name}{(character string) The name of the data frame. This is used for
 file names and graph titles. The default is "cell".}
@@ -91,9 +95,9 @@ ssm_path <- paste(ssm_file[-length(ssm_file)], collapse = "/")
 
 # Linear regression
 glist <- lm_dist_beta(cell_list = cell_list, mvtime = chloroplast_mvtime,
-                      ssm_path = ssm_path,
-                      ssm_method = "Bayes", res_name = "chloroplast",
-                      ex_name = "microbeam", unit1 = "micrometer", unit2 = "min")
+                      ssm_path = ssm_path, ssm_method = "Bayes", robust = TRUE,
+                      res_name = "chloroplast", ex_name = "microbeam",
+                      unit1 = "micrometer", unit2 = "min")
 
 # Save output
 g <- glist[[1]] + glist[[2]] + glist[[3]] + glist[[4]] + glist[[5]] +

@@ -11,6 +11,8 @@
 #' any column names are accepted). See the following \strong{Examples} for further details.
 #' @param mvtime (data frame) The movement time estimated by [ssm_individual]
 #' ("ssm_individual_mvtime.csv") or [ssm_KFAS] ("ssm_KFAS_mvtime.csv").
+#' @param robust (logical) When `TRUE`, performs robust regression using repeated medians
+#' (Siegel regression). When `FALSE`, performs linear regression. The default is `FALSE`.
 #' @param df_name (character string) The name of data frame. This is used for graph labels.
 #' The default is "cell".
 #' @param ex_name (character string) The name of the explanatory variable. This is used for graph labels.
@@ -85,7 +87,7 @@
 #'
 #' @export
 #'
-lm_signal <- function(cell_list, mvtime,
+lm_signal <- function(cell_list, mvtime, robust = FALSE,
                       df_name = "cell", ex_name,
                       unit1, unit2, ps = 7,
                       theme_plot = "bw"){
@@ -180,8 +182,11 @@ lm_signal <- function(cell_list, mvtime,
     max_axis_y <- max(df$distance) + range_y*0.1
 
     ##### Linear regression (x: predicted, y: distance) #####
-    #model <- stats::lm(data$distance ~ data$predicted)
-    model <- RobustLinearReg::siegel_regression(distance ~ predicted, data = data)
+    if(robust == T){
+      model <- RobustLinearReg::siegel_regression(distance ~ predicted, data = data)
+    }else{
+      model <- stats::lm(distance ~ predicted, data = data)
+    }
     suppressWarnings(conf_interval <- stats::predict(model, interval="confidence", level = 0.95))
     conf_interval2 <- as.data.frame(cbind(data$predicted, conf_interval)[order(data$predicted, decreasing = F),])
     names(conf_interval2)[1] <- "predicted"
@@ -233,8 +238,12 @@ lm_signal <- function(cell_list, mvtime,
     min_axis_y <- min(df$distance) - range_y*0.1
     max_axis_y <- max(df$distance) + range_y*0.1
 
-    #model <- stats::lm(data$distance ~ data$predicted)
-    model <- RobustLinearReg::siegel_regression(distance ~ predicted, data = data)
+    ##### Linear regression (x: predicted, y: distance) #####
+    if(robust == T){
+      model <- RobustLinearReg::siegel_regression(distance ~ predicted, data = data)
+    }else{
+      model <- stats::lm(distance ~ predicted, data = data)
+    }
     suppressWarnings(conf_interval <- stats::predict(model, interval="confidence", level = 0.95))
     conf_interval2 <- as.data.frame(cbind(data$predicted, conf_interval)[order(data$predicted, decreasing = F),])
     names(conf_interval2)[1] <- "predicted"
@@ -277,14 +286,23 @@ lm_signal <- function(cell_list, mvtime,
   if(length(cell_list) != 1){
 
     # Speed of all cells
-    lm_allcells <- RobustLinearReg::siegel_regression(distance ~ predicted, data = df)
+    if(robust == T){
+      lm_allcells <- RobustLinearReg::siegel_regression(distance ~ predicted, data = df)
+    }else{
+      lm_allcells <- stats::lm(distance ~ predicted, data = df)
+    }
 
     # Speed of each cell
     ydiff <- 1 / (length(cell_list) + 1)
     g_speed <- ggplot() + theme_void()
 
     for(i in 1:length(cell_list)){
-      lm_cell <- RobustLinearReg::siegel_regression(formula = distance~predicted, data = df[df[,1]==i,])
+
+      if(robust == T){
+        lm_cell <- RobustLinearReg::siegel_regression(formula = distance~predicted, data = df[df[,1]==i,])
+      }else{
+        lm_cell <- stats::lm(formula = distance~predicted, data = df[df[,1]==i,])
+      }
 
       # label
       title_all <- paste0("All ", stringr::str_to_lower(df_name), "s")
@@ -329,7 +347,11 @@ lm_signal <- function(cell_list, mvtime,
 
   }else{
     g_speed <- ggplot() + theme_void()
-    lm_cell <- RobustLinearReg::siegel_regression(formula = distance~predicted, data = df)
+    if(robust == T){
+      lm_cell <- RobustLinearReg::siegel_regression(distance ~ predicted, data = df)
+    }else{
+      lm_cell <- stats::lm(distance ~ predicted, data = df)
+    }
 
     if(unit1=="meter"){
       label_each <- bquote(paste(.(round(lm_cell$coefficients[2], 2)), " ", (m/.(unit2)), sep = ""))

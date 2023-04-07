@@ -7,6 +7,7 @@
 lm_dist_start(
   cell_list,
   mvtime,
+  robust = FALSE,
   df_name = "cell",
   ex_name,
   unit1,
@@ -23,6 +24,9 @@ any column names are accepted). See the following \strong{Examples} for further 
 
 \item{mvtime}{(data frame) The movement time estimated by \link{ssm_individual}
 ("ssm_individual_mvtime.csv") or \link{ssm_KFAS} ("ssm_KFAS_mvtime.csv").}
+
+\item{robust}{(logical) When \code{TRUE}, performs robust regression using repeated medians
+(Siegel regression). When \code{FALSE}, performs linear regression. The default is \code{FALSE}.}
 
 \item{df_name}{(character string) The name of data frame. This is used for graph labels.
 The default is "cell".}
