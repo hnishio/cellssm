@@ -743,8 +743,8 @@ ssm_KFAS <- function(cell_list, visual = NULL, out,
              y = label_y)
 
       # alpha
-      ymax <- max(conf_high_alpha)
-      ymin <- min(conf_low_alpha)
+      ymax <- max(c(df$Y, conf_high_alpha))
+      ymin <- min(c(df$Y, conf_low_alpha))
       yrange <- (ymax - ymin)
       yceiling <-  ymax + yrange * 0.05
       yfloor <- ymin - yrange * 0.05
