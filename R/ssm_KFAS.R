@@ -743,8 +743,8 @@ ssm_KFAS <- function(cell_list, visual = NULL, out,
              y = label_y)
 
       # alpha
-      ymax <- max(df$Y)
-      ymin <- min(df$Y)
+      ymax <- max(conf_high_alpha)
+      ymin <- min(conf_low_alpha)
       yrange <- (ymax - ymin)
       yceiling <-  ymax + yrange * 0.05
       yfloor <- ymin - yrange * 0.05
@@ -769,8 +769,8 @@ ssm_KFAS <- function(cell_list, visual = NULL, out,
         labs(y = label_alpha)
 
       # beta_ex
-      ymax <- max(df$`b_ex_97.5%`, na.rm = T)
-      ymin <- min(df$`b_ex_2.5%`, na.rm = T)
+      ymax <- max(conf_high_b_ex, na.rm = T)
+      ymin <- min(conf_low_b_ex, na.rm = T)
       yrange <- (ymax - ymin)
       yceiling <-  ymax + yrange * 0.05
       yfloor <- ymin - yrange * 0.05
