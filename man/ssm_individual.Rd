@@ -12,7 +12,7 @@ ssm_individual(
   warmup = 1000,
   sampling = 1000,
   thin = 3,
-  stepwise = TRUE,
+  stepwise = 90,
   start_sensitivity = 5,
   ex_sign = "negative",
   df_name = "cell",
@@ -54,13 +54,14 @@ The default is 1000.}
 reducing the autocorrelation of the MCMC samples and improving the convergence of
 MCMC. The default is 3.}
 
-\item{stepwise}{(logical) Whether to estimate the start time of the movement stepwise.
-When \code{FALSE}, the start of the movement was estimated from the 95 \% confidence
-interval of the time-varying coefficient of the explanatory variable.
-When \code{TRUE} and the start time can not be estimated with the 95 \% confidence
-interval, the threshold is sequentially lowered to the 90 \%, 80 \%, 70 \%, 60 \%,
-and 50 \% confidence intervals until the start time is determined. If the start
-time is still not able to be determined, it is set to infinity. The default is \code{TRUE}.}
+\item{stepwise}{(one of (95, 90, 80, 70, 60, 50)) The extent of stepwise
+estimation of the start time of the movement.
+When this is set to 95, the start of the movement was estimated from the 95 \%
+confidence interval of the time-varying coefficient of the explanatory variable.
+When this is set to the lower values and the start time can not be estimated
+with the 95 \% confidence interval, the threshold is sequentially lowered to the
+values until the start time is determined. If the start
+time is still not able to be determined, it is set to infinity. The default is 90.}
 
 \item{start_sensitivity}{(positive integer) The sensitivity to estimate the start time
 of the movement. Larger values indicate a higher sensitivity and adopt the earlier

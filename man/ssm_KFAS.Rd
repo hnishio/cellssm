@@ -8,8 +8,8 @@ ssm_KFAS(
   cell_list,
   visual = NULL,
   out,
-  stepwise = TRUE,
-  start_sensitivity = 1,
+  stepwise = 90,
+  start_sensitivity = 5,
   ex_sign = "negative",
   df_name = "cell",
   res_name,
@@ -36,17 +36,25 @@ second column, index (column name "index"); third column, the start time. The de
 
 \item{out}{(character string) The path of the output directory.}
 
-\item{stepwise}{(logical) Whether to estimate the start time of the movement stepwise.
-When \code{FALSE}, the start of the movement was estimated from the 95 \% confidence
-interval of the time-varying coefficient of the explanatory variable.
-When \code{TRUE} and the start time can not be estimated with the 95 \% confidence
-interval, the threshold is sequentially lowered to the 90 \%, 80 \%, 70 \%, 60 \%,
-and 50 \% confidence intervals until the start time is determined. If the start
-time is still not able to be determined, it is set to infinity. The default is \code{TRUE}.}
+\item{stepwise}{(one of (95, 90, 80, 70, 60, 50)) The extent of stepwise
+estimation of the start time of the movement.
+When this is set to 95, the start of the movement was estimated from the 95 \%
+confidence interval of the time-varying coefficient of the explanatory variable.
+When this is set to the lower values and the start time can not be estimated
+with the 95 \% confidence interval, the threshold is sequentially lowered to the
+values until the start time is determined. If the start
+time is still not able to be determined, it is set to infinity. The default is 90.}
 
 \item{start_sensitivity}{(positive integer) The sensitivity to estimate the start time
 of the movement. Larger values indicate a higher sensitivity and adopt the earlier
-start time estimated with lower confidence intervals. The default is 1.}
+start time estimated with lower confidence intervals. In detail, this parameter
+relates to how much earlier the start time estimated by the lower threshold of
+confidence intervals is than that estimated by the 95 \% confidence interval.
+When this difference is larger than the value obtained by dividing the period of
+the explanatory variable by \code{start_sensitivity}, the start time estimated with
+lower confidence intervals is adopted. When \code{start_sensitivity} is set to the
+value lower than 1, no threshold lower than the 95 \% confidence interval is
+considerred. The default is 5.}
 
 \item{ex_sign}{(character string) "positive" or "negative". This is used to
 estimate the start time of the positive or negative influence of the explanatory
