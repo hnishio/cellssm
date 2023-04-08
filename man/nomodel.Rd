@@ -9,7 +9,7 @@ nomodel(
   visual = NULL,
   out,
   ex_sign = "negative",
-  sma_period = 10,
+  period = 5,
   fold = 2,
   df_name = "cell",
   res_name = "organelle",
@@ -43,13 +43,9 @@ If cells or organelles are moving away from the explanatory variable, \code{ex_s
 should be "positive". If cells or organelles are approaching to the explanatory
 variable, \code{ex_sign} should be "negative".}
 
-\item{sma_period}{(positive integer) One of the definitions of the start time:
-the simple moving averages of the first-order differences for \code{sma_period} are
-\code{ex_sign} (positive or negative). The default is 10.}
-
-\item{fold}{(positive real) One of the definitions of the start time:
-difference from the distance at five time points ahead is \code{fold} times larger
-than the average change rate. The default is 2.}
+\item{period, fold}{(positive integer, positive real) One of the definitions of the start time:
+difference from the distance at \code{period} time points ahead is \code{fold} times larger
+than the average change rate. The default is 5 for \code{period} and 2 for \code{fold}.}
 
 \item{df_name}{(character string) The name of the data frame. This is used for
 file names and graph titles. The default is "cell".}

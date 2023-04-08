@@ -20,12 +20,9 @@
 #' If cells or organelles are moving away from the explanatory variable, `ex_sign`
 #' should be "positive". If cells or organelles are approaching to the explanatory
 #' variable, `ex_sign` should be "negative".
-#' @param sma_period (positive integer) One of the definitions of the start time:
-#' the simple moving averages of the first-order differences for `sma_period` are
-#' `ex_sign` (positive or negative). The default is 10.
-#' @param fold (positive real) One of the definitions of the start time:
-#' difference from the distance at five time points ahead is `fold` times larger
-#' than the average change rate. The default is 2.
+#' @param period,fold (positive integer, positive real) One of the definitions of the start time:
+#' difference from the distance at `period` time points ahead is `fold` times larger
+#' than the average change rate. The default is 5 for `period` and 2 for `fold`.
 #' @param df_name (character string) The name of the data frame. This is used for
 #' file names and graph titles. The default is "cell".
 #' @param res_name (character string) The name of the response variable. This is used
@@ -122,7 +119,7 @@
 #' @export
 #'
 nomodel <- function(cell_list, visual = NULL, out,
-                    ex_sign = "negative", sma_period = 10, fold = 2,
+                    ex_sign = "negative", period = 5, fold = 2,
                     df_name = "cell", res_name = "organelle", ex_name,
                     df_idx = NULL, res_idx = NULL, unit1, unit2,
                     shade = TRUE, start_line = TRUE, ps = 7, theme_plot = "bw"){
@@ -170,18 +167,20 @@ nomodel <- function(cell_list, visual = NULL, out,
         st_index1 <- st_index1[-length(st_index1)]
 
         ## definition2: moving average of differences (sma_period points) are positive
+        N_ex <- sum(cell_list[[i]]$ex == 1)
         diff <- diff(Y[st_index]) #difference between adjacent data
         sma <- NULL
+        sma_period <- round(N_ex / 10, 0)
         for(k in 1:(length(diff)-(sma_period-1))){
           sma[k] <- mean(diff[k:(k+(sma_period-1))]) # sma of next sma_period differences
         }
         st_index2 <- st_index[which(sma > 0)]
 
-        ## definition3: difference from the data after 5 tp is larger than fold*5/N_ex times of max - min
-        N_ex <- sum(cell_list[[i]]$ex == 1)
-        st_index3 <- st_index[(Y[st_index+5] - Y[st_index]) >
-                                (fold*5/N_ex)*(max(Y[st_index]) - min(Y[st_index]))]
-        st_index3 <- st_index3[-((length(st_index3)-4):length(st_index3))]
+        ## definition3: difference from the data after period tp is larger than fold*period/N_ex times of max - min
+        st_index3 <- st_index[(Y[st_index+period] - Y[st_index]) >
+                                (fold*period/N_ex)*(max(Y[st_index]) - min(Y[st_index]))]
+        st_index3 <- st_index3[-((length(st_index3)-(period-1)):length(st_index3))]
+
 
         ## Overlap of def1, def2 and def3
         st_index1_2 <- intersect(st_index1, st_index2)
@@ -205,18 +204,19 @@ nomodel <- function(cell_list, visual = NULL, out,
         st_index1 <- st_index1[-length(st_index1)]
 
         ## definition2: moving average of differences (sma_period points) are negative
+        N_ex <- sum(cell_list[[i]]$ex == 1)
         diff <- diff(Y[st_index]) #difference between adjacent data
         sma <- NULL
+        sma_period <- round(N_ex / 10, 0)
         for(k in 1:(length(diff)-(sma_period-1))){
           sma[k] <- mean(diff[k:(k+(sma_period-1))]) # sma of next sma_period differences
         }
         st_index2 <- st_index[which(sma < 0)]
 
-        ## definition3: difference from the data after 5 tp is larger than fold*5/N_ex times of max - min
-        N_ex <- sum(cell_list[[i]]$ex == 1)
-        st_index3 <- st_index[(Y[st_index] - Y[st_index+5]) >
-                                (fold*5/N_ex)*(max(Y[st_index]) - min(Y[st_index]))]
-        st_index3 <- st_index3[-((length(st_index3)-4):length(st_index3))]
+        ## definition3: difference from the data after period tp is larger than fold*period/N_ex times of max - min
+        st_index3 <- st_index[(Y[st_index] - Y[st_index+period]) >
+                                (fold*period/N_ex)*(max(Y[st_index]) - min(Y[st_index]))]
+        st_index3 <- st_index3[-((length(st_index3)-(period-1)):length(st_index3))]
 
         ## Overlap of def1, def2 and def3
         st_index1_2 <- intersect(st_index1, st_index2)
