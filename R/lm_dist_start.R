@@ -117,6 +117,7 @@ lm_dist_start <- function(cell_list, mvtime, robust = FALSE,
     }
     df$distance <- distance
     df <- df[!is.infinite(rowSums(df)),]
+    df <- df[!is.na(rowSums(df)),]
 
 
   ## label
