@@ -16,6 +16,7 @@ ssm_common(
   res_name,
   ex_name,
   df_idx = NULL,
+  graph = TRUE,
   unit1,
   unit2,
   shade = TRUE,
@@ -71,6 +72,9 @@ used for graph labels.}
 \item{df_idx}{(integer vector) Indexes of the data frame. This should be set
 only when you want to set the indexes manually. This is used for
 file names and graph titles. The default is \code{NULL} and the indexes are automatically set.}
+
+\item{graph}{(logical) Whether to output the graphs of the estimation.
+The default is \code{TRUE}.}
 
 \item{unit1}{(character string) The unit of the response variable. One of "meter",
 "centimeter", "millimeter", "micrometer", "nanometer". If another character

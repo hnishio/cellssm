@@ -44,6 +44,8 @@
 #' = c(2,8)" with the default `df_name` and `res_name` results in the file names
 #' including "cell1_organelle2" and "cell3_organelle8". The default is `NULL` and
 #' the indexes are automatically set.
+#' @param graph (logical) Whether to output the graphs of the estimation.
+#' The default is `TRUE`.
 #' @param unit1 (character string) The unit of the response variable. One of "meter",
 #' "centimeter", "millimeter", "micrometer", "nanometer". If another character
 #' string is given, it is used as it is. This is used for graph labels.
@@ -124,7 +126,7 @@
 nomodel <- function(cell_list, visual = NULL, out,
                     ex_sign = "negative", consecutive = 3, period = 5, fold = 2,
                     df_name = "cell", res_name = "organelle", ex_name,
-                    df_idx = NULL, res_idx = NULL, unit1, unit2,
+                    df_idx = NULL, res_idx = NULL, graph = TRUE, unit1, unit2,
                     shade = TRUE, start_line = TRUE, ps = 7, theme_plot = "bw"){
 
 
@@ -245,128 +247,130 @@ nomodel <- function(cell_list, visual = NULL, out,
       }
 
       ## Plotting
+      if(graph == TRUE){
 
-      # Visual
-      if(!is.null(visual)){
-        if(!is.null(df_idx) & !is.null(res_idx)){
-          vis <- dplyr::filter(visual, cell == df_idx[j] & index == res_idx[j])$time
+        # Visual
+        if(!is.null(visual)){
+          if(!is.null(df_idx) & !is.null(res_idx)){
+            vis <- dplyr::filter(visual, cell == df_idx[j] & index == res_idx[j])$time
+          }else{
+            vis <- dplyr::filter(visual, cell == i & index == j)$time
+          }
+          label_statistical <- "Statistical"
+          label_visual <- "Visual"
         }else{
-          vis <- dplyr::filter(visual, cell == i & index == j)$time
+          vis <- NULL
+          label_statistical <- NULL
+          label_visual <- NULL
         }
-        label_statistical <- "Statistical"
-        label_visual <- "Visual"
-      }else{
-        vis <- NULL
-        label_statistical <- NULL
-        label_visual <- NULL
-      }
 
-      # Shade
-      if(shade == T){
-        alpha = 0.3
-      }else{
-        alpha = 0
-      }
+        # Shade
+        if(shade == T){
+          alpha = 0.3
+        }else{
+          alpha = 0
+        }
 
-      # Start time
-      if(start_line == T){
-        col1 = "orange"
-        col2 = "aquamarine3"
-      }else{
-        col1 = "transparent"
-        col2 = "transparent"
-      }
+        # Start time
+        if(start_line == T){
+          col1 = "orange"
+          col2 = "aquamarine3"
+        }else{
+          col1 = "transparent"
+          col2 = "transparent"
+        }
 
-      # Theme
-      if(theme_plot == "bw"){
-        theme_plot2 <- theme_bw(base_size = ps)
-      }else if(theme_plot == "light"){
-        theme_plot2 <- theme_light(base_size = ps)
-      }else if(theme_plot == "classic"){
-        theme_plot2 <- theme_classic(base_size = ps)
-      }else if(theme_plot == "gray"){
-        theme_plot2 <- theme_gray(base_size = ps)
-      }else if(theme_plot == "dark"){
-        theme_plot2 <- theme_dark(base_size = ps)
-      }else if(theme_plot == "test"){
-        theme_plot2 <- theme_test(base_size = ps)
-      }else if(theme_plot == "minimal"){
-        theme_plot2 <- theme_minimal(base_size = ps)
-      }else if(theme_plot == "void"){
-        theme_plot2 <- theme_void(base_size = ps)
-      }
+        # Theme
+        if(theme_plot == "bw"){
+          theme_plot2 <- theme_bw(base_size = ps)
+        }else if(theme_plot == "light"){
+          theme_plot2 <- theme_light(base_size = ps)
+        }else if(theme_plot == "classic"){
+          theme_plot2 <- theme_classic(base_size = ps)
+        }else if(theme_plot == "gray"){
+          theme_plot2 <- theme_gray(base_size = ps)
+        }else if(theme_plot == "dark"){
+          theme_plot2 <- theme_dark(base_size = ps)
+        }else if(theme_plot == "test"){
+          theme_plot2 <- theme_test(base_size = ps)
+        }else if(theme_plot == "minimal"){
+          theme_plot2 <- theme_minimal(base_size = ps)
+        }else if(theme_plot == "void"){
+          theme_plot2 <- theme_void(base_size = ps)
+        }
 
-      # label
-      if(unit1=="meter"){
-        label_y <- bquote(atop(paste("Distance of ", .(res_name)), paste("from ", .(ex_name), " ", (m))))
-      }else if(unit1=="centimeter"){
-        label_y <- bquote(atop(paste("Distance of ", .(res_name)), paste("from ", .(ex_name), " ", (cm))))
-      }else if(unit1=="millimeter"){
-        label_y <- bquote(atop(paste("Distance of ", .(res_name)), paste("from ", .(ex_name), " ", (mm))))
-      }else if(unit1=="micrometer"){
-        label_y <- bquote(atop(paste("Distance of ", .(res_name)), paste("from ", .(ex_name), " ", (mu*m))))
-      }else if(unit1=="nanometer"){
-        label_y <- bquote(atop(paste("Distance of ", .(res_name)), paste("from ", .(ex_name), " ", (nm))))
-      }else{
-        label_y <- bquote(atop(paste("Distance of ", .(res_name)), paste("from ", .(ex_name), " (",  .(unit1), ")")))
-      }
+        # label
+        if(unit1=="meter"){
+          label_y <- bquote(atop(paste("Distance of ", .(res_name)), paste("from ", .(ex_name), " ", (m))))
+        }else if(unit1=="centimeter"){
+          label_y <- bquote(atop(paste("Distance of ", .(res_name)), paste("from ", .(ex_name), " ", (cm))))
+        }else if(unit1=="millimeter"){
+          label_y <- bquote(atop(paste("Distance of ", .(res_name)), paste("from ", .(ex_name), " ", (mm))))
+        }else if(unit1=="micrometer"){
+          label_y <- bquote(atop(paste("Distance of ", .(res_name)), paste("from ", .(ex_name), " ", (mu*m))))
+        }else if(unit1=="nanometer"){
+          label_y <- bquote(atop(paste("Distance of ", .(res_name)), paste("from ", .(ex_name), " ", (nm))))
+        }else{
+          label_y <- bquote(atop(paste("Distance of ", .(res_name)), paste("from ", .(ex_name), " (",  .(unit1), ")")))
+        }
 
-      # Title of the plots
-      if(!is.null(df_idx) & !is.null(res_idx)){
-        titles <- paste(stringr::str_to_title(df_name), " ", df_idx[j], ", ", res_name, " ", res_idx[j], sep="")
-      }else{
-        titles <- paste(stringr::str_to_title(df_name), " ", i, ", ", res_name, " ", j, sep="")
-      }
+        # Title of the plots
+        if(!is.null(df_idx) & !is.null(res_idx)){
+          titles <- paste(stringr::str_to_title(df_name), " ", df_idx[j], ", ", res_name, " ", res_idx[j], sep="")
+        }else{
+          titles <- paste(stringr::str_to_title(df_name), " ", i, ", ", res_name, " ", j, sep="")
+        }
 
-      # X-axis min and max of shade
-      shade_xmin <- min(cell_list[[i]]$time[cell_list[[i]]$ex == 0])
-      shade_xmax <- max(cell_list[[i]]$time[cell_list[[i]]$ex == 0])
-      zero_time <- (cell_list[[i]]$time[cell_list[[i]]$ex == 0])
-      boundary1 <- zero_time[which(diff(zero_time) != 1)]
-      boundary2 <- zero_time[which(diff(zero_time) != 1)+1]
-      shade_xmin <- c(shade_xmin, boundary2)
-      shade_xmax <- c(boundary1, shade_xmax)
+        # X-axis min and max of shade
+        shade_xmin <- min(cell_list[[i]]$time[cell_list[[i]]$ex == 0])
+        shade_xmax <- max(cell_list[[i]]$time[cell_list[[i]]$ex == 0])
+        zero_time <- (cell_list[[i]]$time[cell_list[[i]]$ex == 0])
+        boundary1 <- zero_time[which(diff(zero_time) != 1)]
+        boundary2 <- zero_time[which(diff(zero_time) != 1)+1]
+        shade_xmin <- c(shade_xmin, boundary2)
+        shade_xmax <- c(boundary1, shade_xmax)
 
-      # Location of text
-      text_x1 <- max(cell_list[[i]]$time) - (max(cell_list[[i]]$time) - min(cell_list[[i]]$time)) * 0.13
-      text_x2 <- max(cell_list[[i]]$time) - (max(cell_list[[i]]$time) - min(cell_list[[i]]$time)) * 0.158
+        # Location of text
+        text_x1 <- max(cell_list[[i]]$time) - (max(cell_list[[i]]$time) - min(cell_list[[i]]$time)) * 0.13
+        text_x2 <- max(cell_list[[i]]$time) - (max(cell_list[[i]]$time) - min(cell_list[[i]]$time)) * 0.158
 
-      # Distance
-      df_g <- data.frame(x = cell_list[[i]]$time, y = Y)
-      ymax <- max(df_g$y)
-      ymin <- min(df_g$y)
-      yrange <- (ymax - ymin)
-      yceiling <-  ymax + yrange * 0.05
-      yfloor <- ymin - yrange * 0.05
+        # Distance
+        df_g <- data.frame(x = cell_list[[i]]$time, y = Y)
+        ymax <- max(df_g$y)
+        ymin <- min(df_g$y)
+        yrange <- (ymax - ymin)
+        yceiling <-  ymax + yrange * 0.05
+        yfloor <- ymin - yrange * 0.05
 
-      g_dist <- ggplot(data = df_g) +
-        annotate("rect", xmin = shade_xmin, xmax = shade_xmax,
-                 ymin = yfloor, ymax = yceiling, alpha = alpha, fill = "gray50") +
-        geom_line(aes(x = x, y = y), linewidth=0.5) +
-        geom_vline(xintercept = mv_time$start_time, linetype="solid", col = col1) +
-        geom_vline(xintercept = vis, linetype="dashed", col = col2) +
-        annotate("text", x=text_x1, y=yceiling-yrange*0.08, label=label_statistical, col=col1, size = ps/ggplot2::.pt) +
-        annotate("text", x=text_x2, y=yceiling-yrange*0.2, label=label_visual, col=col2, size = ps/ggplot2::.pt) +
-        scale_x_continuous(expand = c(0,0)) +
-        scale_y_continuous(expand = c(0,0)) +
-        theme_plot2 +
-        theme(legend.position = "none",
-              axis.title=element_text(size = ps),
-              axis.title.x=element_blank(),
-              axis.text = element_text(size = ps),
-              plot.title = element_text(size = ps, face = "bold")) +
-        labs(title = titles,
-             x = paste("Time (", unit2, ")", sep=""),
-             y = label_y)
+        g_dist <- ggplot(data = df_g) +
+          annotate("rect", xmin = shade_xmin, xmax = shade_xmax,
+                   ymin = yfloor, ymax = yceiling, alpha = alpha, fill = "gray50") +
+          geom_line(aes(x = x, y = y), linewidth=0.5) +
+          geom_vline(xintercept = mv_time$start_time, linetype="solid", col = col1) +
+          geom_vline(xintercept = vis, linetype="dashed", col = col2) +
+          annotate("text", x=text_x1, y=yceiling-yrange*0.08, label=label_statistical, col=col1, size = ps/ggplot2::.pt) +
+          annotate("text", x=text_x2, y=yceiling-yrange*0.2, label=label_visual, col=col2, size = ps/ggplot2::.pt) +
+          scale_x_continuous(expand = c(0,0)) +
+          scale_y_continuous(expand = c(0,0)) +
+          theme_plot2 +
+          theme(legend.position = "none",
+                axis.title=element_text(size = ps),
+                axis.title.x=element_blank(),
+                axis.text = element_text(size = ps),
+                plot.title = element_text(size = ps, face = "bold")) +
+          labs(title = titles,
+               x = paste("Time (", unit2, ")", sep=""),
+               y = label_y)
 
-      # Integrate plots
-      suppressWarnings(
-        ggsave(paste0(out, "/nomodel_", file_name, ".pdf"),
-               g_dist, height = ps*20*1/4, width = ps*10*1.2, units = "mm")
-      )
+        # Integrate plots
+        suppressWarnings(
+          ggsave(paste0(out, "/nomodel_", file_name, ".pdf"),
+                 g_dist, height = ps*20*1/4, width = ps*10*1.2, units = "mm")
+        )
+      } # if(graph == TRUE)
 
-    }
-  }
+    } # for loop of the response variable
+  } # for loop of cells
 
   ## Save movement time
   if(!is.null(visual)){

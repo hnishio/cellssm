@@ -17,6 +17,7 @@ nomodel(
   ex_name,
   df_idx = NULL,
   res_idx = NULL,
+  graph = TRUE,
   unit1,
   unit2,
   shade = TRUE,
@@ -74,6 +75,9 @@ file names and graph titles. For example, setting "\code{df_idx} = c(1,3) and \c
 = c(2,8)" with the default \code{df_name} and \code{res_name} results in the file names
 including "cell1_organelle2" and "cell3_organelle8". The default is \code{NULL} and
 the indexes are automatically set.}
+
+\item{graph}{(logical) Whether to output the graphs of the estimation.
+The default is \code{TRUE}.}
 
 \item{unit1}{(character string) The unit of the response variable. One of "meter",
 "centimeter", "millimeter", "micrometer", "nanometer". If another character
