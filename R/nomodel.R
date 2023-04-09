@@ -20,6 +20,9 @@
 #' If cells or organelles are moving away from the explanatory variable, `ex_sign`
 #' should be "positive". If cells or organelles are approaching to the explanatory
 #' variable, `ex_sign` should be "negative".
+#' @param consecutive (positive integer) One of the definitions of the start time:
+#' the distance continues to increase or decrease for `consecutive` time points.
+#' The default is 3.
 #' @param period,fold (positive integer, positive real) One of the definitions of the start time:
 #' difference from the distance at `period` time points ahead is `fold` times larger
 #' than the average change rate. The default is 5 for `period` and 2 for `fold`.
@@ -119,7 +122,7 @@
 #' @export
 #'
 nomodel <- function(cell_list, visual = NULL, out,
-                    ex_sign = "negative", period = 5, fold = 2,
+                    ex_sign = "negative", consecutive = 3, period = 5, fold = 2,
                     df_name = "cell", res_name = "organelle", ex_name,
                     df_idx = NULL, res_idx = NULL, unit1, unit2,
                     shade = TRUE, start_line = TRUE, ps = 7, theme_plot = "bw"){
@@ -163,16 +166,20 @@ nomodel <- function(cell_list, visual = NULL, out,
         ## Estimate the start of movement
         ## definition1: approaching to light
         st_index <- min(which(cell_list[[i]]$ex == 1)) : max(which(cell_list[[i]]$ex == 1))
-        st_index1 <- st_index[Y[st_index] < Y[st_index+1]] # increase at the next point
-        st_index1 <- st_index1[-length(st_index1)]
+        diffY <- diff(Y[st_index]) #difference between adjacent data
+        st_index1 <- NULL
+        for(k in 1:(length(diffY)-consecutive+1)){  # decrease at the next consecutive points
+          if(sum(diffY[k:(k+consecutive-1)] > 0) == consecutive){
+            st_index1 <- c(st_index1, st_index[k])
+          }
+        }
 
         ## definition2: moving average of differences (sma_period points) are positive
         N_ex <- sum(cell_list[[i]]$ex == 1)
-        diff <- diff(Y[st_index]) #difference between adjacent data
         sma <- NULL
         sma_period <- round(N_ex / 10, 0)
-        for(k in 1:(length(diff)-(sma_period-1))){
-          sma[k] <- mean(diff[k:(k+(sma_period-1))]) # sma of next sma_period differences
+        for(k in 1:(length(diffY)-(sma_period-1))){
+          sma[k] <- mean(diffY[k:(k+(sma_period-1))]) # sma of next sma_period differences
         }
         st_index2 <- st_index[which(sma > 0)]
 
@@ -200,16 +207,20 @@ nomodel <- function(cell_list, visual = NULL, out,
         ## Estimate the start of movement
         ## definition1: approaching to light
         st_index <- min(which(cell_list[[i]]$ex == 1)) : max(which(cell_list[[i]]$ex == 1))
-        st_index1 <- st_index[Y[st_index] > Y[st_index+1]] # decrease at the next point
-        st_index1 <- st_index1[-length(st_index1)]
+        diffY <- diff(Y[st_index]) #difference between adjacent data
+        st_index1 <- NULL
+        for(k in 1:(length(diffY)-consecutive+1)){  # decrease at the next consecutive points
+          if(sum(diffY[k:(k+consecutive-1)] < 0) == consecutive){
+            st_index1 <- c(st_index1, st_index[k])
+          }
+        }
 
         ## definition2: moving average of differences (sma_period points) are negative
         N_ex <- sum(cell_list[[i]]$ex == 1)
-        diff <- diff(Y[st_index]) #difference between adjacent data
         sma <- NULL
         sma_period <- round(N_ex / 10, 0)
-        for(k in 1:(length(diff)-(sma_period-1))){
-          sma[k] <- mean(diff[k:(k+(sma_period-1))]) # sma of next sma_period differences
+        for(k in 1:(length(diffY)-(sma_period-1))){
+          sma[k] <- mean(diffY[k:(k+(sma_period-1))]) # sma of next sma_period differences
         }
         st_index2 <- st_index[which(sma < 0)]
 

@@ -9,6 +9,7 @@ nomodel(
   visual = NULL,
   out,
   ex_sign = "negative",
+  consecutive = 3,
   period = 5,
   fold = 2,
   df_name = "cell",
@@ -42,6 +43,10 @@ variable on the distances of cells or organelles.
 If cells or organelles are moving away from the explanatory variable, \code{ex_sign}
 should be "positive". If cells or organelles are approaching to the explanatory
 variable, \code{ex_sign} should be "negative".}
+
+\item{consecutive}{(positive integer) One of the definitions of the start time:
+the distance continues to increase or decrease for \code{consecutive} time points.
+The default is 3.}
 
 \item{period, fold}{(positive integer, positive real) One of the definitions of the start time:
 difference from the distance at \code{period} time points ahead is \code{fold} times larger
