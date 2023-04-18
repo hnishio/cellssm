@@ -81,7 +81,7 @@ quantile99 <- function(x){
 #' including "cell1_organelle2" and "cell3_organelle8". The default is `NULL` and
 #' the indexes are automatically set.
 #' @param graph (logical) Whether to output the graphs of the estimation.
-#' The default is `TRUE`.
+#' See \strong{Value} for more details. The default is `TRUE`.
 #' @param unit1 (character string) The unit of the response variable. One of "meter",
 #' "centimeter", "millimeter", "micrometer", "nanometer". If another character
 #' string is given, it is used as it is. This is used for graph labels.
@@ -94,6 +94,8 @@ quantile99 <- function(x){
 #' Plot sizes are automatically adjusted according to the font size.
 #' @param theme_plot (character string) A plot theme of the [ggplot2] package. One of "bw", "light",
 #' "classic", "gray", "dark", "test", "minimal" and "void". The default is "bw".
+#' @param diagnosis (logical) Whether to output the visualised diagnoses of
+#' MCMC sampling. See \strong{Value} for more details. The default is `TRUE`.
 #' @returns A directory named after the `out` parameter is created, which has three subdirectories.
 #' * A subdirectory "csv" includes "ssm_individual_cell `i` _ `res_name` `j` .csv",
 #' "ssm_individual_cell `i` _ `res_name` `j` _sd.csv" and "ssm_individual_mvtime.csv"
@@ -119,7 +121,7 @@ quantile99 <- function(x){
 #' the shaded and light regions represent the periods without and with the explanatory
 #' variable, respectively.
 #' * A subdirectory "diagnosis" includes "ssm_individual_combo_cell `i` _ `res_name` `j` .pdf" and
-#' "ssm_individual_rhat_cell `i` _ `res_name` `j` .pdf". These are visualised diagnoses of
+#' "ssm_individual_rhat_cell `i` _ `res_name` `j` .pdf". These are the visualised diagnoses of
 #' MCMC sampling. "ssm_individual_combo_cell `i` _ `res_name` `j` .pdf" shows the
 #' density plots of the posterior distributions and the trace plots for "b_ex" and
 #' "alpha" at the start and end of the time series and the parameter with the worst Rhat value.
@@ -195,7 +197,8 @@ ssm_individual <- function(cell_list, visual=NULL, out, seed=123, warmup=1000,
                            ex_sign = "negative", df_name = "cell",
                            res_name = "organelle", ex_name, df_idx = NULL, res_idx = NULL,
                            graph = TRUE, unit1, unit2,
-                           shade = TRUE, start_line = TRUE, ps = 7, theme_plot = "bw"){
+                           shade = TRUE, start_line = TRUE, ps = 7, theme_plot = "bw",
+                           diagnosis = T){
 
   ## Dependency on cmdstanr
   if(!requireNamespace("cmdstanr", quietly = TRUE)){
@@ -233,7 +236,7 @@ ssm_individual <- function(cell_list, visual=NULL, out, seed=123, warmup=1000,
   if(file.exists(paste0(out, "/pdf"))==F & graph == T){
     dir.create(paste0(out, "/pdf"), recursive=T)
   }
-  if(file.exists(paste0(out, "/diagnosis"))==F){
+  if(file.exists(paste0(out, "/diagnosis"))==F & diagnosis == T){
     dir.create(paste0(out, "/diagnosis"), recursive=T)
   }
   if(file.exists("tmp")==F){
@@ -927,26 +930,26 @@ ssm_individual <- function(cell_list, visual=NULL, out, seed=123, warmup=1000,
 
 
       ## Diagnosis of MCMC
+      if(diagnosis == T){
+        # Check of Rhat
+        bayesplot::color_scheme_set("viridisC")
+        bayesplot::bayesplot_theme_set(bayesplot::theme_default(base_size = ps+2, base_family = "sans"))
+        g <- bayesplot::mcmc_rhat(bayesplot::rhat(fit))
+        ggsave(paste0(out, "/diagnosis/ssm_individual_rhat_", file_name, ".pdf"),
+               g, height = ps*20, width = ps*20, units = "mm")
+        max_rhat <- names(which.max(bayesplot::rhat(fit)))
 
-      # Check of Rhat
-      bayesplot::color_scheme_set("viridisC")
-      bayesplot::bayesplot_theme_set(bayesplot::theme_default(base_size = ps+2, base_family = "sans"))
-      g <- bayesplot::mcmc_rhat(bayesplot::rhat(fit))
-      ggsave(paste0(out, "/diagnosis/ssm_individual_rhat_", file_name, ".pdf"),
-             g, height = ps*20, width = ps*20, units = "mm")
-      max_rhat <- names(which.max(bayesplot::rhat(fit)))
-
-      # Confirmation of convergence
-      g <- bayesplot::mcmc_combo(
-        fit$draws(),
-        combo = c("dens_overlay", "trace"),
-        widths = c(1, 1),
-        pars = c("b_ex[1]", paste0("b_ex[", data_list$N_ex, "]"), "alpha[1]", paste0("alpha[", data_list$N, "]"), max_rhat),
-        gg_theme = theme_classic(base_size = ps+2)
-      )
-      ggsave(paste0(out, "/diagnosis/ssm_individual_combo_", file_name, ".pdf"),
-             g, height = ps*20, width = ps*20, units = "mm")
-
+        # Confirmation of convergence
+        g <- bayesplot::mcmc_combo(
+          fit$draws(),
+          combo = c("dens_overlay", "trace"),
+          widths = c(1, 1),
+          pars = c("b_ex[1]", paste0("b_ex[", data_list$N_ex, "]"), "alpha[1]", paste0("alpha[", data_list$N, "]"), max_rhat),
+          gg_theme = theme_classic(base_size = ps+2)
+        )
+        ggsave(paste0(out, "/diagnosis/ssm_individual_combo_", file_name, ".pdf"),
+               g, height = ps*20, width = ps*20, units = "mm")
+      } # if(diagnosis == T){
 
       ## Remove temporary files
       file.remove(paste0(output_dir, "/", outcsv_name))

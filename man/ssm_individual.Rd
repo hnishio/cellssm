@@ -26,7 +26,8 @@ ssm_individual(
   shade = TRUE,
   start_line = TRUE,
   ps = 7,
-  theme_plot = "bw"
+  theme_plot = "bw",
+  diagnosis = T
 )
 }
 \arguments{
@@ -107,7 +108,7 @@ including "cell1_organelle2" and "cell3_organelle8". The default is \code{NULL} 
 the indexes are automatically set.}
 
 \item{graph}{(logical) Whether to output the graphs of the estimation.
-The default is \code{TRUE}.}
+See \strong{Value} for more details. The default is \code{TRUE}.}
 
 \item{unit1}{(character string) The unit of the response variable. One of "meter",
 "centimeter", "millimeter", "micrometer", "nanometer". If another character
@@ -126,6 +127,9 @@ Plot sizes are automatically adjusted according to the font size.}
 
 \item{theme_plot}{(character string) A plot theme of the \link{ggplot2} package. One of "bw", "light",
 "classic", "gray", "dark", "test", "minimal" and "void". The default is "bw".}
+
+\item{diagnosis}{(logical) Whether to output the visualised diagnoses of
+MCMC sampling. See \strong{Value} for more details. The default is \code{TRUE}.}
 }
 \value{
 A directory named after the \code{out} parameter is created, which has three subdirectories.
@@ -154,7 +158,7 @@ the visual observation, respectively. When the \code{shade} parameter is \code{T
 the shaded and light regions represent the periods without and with the explanatory
 variable, respectively.
 \item A subdirectory "diagnosis" includes "ssm_individual_combo_cell \code{i} _ \code{res_name} \code{j} .pdf" and
-"ssm_individual_rhat_cell \code{i} _ \code{res_name} \code{j} .pdf". These are visualised diagnoses of
+"ssm_individual_rhat_cell \code{i} _ \code{res_name} \code{j} .pdf". These are the visualised diagnoses of
 MCMC sampling. "ssm_individual_combo_cell \code{i} _ \code{res_name} \code{j} .pdf" shows the
 density plots of the posterior distributions and the trace plots for "b_ex" and
 "alpha" at the start and end of the time series and the parameter with the worst Rhat value.
