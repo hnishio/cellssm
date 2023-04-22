@@ -31,14 +31,12 @@ transformed parameters {
       for (t in 1:(start[n]-2)) {
         b_ex_each[t,n] = 0;
       }
-      for (n in 1:N_each) {
-        for (t in (start[n]-1):N_ex) {
-          b_ex_each[t,n] = b_ex[t-(start[n]-1)+1];
-        }
+      for (t in (start[n]-1):N_ex) {
+        b_ex_each[t,n] = b_ex[t-(start[n]-1)+1];
       }
     }//if (start[n] >= 3) {
 
-    if (start[n] == 1 | start[n] == 2){
+    if (start[n] == 1 || start[n] == 2){
       for (t in 1:N_ex) {
         b_ex_each[t,n] = b_ex[t];
       }
