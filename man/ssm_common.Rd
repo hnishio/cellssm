@@ -21,7 +21,8 @@ ssm_common(
   unit2,
   shade = TRUE,
   ps = 7,
-  theme_plot = "bw"
+  theme_plot = "bw",
+  diagnosis = T
 )
 }
 \arguments{
@@ -90,6 +91,9 @@ Plot sizes are automatically adjusted according to the font size.}
 
 \item{theme_plot}{(character string) A plot theme of the \link{ggplot2} package. One of "bw", "light",
 "classic", "gray", "dark", "test", "minimal" and "void". The default is "bw".}
+
+\item{diagnosis}{(logical) Whether to output the visualised diagnoses of
+MCMC sampling. See \strong{Value} for more details. The default is \code{TRUE}.}
 }
 \value{
 A directory named after the \code{out} parameter is created, which has three subdirectories.

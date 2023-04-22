@@ -295,7 +295,8 @@ lm_signal <- function(cell_list, mvtime, robust = FALSE,
 
     # Speed of each cell
     ydiff <- 1 / (length(cell_list) + 1)
-    g_speed <- ggplot() + theme_void()
+    g_speed <- ggplot() + theme_void() +
+      theme(plot.tag = element_text(size = 12, face = "bold"))
 
     for(i in 1:length(cell_list)){
 
@@ -347,7 +348,9 @@ lm_signal <- function(cell_list, mvtime, robust = FALSE,
     glist[[length(cell_list) + 2]] <- g_speed
 
   }else{
-    g_speed <- ggplot() + theme_void()
+    g_speed <- ggplot() + theme_void() +
+      theme(plot.tag = element_text(size = 12, face = "bold"))
+
     if(robust == T){
       lm_cell <- RobustLinearReg::siegel_regression(distance ~ predicted, data = df)
     }else{
