@@ -198,7 +198,7 @@ ssm_individual <- function(cell_list, visual=NULL, out, seed=123, warmup=1000,
                            res_name = "organelle", ex_name, df_idx = NULL, res_idx = NULL,
                            graph = TRUE, unit1, unit2,
                            shade = TRUE, start_line = TRUE, ps = 7, theme_plot = "bw",
-                           diagnosis = T){
+                           diagnosis = TRUE){
 
   ## Dependency on cmdstanr
   if(!requireNamespace("cmdstanr", quietly = TRUE)){
@@ -239,12 +239,13 @@ ssm_individual <- function(cell_list, visual=NULL, out, seed=123, warmup=1000,
   if(file.exists(paste0(out, "/diagnosis"))==F & diagnosis == T){
     dir.create(paste0(out, "/diagnosis"), recursive=T)
   }
-  if(file.exists("tmp")==F){
+  if(file.exists("tmp")==T){
+    unlink("tmp", recursive = T)
     dir.create("tmp", recursive=T)
     output_dir <- "tmp"
   }else{
-    dir.create("tmp99", recursive=T)
-    output_dir <- "tmp99"
+    dir.create("tmp", recursive=T)
+    output_dir <- "tmp"
   }
 
   # Prepare a container for movement time
@@ -275,6 +276,7 @@ ssm_individual <- function(cell_list, visual=NULL, out, seed=123, warmup=1000,
       sp_vel <- stats::smooth.spline(1:length(vel), vel, spar=0)
       pred_vel <- stats::predict(sp_vel, 1:length(vel))
       obs <- stats::sd(vel - pred_vel$y)
+      #obs <- sqrt(sum((vel - pred_vel$y)^2) / (length(vel)-1))
 
       # Prepare data_list
       data_list <- list(

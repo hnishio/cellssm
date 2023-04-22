@@ -169,7 +169,7 @@ ssm_common <- function(cell_list, mvtime=NULL, out, seed = 123, warmup=1000, sam
                        df_name = "cell", res_name, ex_name, df_idx = NULL,
                        graph = TRUE, unit1, unit2,
                        shade = TRUE, ps = 7, theme_plot = "bw",
-                       diagnosis = T){
+                       diagnosis = TRUE){
 
   ## Dependency on cmdstanr
   if(!requireNamespace("cmdstanr", quietly = TRUE)){
@@ -197,12 +197,13 @@ ssm_common <- function(cell_list, mvtime=NULL, out, seed = 123, warmup=1000, sam
   if(file.exists(paste0(out, "/diagnosis"))==F & diagnosis == T){
     dir.create(paste0(out, "/diagnosis"), recursive=T)
   }
-  if(file.exists("tmp")==F){
+  if(file.exists("tmp")==T){
+    unlink("tmp", recursive = T)
     dir.create("tmp", recursive=T)
     output_dir <- "tmp"
   }else{
-    dir.create("tmp99", recursive=T)
-    output_dir <- "tmp99"
+    dir.create("tmp", recursive=T)
+    output_dir <- "tmp"
   }
 
   # Adjust data.frame

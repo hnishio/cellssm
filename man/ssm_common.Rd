@@ -22,7 +22,7 @@ ssm_common(
   shade = TRUE,
   ps = 7,
   theme_plot = "bw",
-  diagnosis = T
+  diagnosis = TRUE
 )
 }
 \arguments{
