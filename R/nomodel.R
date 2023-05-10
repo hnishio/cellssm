@@ -355,7 +355,7 @@ nomodel <- function(cell_list, visual = NULL, out,
           theme_plot2 +
           theme(legend.position = "none",
                 axis.title=element_text(size = ps),
-                axis.title.x=element_blank(),
+                #axis.title.x=element_blank(),
                 axis.text = element_text(size = ps),
                 plot.title = element_text(size = ps, face = "bold")) +
           labs(title = titles,

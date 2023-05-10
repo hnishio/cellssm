@@ -2,7 +2,7 @@
 % Please edit documentation in R/lm_dist_beta.R
 \name{lm_dist_beta}
 \alias{lm_dist_beta}
-\title{Robust linear regression (x: distance at time 0, y: coefficient of explanatory variable or velocity)}
+\title{Linear regression (x: distance at time 0, y: coefficient of explanatory variable or velocity)}
 \usage{
 lm_dist_beta(
   cell_list,
@@ -72,7 +72,7 @@ and shaded regions are the observed values, regression lines, and 95\% confidenc
 intervals, respectively.
 }
 \description{
-\code{lm_dist_beta} performs the robust linear regression to analyse the
+\code{lm_dist_beta} performs linear regression to analyse the
 relationship between the distance at time 0 and the influence of an explanatory variable
 obtained by the state-space model.
 }

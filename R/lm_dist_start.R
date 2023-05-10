@@ -1,7 +1,7 @@
 
-#' Robust linear regression (x: distance at time 0, y: start time)
+#' Linear regression (x: distance at time 0, y: start time)
 #'
-#' \code{lm_dist_start} performs robust linear regression to analyse the
+#' \code{lm_dist_start} performs linear regression to analyse the
 #' relationship between the distance at time 0 and the start time of the
 #' influence of an explanatory variable obtained by the state-space model.
 #'

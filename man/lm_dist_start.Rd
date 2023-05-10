@@ -2,7 +2,7 @@
 % Please edit documentation in R/lm_dist_start.R
 \name{lm_dist_start}
 \alias{lm_dist_start}
-\title{Robust linear regression (x: distance at time 0, y: start time)}
+\title{Linear regression (x: distance at time 0, y: start time)}
 \usage{
 lm_dist_start(
   cell_list,
@@ -51,7 +51,7 @@ and shaded regions are the observed values, regression lines, and 95\% confidenc
 intervals, respectively.
 }
 \description{
-\code{lm_dist_start} performs robust linear regression to analyse the
+\code{lm_dist_start} performs linear regression to analyse the
 relationship between the distance at time 0 and the start time of the
 influence of an explanatory variable obtained by the state-space model.
 }

@@ -1,7 +1,7 @@
 
-#' Robust linear regression (x: distance at time 0, y: coefficient of explanatory variable or velocity)
+#' Linear regression (x: distance at time 0, y: coefficient of explanatory variable or velocity)
 #'
-#' \code{lm_dist_beta} performs the robust linear regression to analyse the
+#' \code{lm_dist_beta} performs linear regression to analyse the
 #' relationship between the distance at time 0 and the influence of an explanatory variable
 #' obtained by the state-space model.
 #'

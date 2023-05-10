@@ -2,7 +2,7 @@
 % Please edit documentation in R/lm_signal.R
 \name{lm_signal}
 \alias{lm_signal}
-\title{Estimation of signal transfer speed by robust linear regression (x: start time, y: distance at time 0)}
+\title{Estimation of signal transfer speed by linear regression (x: start time, y: distance at time 0)}
 \usage{
 lm_signal(
   cell_list,
@@ -51,7 +51,7 @@ and shaded regions are the observed values, regression lines, and 95\% confidenc
 intervals, respectively.
 }
 \description{
-\code{lm_signal} estimates the speed of signal transfer by robust linear regression
+\code{lm_signal} estimates the speed of signal transfer by linear regression
 between the distance at time 0 and the start time of the
 influence of an explanatory variable obtained by the state-space model.
 }
