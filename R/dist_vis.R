@@ -8,8 +8,8 @@
 #' second column, an explanatory variable (0 or 1, column name "ex"); third to the last columns,
 #' distances of cells or organelles from the explanatory variable (
 #' any column names are accepted). See the following \strong{Examples} for further details.
-#' @param df_name (character string) The name of the data frame. This is used for
-#' graph titles. The default is "cell".
+#' @param graph_title (character string) The name of the data frame. This is used for
+#' graph titles. The default is "Cell".
 #' @param res_name (character string) The name of the response variable. This is used
 #' for graph labels.
 #' @param ex_name (character string) The name of the explanatory variable. This is used
@@ -99,7 +99,7 @@
 #'
 #' @export
 #'
-dist_vis <- function(cell_list, df_name = "cell", res_name, ex_name, unit1, unit2,
+dist_vis <- function(cell_list, graph_title = "Cell", res_name, ex_name, unit1, unit2,
                      col = "viridis", shade = TRUE, ps = 7, theme_plot = "bw"){
 
   # Binding variables locally to the function
@@ -187,7 +187,7 @@ dist_vis <- function(cell_list, df_name = "cell", res_name, ex_name, unit1, unit
     if(length(cell_list) == 1){
       titles <- NULL
     }else{
-      titles <- paste(stringr::str_to_title(df_name), " ", i, sep="")
+      titles <- paste(graph_title, " ", i, sep="")
     }
 
     # X-axis min and max of shade

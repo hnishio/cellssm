@@ -63,7 +63,7 @@ quantile99 <- function(x){
 #' should be "positive". If cells or organelles are approaching to the explanatory
 #' variable, `ex_sign` should be "negative".
 #' @param df_name (character string) The name of the data frame. This is used for
-#' file names and graph titles. The default is "cell".
+#' file names. The default is "cell".
 #' @param res_name (character string) The name of the response variable. This is used
 #' for file names and graph labels. The default is "organelle".
 #' @param ex_name (character string) The name of the explanatory variable. This is used
@@ -82,6 +82,8 @@ quantile99 <- function(x){
 #' the indexes are automatically set.
 #' @param graph (logical) Whether to output the graphs of the estimation.
 #' See \strong{Value} for more details. The default is `TRUE`.
+#' @param graph_title (character string) The name of the data frame. This is used for
+#' graph titles. The default is "Cell".
 #' @param unit1 (character string) The unit of the response variable. One of "meter",
 #' "centimeter", "millimeter", "micrometer", "nanometer". If another character
 #' string is given, it is used as it is. This is used for graph labels.
@@ -187,7 +189,7 @@ quantile99 <- function(x){
 #'                  warmup=1000, sampling=1000, thin=6,
 #'                  start_sensitivity = 3, ex_sign = "positive", df_name = "experiment",
 #'                  res_name = "Paramecium", ex_name = "heat",
-#'                  unit1 = "millimeter", unit2 = "sec")
+#'                  graph_title = "Experiment", unit1 = "millimeter", unit2 = "sec")
 #' }
 #'
 #' @export
@@ -196,7 +198,7 @@ ssm_individual <- function(cell_list, visual=NULL, out, seed=123, warmup=1000,
                            sampling=1000, thin=3, stepwise = c(95, 90), start_sensitivity = 5,
                            ex_sign = "negative", df_name = "cell",
                            res_name = "organelle", ex_name, df_idx = NULL, res_idx = NULL,
-                           graph = TRUE, unit1, unit2,
+                           graph = TRUE, graph_title = "Cell", unit1, unit2,
                            shade = TRUE, start_line = TRUE, ps = 7, theme_plot = "bw",
                            diagnosis = TRUE){
 
@@ -748,9 +750,9 @@ ssm_individual <- function(cell_list, visual=NULL, out, seed=123, warmup=1000,
 
         # Title of the plots
         if(!is.null(df_idx) & !is.null(res_idx)){
-          titles <- paste(stringr::str_to_title(df_name), " ", df_idx[j], ", ", res_name, " ", res_idx[j], sep="")
+          titles <- paste(graph_title, " ", df_idx[j], ", ", res_name, " ", res_idx[j], sep="")
         }else{
-          titles <- paste(stringr::str_to_title(df_name), " ", i, ", ", res_name, " ", j, sep="")
+          titles <- paste(graph_title, " ", i, ", ", res_name, " ", j, sep="")
         }
 
         # X-axis min and max of shade

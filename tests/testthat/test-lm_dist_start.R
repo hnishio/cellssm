@@ -28,7 +28,7 @@ cell_list <- list(Paramecium)
 
 # dist vs. start
 glist <- lm_dist_start(cell_list = cell_list, mvtime = Paramecium_mvtime,
-                       df_name = "experiment", ex_name = "heat",
+                       graph_title = "Experiment", ex_name = "heat",
                        unit1 = "millimeter", unit2 = "sec")
 
 # Test

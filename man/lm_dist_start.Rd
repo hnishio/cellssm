@@ -8,10 +8,11 @@ lm_dist_start(
   cell_list,
   mvtime,
   robust = FALSE,
-  df_name = "cell",
+  graph_title = "Cell",
   ex_name,
   unit1,
   unit2,
+  eq_pos = "topleft",
   ps = 7,
   theme_plot = "bw"
 )
@@ -28,8 +29,8 @@ any column names are accepted). See the following \strong{Examples} for further 
 \item{robust}{(logical) When \code{TRUE}, performs robust regression using repeated medians
 (Siegel regression). When \code{FALSE}, performs linear regression. The default is \code{FALSE}.}
 
-\item{df_name}{(character string) The name of data frame. This is used for graph labels.
-The default is "cell".}
+\item{graph_title}{(character string) The name of the data frame. This is used for
+graph titles. The default is "Cell".}
 
 \item{ex_name}{(character string) The name of the explanatory variable. This is used for graph labels.}
 
@@ -38,6 +39,9 @@ The default is "cell".}
 string is given, it is used as it is. This is used for graph labels.}
 
 \item{unit2}{(character string) The unit of time. This is used for graph labels.}
+
+\item{eq_pos}{(character string) The position of equations. One of "topleft", "topright",
+"bottomleft", "bottomright". The default is "topleft".}
 
 \item{ps}{(positive integer) Font size of graphs specified in pt. The default is 7 pt.
 Plot sizes are automatically adjusted according to the font size.}
@@ -97,7 +101,7 @@ cell_list <- list(Paramecium)
 
 # dist vs. start
 glist <- lm_dist_start(cell_list = cell_list, mvtime = Paramecium_mvtime,
-                       df_name = "experiment", ex_name = "heat",
+                       graph_title = "Experiment", ex_name = "heat",
                        unit1 = "millimeter", unit2 = "sec")
 
 \dontrun{

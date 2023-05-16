@@ -6,7 +6,7 @@
 \usage{
 dist_vis(
   cell_list,
-  df_name = "cell",
+  graph_title = "Cell",
   res_name,
   ex_name,
   unit1,
@@ -23,8 +23,8 @@ second column, an explanatory variable (0 or 1, column name "ex"); third to the 
 distances of cells or organelles from the explanatory variable (
 any column names are accepted). See the following \strong{Examples} for further details.}
 
-\item{df_name}{(character string) The name of the data frame. This is used for
-graph titles. The default is "cell".}
+\item{graph_title}{(character string) The name of the data frame. This is used for
+graph titles. The default is "Cell".}
 
 \item{res_name}{(character string) The name of the response variable. This is used
 for graph labels.}

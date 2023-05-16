@@ -13,13 +13,15 @@
 #' ("ssm_individual_mvtime.csv") or [ssm_KFAS] ("ssm_KFAS_mvtime.csv").
 #' @param robust (logical) When `TRUE`, performs robust regression using repeated medians
 #' (Siegel regression). When `FALSE`, performs linear regression. The default is `FALSE`.
-#' @param df_name (character string) The name of data frame. This is used for graph labels.
-#' The default is "cell".
+#' @param graph_title (character string) The name of the data frame. This is used for
+#' graph titles. The default is "Cell".
 #' @param ex_name (character string) The name of the explanatory variable. This is used for graph labels.
 #' @param unit1 (character string) The unit of the response variable. One of "meter",
 #' "centimeter", "millimeter", "micrometer", "nanometer". If another character
 #' string is given, it is used as it is. This is used for graph labels.
 #' @param unit2 (character string) The unit of time. This is used for graph labels.
+#' @param eq_pos (character string) The position of equations. One of "topleft", "topright",
+#' "bottomleft", "bottomright". The default is "topleft".
 #' @param ps (positive integer) Font size of graphs specified in pt. The default is 7 pt.
 #' Plot sizes are automatically adjusted according to the font size.
 #' @param theme_plot (character string) A plot theme of the [ggplot2] package. One of "bw", "light",
@@ -69,7 +71,7 @@
 #'
 #' # dist vs. start
 #' glist <- lm_dist_start(cell_list = cell_list, mvtime = Paramecium_mvtime,
-#'                        df_name = "experiment", ex_name = "heat",
+#'                        graph_title = "Experiment", ex_name = "heat",
 #'                        unit1 = "millimeter", unit2 = "sec")
 #'
 #' \dontrun{
@@ -88,8 +90,8 @@
 #' @export
 #'
 lm_dist_start <- function(cell_list, mvtime, robust = FALSE,
-                          df_name = "cell", ex_name,
-                          unit1, unit2, ps = 7,
+                          graph_title = "Cell", ex_name,
+                          unit1, unit2, eq_pos = "topleft", ps = 7,
                           theme_plot = "bw"){
 
 
@@ -170,7 +172,7 @@ lm_dist_start <- function(cell_list, mvtime, robust = FALSE,
     if(length(cell_list) == 1){
       titles <- NULL
     }else{
-      titles <- paste(stringr::str_to_title(df_name), " ", i, sep="")
+      titles <- paste(graph_title, " ", i, sep="")
     }
 
     data <- df[df$cell==i,]
@@ -203,13 +205,28 @@ lm_dist_start <- function(cell_list, mvtime, robust = FALSE,
       equationlab <- bquote(paste(italic(y), " = ", .(intercept), " - ", .(coefficient), " ", italic(x), sep=""))
     }
 
+    # Position of equations
+    if(eq_pos == "topleft"){
+      eq_x=min_axis_x+range_x*0.02; eq_y1=max_axis_y-range_y*0.05
+      eq_x=min_axis_x+range_x*0.02; eq_y2=max_axis_y-range_y*0.17
+    }else if(eq_pos == "topright"){
+      eq_x=max_axis_x-range_x*0.63; eq_y1=max_axis_y-range_y*0.05
+      eq_x=max_axis_x-range_x*0.63; eq_y2=max_axis_y-range_y*0.17
+    }else if(eq_pos == "bottomleft"){
+      eq_x=min_axis_x+range_x*0.02; eq_y1=min_axis_y+range_y*0.17
+      eq_x=min_axis_x+range_x*0.02; eq_y2=min_axis_y+range_y*0.05
+    }else if(eq_pos == "bottomright"){
+      eq_x=max_axis_x-range_x*0.63; eq_y1=min_axis_y+range_y*0.17
+      eq_x=max_axis_x-range_x*0.63; eq_y2=min_axis_y+range_y*0.05
+    }
+
     glist[[i]] <- ggplot() +
       geom_line(data = conf_interval2, aes(x=distance, y=fit), color = "steelblue", linewidth = 1) +
       geom_ribbon(data = conf_interval2, aes(x=distance, ymin = lwr, ymax = upr), alpha = 0.4, fill = "steelblue") +
       geom_point(data = data, aes(x=distance, y=predicted), size=0.8, alpha=0.5) +
-      annotate("text", x=min_axis_x+range_x*0.02, y=max_axis_y-range_y*0.05,
+      annotate("text", x=eq_x, y=eq_y1,
                label=equationlab, size=ps/ggplot2::.pt, hjust = 0) +
-      annotate("text", x=min_axis_x+range_x*0.02, y=max_axis_y-range_y*0.17,
+      annotate("text", x=eq_x, y=eq_y2,
                label=r2lab, size=ps/ggplot2::.pt, hjust = 0) +
       coord_cartesian(xlim=c(min_axis_x, max_axis_x), ylim=c(min_axis_y, max_axis_y), clip='on') +
       theme_plot2 +
@@ -227,7 +244,7 @@ lm_dist_start <- function(cell_list, mvtime, robust = FALSE,
   ## Plotting for all cells
   # Title of the plots
   if(length(cell_list) != 1){
-    titles <- c(paste0("All ", stringr::str_to_lower(df_name), "s"))
+    titles <- c(paste0("All ", stringr::str_to_lower(graph_title), "s"))
 
     data <- df
 
@@ -263,9 +280,9 @@ lm_dist_start <- function(cell_list, mvtime, robust = FALSE,
       geom_line(data = conf_interval2, aes(x=distance, y=fit), color = "steelblue", linewidth = 1) +
       geom_ribbon(data = conf_interval2, aes(x=distance, ymin = lwr, ymax = upr), alpha = 0.4, fill = "steelblue") +
       geom_point(data = data, aes(x=distance, y=predicted), size=0.8, alpha=0.5) +
-      annotate("text", x=min_axis_x+range_x*0.02, y=max_axis_y-range_y*0.05,
+      annotate("text", x=eq_x, y=eq_y1,
                label=equationlab, size=ps/ggplot2::.pt, hjust = 0) +
-      annotate("text", x=min_axis_x+range_x*0.02, y=max_axis_y-range_y*0.17,
+      annotate("text", x=eq_x, y=eq_y2,
                label=r2lab, size=ps/ggplot2::.pt, hjust = 0) +
       coord_cartesian(xlim=c(min_axis_x, max_axis_x), ylim=c(min_axis_y, max_axis_y), clip='on') +
       theme_plot2 +

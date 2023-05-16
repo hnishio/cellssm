@@ -17,6 +17,7 @@ ssm_common(
   ex_name,
   df_idx = NULL,
   graph = TRUE,
+  graph_title = "Cell",
   unit1,
   unit2,
   shade = TRUE,
@@ -62,7 +63,7 @@ The default is 1000.}
 MCMC samples and improve the convergence. The default is 3.}
 
 \item{df_name}{(character string) The name of the data frame. This is used for
-file names and graph titles. The default is "cell".}
+file names. The default is "cell".}
 
 \item{res_name}{(character string) The name of the response variable. This is used
 for file names and graph labels.}
@@ -76,6 +77,9 @@ file names and graph titles. The default is \code{NULL} and the indexes are auto
 
 \item{graph}{(logical) Whether to output the graphs of the estimation.
 The default is \code{TRUE}.}
+
+\item{graph_title}{(character string) The name of the data frame. This is used for
+graph titles. The default is "Cell".}
 
 \item{unit1}{(character string) The unit of the response variable. One of "meter",
 "centimeter", "millimeter", "micrometer", "nanometer". If another character
@@ -196,12 +200,12 @@ Paramecium_mvtime
   # With the data frame of the movement time. This is recommended
   ssm_common(cell_list = cell_list, mvtime = Paramecium_mvtime, out = "18_ssm_common",
              df_name = "experiment", res_name = "Paramecium", ex_name = "heat",
-             unit1 = "millimeter", unit2 = "sec")
+             graph_title = "Experiment", unit1 = "millimeter", unit2 = "sec")
 
   # Without the data frame of the movement time
   ssm_common(cell_list = cell_list, out = "18_ssm_common",
              df_name = "experiment", res_name = "Paramecium", ex_name = "heat",
-            unit1 = "millimeter", unit2 = "sec")
+            graph_title = "Experiment", unit1 = "millimeter", unit2 = "sec")
 }
 
 }

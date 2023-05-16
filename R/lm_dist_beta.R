@@ -33,6 +33,8 @@
 #' "centimeter", "millimeter", "micrometer", "nanometer". If another character
 #' string is given, it is used as it is. This is used for graph labels.
 #' @param unit2 (character string) The unit of time. This is used for graph labels.
+#' @param eq_pos (character string) The position of equations. One of "topleft", "topright",
+#' "bottomleft", "bottomright". The default is "topleft".
 #' @param ps (positive integer) Font size of graphs specified in pt. The default is 7 pt.
 #' Plot sizes are automatically adjusted according to the font size.
 #' @param theme_plot (character string) A plot theme of the [ggplot2] package. One of "bw", "light",
@@ -84,7 +86,7 @@
 lm_dist_beta <- function(cell_list, mvtime, ssm_path,
                          ex_sign = "negative", ssm_method, robust = FALSE,
                          df_name = "cell", res_name, ex_name,
-                         unit1, unit2, ps = 7,
+                         unit1, unit2, eq_pos = "topleft", ps = 7,
                          theme_plot = "bw"){
 
   # Binding variables locally to the function
@@ -296,18 +298,35 @@ lm_dist_beta <- function(cell_list, mvtime, ssm_path,
     r2lab <- bquote(paste(italic(R^2), " = ", .(r2), sep=""))
     plab <- bquote(paste(italic(P), " = ", .(p), sep=""))
 
-    min_axis_y <- min(df_new$mean_b) - diff(range(df_new$mean_b))*0.1
-    max_axis_y <- max(df_new$mean_b) + diff(range(df_new$mean_b))*0.1
+    range_x <- diff(range(df_new$distance))
     min_axis_x <- min(df_new$distance)
     max_axis_x <- max(df_new$distance)
+    range_y <- diff(range(df_new$mean_b))
+    min_axis_y <- min(df_new$mean_b) - range_y*0.1
+    max_axis_y <- max(df_new$mean_b) + range_y*0.1
+
+    # Position of equations
+    if(eq_pos == "topleft"){
+      eq_x=min_axis_x+range_x*0.02; eq_y1=max_axis_y-range_y*0.05
+      eq_x=min_axis_x+range_x*0.02; eq_y2=max_axis_y-range_y*0.17
+    }else if(eq_pos == "topright"){
+      eq_x=max_axis_x-range_x*0.45; eq_y1=max_axis_y-range_y*0.05
+      eq_x=max_axis_x-range_x*0.45; eq_y2=max_axis_y-range_y*0.17
+    }else if(eq_pos == "bottomleft"){
+      eq_x=min_axis_x+range_x*0.02; eq_y1=min_axis_y+range_y*0.17
+      eq_x=min_axis_x+range_x*0.02; eq_y2=min_axis_y+range_y*0.05
+    }else if(eq_pos == "bottomright"){
+      eq_x=max_axis_x-range_x*0.45; eq_y1=min_axis_y+range_y*0.17
+      eq_x=max_axis_x-range_x*0.45; eq_y2=min_axis_y+range_y*0.05
+    }
 
     g1 <- ggplot() +
       geom_line(data = conf_interval2, aes(x=distance, y=fit), color = "steelblue", linewidth = 1) +
       geom_ribbon(data = conf_interval2, aes(x=distance, ymin = lwr, ymax = upr), alpha = 0.4, fill = "steelblue") +
       geom_point(data = df_new, aes(x=distance, y=mean_b), size=0.8, alpha=0.5) +
-      annotate("text", x=max_axis_x - (max_axis_x - min_axis_x)*0.45, y=max_axis_y - (max_axis_y - min_axis_y)*0.03,
+      annotate("text", x=eq_x, y=eq_y1,
                label=r2lab, size=ps/ggplot2::.pt, hjust = 0) +
-      annotate("text", x=max_axis_x - (max_axis_x - min_axis_x)*0.45, y=max_axis_y - (max_axis_y - min_axis_y)*0.13,
+      annotate("text", x=eq_x, y=eq_y2,
                label=plab, size=ps/ggplot2::.pt, hjust = 0) +
       coord_cartesian(xlim=c(min_axis_x, max_axis_x), ylim=c(min_axis_y, max_axis_y), clip='on') +
       theme_plot2 +
@@ -338,18 +357,35 @@ lm_dist_beta <- function(cell_list, mvtime, ssm_path,
     r2lab <- bquote(paste(italic(R^2), " = ", .(r2), sep=""))
     plab <- bquote(paste(italic(P), " = ", .(p), sep=""))
 
-    min_axis_y <- min(df_new$most_b) - diff(range(df_new$most_b))*0.1
-    max_axis_y <- max(df_new$most_b) + diff(range(df_new$most_b))*0.1
+    range_x <- diff(range(df_new$distance))
     min_axis_x <- min(df_new$distance)
     max_axis_x <- max(df_new$distance)
+    range_y <- diff(range(df_new$most_b))
+    min_axis_y <- min(df_new$most_b) - range_y*0.1
+    max_axis_y <- max(df_new$most_b) + range_y*0.1
+
+    # Position of equations
+    if(eq_pos == "topleft"){
+      eq_x=min_axis_x+range_x*0.02; eq_y1=max_axis_y-range_y*0.05
+      eq_x=min_axis_x+range_x*0.02; eq_y2=max_axis_y-range_y*0.17
+    }else if(eq_pos == "topright"){
+      eq_x=max_axis_x-range_x*0.45; eq_y1=max_axis_y-range_y*0.05
+      eq_x=max_axis_x-range_x*0.45; eq_y2=max_axis_y-range_y*0.17
+    }else if(eq_pos == "bottomleft"){
+      eq_x=min_axis_x+range_x*0.02; eq_y1=min_axis_y+range_y*0.17
+      eq_x=min_axis_x+range_x*0.02; eq_y2=min_axis_y+range_y*0.05
+    }else if(eq_pos == "bottomright"){
+      eq_x=max_axis_x-range_x*0.45; eq_y1=min_axis_y+range_y*0.17
+      eq_x=max_axis_x-range_x*0.45; eq_y2=min_axis_y+range_y*0.05
+    }
 
     g2 <- ggplot() +
       geom_line(data = conf_interval2, aes(x=distance, y=fit), color = "steelblue", linewidth = 1) +
       geom_ribbon(data = conf_interval2, aes(x=distance, ymin = lwr, ymax = upr), alpha = 0.4, fill = "steelblue") +
       geom_point(data = df_new, aes(x=distance, y=most_b), size=0.8, alpha=0.5) +
-      annotate("text", x=max_axis_x - (max_axis_x - min_axis_x)*0.45, y=max_axis_y - (max_axis_y - min_axis_y)*0.03,
+      annotate("text", x=eq_x, y=eq_y1,
                label=r2lab, size=ps/ggplot2::.pt, hjust = 0) +
-      annotate("text", x=max_axis_x - (max_axis_x - min_axis_x)*0.45, y=max_axis_y - (max_axis_y - min_axis_y)*0.13,
+      annotate("text", x=eq_x, y=eq_y2,
                label=plab, size=ps/ggplot2::.pt, hjust = 0) +
       coord_cartesian(xlim=c(min_axis_x, max_axis_x), ylim=c(min_axis_y, max_axis_y), clip='on') +
       theme_plot2 +
@@ -379,18 +415,35 @@ lm_dist_beta <- function(cell_list, mvtime, ssm_path,
     r2lab <- bquote(paste(italic(R^2), " = ", .(r2), sep=""))
     plab <- bquote(paste(italic(P), " = ", .(p), sep=""))
 
-    min_axis_y <- min(df_new$s_b_ex) - diff(range(df_new$s_b_ex))*0.1
-    max_axis_y <- max(df_new$s_b_ex) + diff(range(df_new$s_b_ex))*0.1
+    range_x <- diff(range(df_new$distance))
     min_axis_x <- min(df_new$distance)
     max_axis_x <- max(df_new$distance)
+    range_y <- diff(range(df_new$s_b_ex))
+    min_axis_y <- min(df_new$s_b_ex) - range_y*0.1
+    max_axis_y <- max(df_new$s_b_ex) + range_y*0.1
+
+    # Position of equations
+    if(eq_pos == "topleft"){
+      eq_x=min_axis_x+range_x*0.02; eq_y1=max_axis_y-range_y*0.05
+      eq_x=min_axis_x+range_x*0.02; eq_y2=max_axis_y-range_y*0.17
+    }else if(eq_pos == "topright"){
+      eq_x=max_axis_x-range_x*0.45; eq_y1=max_axis_y-range_y*0.05
+      eq_x=max_axis_x-range_x*0.45; eq_y2=max_axis_y-range_y*0.17
+    }else if(eq_pos == "bottomleft"){
+      eq_x=min_axis_x+range_x*0.02; eq_y1=min_axis_y+range_y*0.17
+      eq_x=min_axis_x+range_x*0.02; eq_y2=min_axis_y+range_y*0.05
+    }else if(eq_pos == "bottomright"){
+      eq_x=max_axis_x-range_x*0.45; eq_y1=min_axis_y+range_y*0.17
+      eq_x=max_axis_x-range_x*0.45; eq_y2=min_axis_y+range_y*0.05
+    }
 
     g3 <- ggplot() +
       geom_line(data = conf_interval2, aes(x=distance, y=fit), color = "steelblue", linewidth = 1) +
       geom_ribbon(data = conf_interval2, aes(x=distance, ymin = lwr, ymax = upr), alpha = 0.4, fill = "steelblue") +
       geom_point(data = df_new, aes(x=distance, y=s_b_ex), size=0.8, alpha=0.5) +
-      annotate("text", x=max_axis_x - (max_axis_x - min_axis_x)*0.45, y=max_axis_y - (max_axis_y - min_axis_y)*0.03,
+      annotate("text", x=eq_x, y=eq_y1,
                label=r2lab, size=ps/ggplot2::.pt, hjust = 0) +
-      annotate("text", x=max_axis_x - (max_axis_x - min_axis_x)*0.45, y=max_axis_y - (max_axis_y - min_axis_y)*0.13,
+      annotate("text", x=eq_x, y=eq_y2,
                label=plab, size=ps/ggplot2::.pt, hjust = 0) +
       coord_cartesian(xlim=c(min_axis_x, max_axis_x), ylim=c(min_axis_y, max_axis_y), clip='on') +
       theme_plot2 +
@@ -421,18 +474,35 @@ lm_dist_beta <- function(cell_list, mvtime, ssm_path,
     r2lab <- bquote(paste(italic(R^2), " = ", .(r2), sep=""))
     plab <- bquote(paste(italic(P), " = ", .(p), sep=""))
 
-    min_axis_y <- min(df_new$mean_alpha) - diff(range(df_new$mean_alpha))*0.1
-    max_axis_y <- max(df_new$mean_alpha) + diff(range(df_new$mean_alpha))*0.1
+    range_x <- diff(range(df_new$distance))
     min_axis_x <- min(df_new$distance)
     max_axis_x <- max(df_new$distance)
+    range_y <- diff(range(df_new$mean_alpha))
+    min_axis_y <- min(df_new$mean_alpha) - range_y*0.1
+    max_axis_y <- max(df_new$mean_alpha) + range_y*0.1
+
+    # Position of equations
+    if(eq_pos == "topleft"){
+      eq_x=min_axis_x+range_x*0.02; eq_y1=max_axis_y-range_y*0.05
+      eq_x=min_axis_x+range_x*0.02; eq_y2=max_axis_y-range_y*0.17
+    }else if(eq_pos == "topright"){
+      eq_x=max_axis_x-range_x*0.45; eq_y1=max_axis_y-range_y*0.05
+      eq_x=max_axis_x-range_x*0.45; eq_y2=max_axis_y-range_y*0.17
+    }else if(eq_pos == "bottomleft"){
+      eq_x=min_axis_x+range_x*0.02; eq_y1=min_axis_y+range_y*0.17
+      eq_x=min_axis_x+range_x*0.02; eq_y2=min_axis_y+range_y*0.05
+    }else if(eq_pos == "bottomright"){
+      eq_x=max_axis_x-range_x*0.45; eq_y1=min_axis_y+range_y*0.17
+      eq_x=max_axis_x-range_x*0.45; eq_y2=min_axis_y+range_y*0.05
+    }
 
     g4 <- ggplot() +
       geom_line(data = conf_interval2, aes(x=distance, y=fit), color = "steelblue", linewidth = 1) +
       geom_ribbon(data = conf_interval2, aes(x=distance, ymin = lwr, ymax = upr), alpha = 0.4, fill = "steelblue") +
       geom_point(data = df_new, aes(x=distance, y=mean_alpha), size=0.8, alpha=0.5) +
-      annotate("text", x=max_axis_x - (max_axis_x - min_axis_x)*0.45, y=max_axis_y - (max_axis_y - min_axis_y)*0.03,
+      annotate("text", x=eq_x, y=eq_y1,
                label=r2lab, size=ps/ggplot2::.pt, hjust = 0) +
-      annotate("text", x=max_axis_x - (max_axis_x - min_axis_x)*0.45, y=max_axis_y - (max_axis_y - min_axis_y)*0.13,
+      annotate("text", x=eq_x, y=eq_y2,
                label=plab, size=ps/ggplot2::.pt, hjust = 0) +
       coord_cartesian(xlim=c(min_axis_x, max_axis_x), ylim=c(min_axis_y, max_axis_y), clip='on') +
       theme_plot2 +
@@ -463,18 +533,35 @@ lm_dist_beta <- function(cell_list, mvtime, ssm_path,
     r2lab <- bquote(paste(italic(R^2), " = ", .(r2), sep=""))
     plab <- bquote(paste(italic(P), " = ", .(p), sep=""))
 
-    min_axis_y <- min(df_new$most_alpha) - diff(range(df_new$most_alpha))*0.1
-    max_axis_y <- max(df_new$most_alpha) + diff(range(df_new$most_alpha))*0.1
+    range_x <- diff(range(df_new$distance))
     min_axis_x <- min(df_new$distance)
     max_axis_x <- max(df_new$distance)
+    range_y <- diff(range(df_new$most_alpha))
+    min_axis_y <- min(df_new$most_alpha) - range_y*0.1
+    max_axis_y <- max(df_new$most_alpha) + range_y*0.1
+
+    # Position of equations
+    if(eq_pos == "topleft"){
+      eq_x=min_axis_x+range_x*0.02; eq_y1=max_axis_y-range_y*0.05
+      eq_x=min_axis_x+range_x*0.02; eq_y2=max_axis_y-range_y*0.17
+    }else if(eq_pos == "topright"){
+      eq_x=max_axis_x-range_x*0.45; eq_y1=max_axis_y-range_y*0.05
+      eq_x=max_axis_x-range_x*0.45; eq_y2=max_axis_y-range_y*0.17
+    }else if(eq_pos == "bottomleft"){
+      eq_x=min_axis_x+range_x*0.02; eq_y1=min_axis_y+range_y*0.17
+      eq_x=min_axis_x+range_x*0.02; eq_y2=min_axis_y+range_y*0.05
+    }else if(eq_pos == "bottomright"){
+      eq_x=max_axis_x-range_x*0.45; eq_y1=min_axis_y+range_y*0.17
+      eq_x=max_axis_x-range_x*0.45; eq_y2=min_axis_y+range_y*0.05
+    }
 
     g5 <- ggplot() +
       geom_line(data = conf_interval2, aes(x=distance, y=fit), color = "steelblue", linewidth = 1) +
       geom_ribbon(data = conf_interval2, aes(x=distance, ymin = lwr, ymax = upr), alpha = 0.4, fill = "steelblue") +
       geom_point(data = df_new, aes(x=distance, y=most_alpha), size=0.8, alpha=0.5) +
-      annotate("text", x=max_axis_x - (max_axis_x - min_axis_x)*0.45, y=max_axis_y - (max_axis_y - min_axis_y)*0.03,
+      annotate("text", x=eq_x, y=eq_y1,
                label=r2lab, size=ps/ggplot2::.pt, hjust = 0) +
-      annotate("text", x=max_axis_x - (max_axis_x - min_axis_x)*0.45, y=max_axis_y - (max_axis_y - min_axis_y)*0.13,
+      annotate("text", x=eq_x, y=eq_y2,
                label=plab, size=ps/ggplot2::.pt, hjust = 0) +
       coord_cartesian(xlim=c(min_axis_x, max_axis_x), ylim=c(min_axis_y, max_axis_y), clip='on') +
       theme_plot2 +
@@ -626,18 +713,35 @@ lm_dist_beta <- function(cell_list, mvtime, ssm_path,
     r2lab <- bquote(paste(italic(R^2), " = ", .(r2), sep=""))
     plab <- bquote(paste(italic(P), " = ", .(p), sep=""))
 
-    min_axis_y <- min(df_new$mean_b) - diff(range(df_new$mean_b))*0.1
-    max_axis_y <- max(df_new$mean_b) + diff(range(df_new$mean_b))*0.1
+    range_x <- diff(range(df_new$distance))
     min_axis_x <- min(df_new$distance)
     max_axis_x <- max(df_new$distance)
+    range_y <- diff(range(df_new$mean_b))
+    min_axis_y <- min(df_new$mean_b) - range_y*0.1
+    max_axis_y <- max(df_new$mean_b) + range_y*0.1
+
+    # Position of equations
+    if(eq_pos == "topleft"){
+      eq_x=min_axis_x+range_x*0.02; eq_y1=max_axis_y-range_y*0.05
+      eq_x=min_axis_x+range_x*0.02; eq_y2=max_axis_y-range_y*0.17
+    }else if(eq_pos == "topright"){
+      eq_x=max_axis_x-range_x*0.45; eq_y1=max_axis_y-range_y*0.05
+      eq_x=max_axis_x-range_x*0.45; eq_y2=max_axis_y-range_y*0.17
+    }else if(eq_pos == "bottomleft"){
+      eq_x=min_axis_x+range_x*0.02; eq_y1=min_axis_y+range_y*0.17
+      eq_x=min_axis_x+range_x*0.02; eq_y2=min_axis_y+range_y*0.05
+    }else if(eq_pos == "bottomright"){
+      eq_x=max_axis_x-range_x*0.45; eq_y1=min_axis_y+range_y*0.17
+      eq_x=max_axis_x-range_x*0.45; eq_y2=min_axis_y+range_y*0.05
+    }
 
     g1 <- ggplot() +
       geom_line(data = conf_interval2, aes(x=distance, y=fit), color = "steelblue", linewidth = 1) +
       geom_ribbon(data = conf_interval2, aes(x=distance, ymin = lwr, ymax = upr), alpha = 0.4, fill = "steelblue") +
       geom_point(data = df_new, aes(x=distance, y=mean_b), size=0.8, alpha=0.5) +
-      annotate("text", x=max_axis_x - (max_axis_x - min_axis_x)*0.45, y=max_axis_y - (max_axis_y - min_axis_y)*0.03,
+      annotate("text", x=eq_x, y=eq_y1,
                label=r2lab, size=ps/ggplot2::.pt, hjust = 0) +
-      annotate("text", x=max_axis_x - (max_axis_x - min_axis_x)*0.45, y=max_axis_y - (max_axis_y - min_axis_y)*0.13,
+      annotate("text", x=eq_x, y=eq_y2,
                label=plab, size=ps/ggplot2::.pt, hjust = 0) +
       coord_cartesian(xlim=c(min_axis_x, max_axis_x), ylim=c(min_axis_y, max_axis_y), clip='on') +
       theme_plot2 +
@@ -668,18 +772,35 @@ lm_dist_beta <- function(cell_list, mvtime, ssm_path,
     r2lab <- bquote(paste(italic(R^2), " = ", .(r2), sep=""))
     plab <- bquote(paste(italic(P), " = ", .(p), sep=""))
 
-    min_axis_y <- min(df_new$most_b) - diff(range(df_new$most_b))*0.1
-    max_axis_y <- max(df_new$most_b) + diff(range(df_new$most_b))*0.1
+    range_x <- diff(range(df_new$distance))
     min_axis_x <- min(df_new$distance)
     max_axis_x <- max(df_new$distance)
+    range_y <- diff(range(df_new$most_b))
+    min_axis_y <- min(df_new$most_b) - range_y*0.1
+    max_axis_y <- max(df_new$most_b) + range_y*0.1
+
+    # Position of equations
+    if(eq_pos == "topleft"){
+      eq_x=min_axis_x+range_x*0.02; eq_y1=max_axis_y-range_y*0.05
+      eq_x=min_axis_x+range_x*0.02; eq_y2=max_axis_y-range_y*0.17
+    }else if(eq_pos == "topright"){
+      eq_x=max_axis_x-range_x*0.45; eq_y1=max_axis_y-range_y*0.05
+      eq_x=max_axis_x-range_x*0.45; eq_y2=max_axis_y-range_y*0.17
+    }else if(eq_pos == "bottomleft"){
+      eq_x=min_axis_x+range_x*0.02; eq_y1=min_axis_y+range_y*0.17
+      eq_x=min_axis_x+range_x*0.02; eq_y2=min_axis_y+range_y*0.05
+    }else if(eq_pos == "bottomright"){
+      eq_x=max_axis_x-range_x*0.45; eq_y1=min_axis_y+range_y*0.17
+      eq_x=max_axis_x-range_x*0.45; eq_y2=min_axis_y+range_y*0.05
+    }
 
     g2 <- ggplot() +
       geom_line(data = conf_interval2, aes(x=distance, y=fit), color = "steelblue", linewidth = 1) +
       geom_ribbon(data = conf_interval2, aes(x=distance, ymin = lwr, ymax = upr), alpha = 0.4, fill = "steelblue") +
       geom_point(data = df_new, aes(x=distance, y=most_b), size=0.8, alpha=0.5) +
-      annotate("text", x=max_axis_x - (max_axis_x - min_axis_x)*0.45, y=max_axis_y - (max_axis_y - min_axis_y)*0.03,
+      annotate("text", x=eq_x, y=eq_y1,
                label=r2lab, size=ps/ggplot2::.pt, hjust = 0) +
-      annotate("text", x=max_axis_x - (max_axis_x - min_axis_x)*0.45, y=max_axis_y - (max_axis_y - min_axis_y)*0.13,
+      annotate("text", x=eq_x, y=eq_y2,
                label=plab, size=ps/ggplot2::.pt, hjust = 0) +
       coord_cartesian(xlim=c(min_axis_x, max_axis_x), ylim=c(min_axis_y, max_axis_y), clip='on') +
       theme_plot2 +
@@ -709,18 +830,35 @@ lm_dist_beta <- function(cell_list, mvtime, ssm_path,
     r2lab <- bquote(paste(italic(R^2), " = ", .(r2), sep=""))
     plab <- bquote(paste(italic(P), " = ", .(p), sep=""))
 
-    min_axis_y <- min(df_new$s_b_ex) - diff(range(df_new$s_b_ex))*0.1
-    max_axis_y <- max(df_new$s_b_ex) + diff(range(df_new$s_b_ex))*0.1
+    range_x <- diff(range(df_new$distance))
     min_axis_x <- min(df_new$distance)
     max_axis_x <- max(df_new$distance)
+    range_y <- diff(range(df_new$s_b_ex))
+    min_axis_y <- min(df_new$s_b_ex) - range_y*0.1
+    max_axis_y <- max(df_new$s_b_ex) + range_y*0.1
+
+    # Position of equations
+    if(eq_pos == "topleft"){
+      eq_x=min_axis_x+range_x*0.02; eq_y1=max_axis_y-range_y*0.05
+      eq_x=min_axis_x+range_x*0.02; eq_y2=max_axis_y-range_y*0.17
+    }else if(eq_pos == "topright"){
+      eq_x=max_axis_x-range_x*0.45; eq_y1=max_axis_y-range_y*0.05
+      eq_x=max_axis_x-range_x*0.45; eq_y2=max_axis_y-range_y*0.17
+    }else if(eq_pos == "bottomleft"){
+      eq_x=min_axis_x+range_x*0.02; eq_y1=min_axis_y+range_y*0.17
+      eq_x=min_axis_x+range_x*0.02; eq_y2=min_axis_y+range_y*0.05
+    }else if(eq_pos == "bottomright"){
+      eq_x=max_axis_x-range_x*0.45; eq_y1=min_axis_y+range_y*0.17
+      eq_x=max_axis_x-range_x*0.45; eq_y2=min_axis_y+range_y*0.05
+    }
 
     g3 <- ggplot() +
       geom_line(data = conf_interval2, aes(x=distance, y=fit), color = "steelblue", linewidth = 1) +
       geom_ribbon(data = conf_interval2, aes(x=distance, ymin = lwr, ymax = upr), alpha = 0.4, fill = "steelblue") +
       geom_point(data = df_new, aes(x=distance, y=s_b_ex), size=0.8, alpha=0.5) +
-      annotate("text", x=max_axis_x - (max_axis_x - min_axis_x)*0.45, y=max_axis_y - (max_axis_y - min_axis_y)*0.03,
+      annotate("text", x=eq_x, y=eq_y1,
                label=r2lab, size=ps/ggplot2::.pt, hjust = 0) +
-      annotate("text", x=max_axis_x - (max_axis_x - min_axis_x)*0.45, y=max_axis_y - (max_axis_y - min_axis_y)*0.13,
+      annotate("text", x=eq_x, y=eq_y2,
                label=plab, size=ps/ggplot2::.pt, hjust = 0) +
       coord_cartesian(xlim=c(min_axis_x, max_axis_x), ylim=c(min_axis_y, max_axis_y), clip='on') +
       theme_plot2 +

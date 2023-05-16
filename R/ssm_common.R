@@ -46,7 +46,7 @@ quantile99 <- function(x){
 #' @param thin (positive integer) Intervals of MCMC samples. This is useful to reduce the autocorrelation of
 #' MCMC samples and improve the convergence. The default is 3.
 #' @param df_name (character string) The name of the data frame. This is used for
-#' file names and graph titles. The default is "cell".
+#' file names. The default is "cell".
 #' @param res_name (character string) The name of the response variable. This is used
 #' for file names and graph labels.
 #' @param ex_name (character string) The name of the explanatory variable. This is
@@ -56,6 +56,8 @@ quantile99 <- function(x){
 #' file names and graph titles. The default is `NULL` and the indexes are automatically set.
 #' @param graph (logical) Whether to output the graphs of the estimation.
 #' The default is `TRUE`.
+#' @param graph_title (character string) The name of the data frame. This is used for
+#' graph titles. The default is "Cell".
 #' @param unit1 (character string) The unit of the response variable. One of "meter",
 #' "centimeter", "millimeter", "micrometer", "nanometer". If another character
 #' string is given, it is used as it is. This is used for graph labels.
@@ -155,19 +157,19 @@ quantile99 <- function(x){
 #'   # With the data frame of the movement time. This is recommended
 #'   ssm_common(cell_list = cell_list, mvtime = Paramecium_mvtime, out = "18_ssm_common",
 #'              df_name = "experiment", res_name = "Paramecium", ex_name = "heat",
-#'              unit1 = "millimeter", unit2 = "sec")
+#'              graph_title = "Experiment", unit1 = "millimeter", unit2 = "sec")
 #'
 #'   # Without the data frame of the movement time
 #'   ssm_common(cell_list = cell_list, out = "18_ssm_common",
 #'              df_name = "experiment", res_name = "Paramecium", ex_name = "heat",
-#'             unit1 = "millimeter", unit2 = "sec")
+#'             graph_title = "Experiment", unit1 = "millimeter", unit2 = "sec")
 #' }
 #'
 #' @export
 #'
 ssm_common <- function(cell_list, mvtime=NULL, out, seed = 123, warmup=1000, sampling=1000, thin=3,
                        df_name = "cell", res_name, ex_name, df_idx = NULL,
-                       graph = TRUE, unit1, unit2,
+                       graph = TRUE, graph_title = "Cell", unit1, unit2,
                        shade = TRUE, ps = 7, theme_plot = "bw",
                        diagnosis = TRUE){
 
@@ -556,9 +558,9 @@ ssm_common <- function(cell_list, mvtime=NULL, out, seed = 123, warmup=1000, sam
 
       # Title of the plots
       if(!is.null(df_idx)){
-        titles <- paste(stringr::str_to_title(df_name), " ", df_idx[i], sep="")
+        titles <- paste(graph_title, " ", df_idx[i], sep="")
       }else{
-        titles <- paste(stringr::str_to_title(df_name), " ", i, sep="")
+        titles <- paste(graph_title, " ", i, sep="")
       }
 
       # X-axis min and max of shade

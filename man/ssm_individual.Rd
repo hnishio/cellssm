@@ -21,6 +21,7 @@ ssm_individual(
   df_idx = NULL,
   res_idx = NULL,
   graph = TRUE,
+  graph_title = "Cell",
   unit1,
   unit2,
   shade = TRUE,
@@ -85,7 +86,7 @@ should be "positive". If cells or organelles are approaching to the explanatory
 variable, \code{ex_sign} should be "negative".}
 
 \item{df_name}{(character string) The name of the data frame. This is used for
-file names and graph titles. The default is "cell".}
+file names. The default is "cell".}
 
 \item{res_name}{(character string) The name of the response variable. This is used
 for file names and graph labels. The default is "organelle".}
@@ -109,6 +110,9 @@ the indexes are automatically set.}
 
 \item{graph}{(logical) Whether to output the graphs of the estimation.
 See \strong{Value} for more details. The default is \code{TRUE}.}
+
+\item{graph_title}{(character string) The name of the data frame. This is used for
+graph titles. The default is "Cell".}
 
 \item{unit1}{(character string) The unit of the response variable. One of "meter",
 "centimeter", "millimeter", "micrometer", "nanometer". If another character
@@ -238,7 +242,7 @@ cell_list
                  warmup=1000, sampling=1000, thin=6,
                  start_sensitivity = 3, ex_sign = "positive", df_name = "experiment",
                  res_name = "Paramecium", ex_name = "heat",
-                 unit1 = "millimeter", unit2 = "sec")
+                 graph_title = "Experiment", unit1 = "millimeter", unit2 = "sec")
 }
 
 }

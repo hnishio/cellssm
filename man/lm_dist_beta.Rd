@@ -16,6 +16,7 @@ lm_dist_beta(
   ex_name,
   unit1,
   unit2,
+  eq_pos = "topleft",
   ps = 7,
   theme_plot = "bw"
 )
@@ -59,6 +60,9 @@ file names and graph titles. The default is "cell".}
 string is given, it is used as it is. This is used for graph labels.}
 
 \item{unit2}{(character string) The unit of time. This is used for graph labels.}
+
+\item{eq_pos}{(character string) The position of equations. One of "topleft", "topright",
+"bottomleft", "bottomright". The default is "topleft".}
 
 \item{ps}{(positive integer) Font size of graphs specified in pt. The default is 7 pt.
 Plot sizes are automatically adjusted according to the font size.}

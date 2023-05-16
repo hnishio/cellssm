@@ -42,7 +42,7 @@
 #' should be "positive". If cells or organelles are approaching to the explanatory
 #' variable, `ex_sign` should be "negative".
 #' @param df_name (character string) The name of the data frame. This is used for
-#' file names and graph titles. The default is "cell".
+#' file names. The default is "cell".
 #' @param res_name (character string) The name of the response variable. This is used
 #' for file names and graph labels. The default is "organelle".
 #' @param ex_name (character string) The name of the explanatory variable. This is
@@ -61,6 +61,8 @@
 #' the indexes are automatically set.
 #' @param graph (logical) Whether to output the graphs of the estimation.
 #' The default is `TRUE`.
+#' @param graph_title (character string) The name of the data frame. This is used for
+#' graph titles. The default is "Cell".
 #' @param unit1 (character string) The unit of the response variable. One of "meter",
 #' "centimeter", "millimeter", "micrometer", "nanometer". If another character
 #' string is given, it is used as it is. This is used for graph labels.
@@ -149,7 +151,7 @@
 #'   ssm_KFAS(cell_list = cell_list, out = "13_ssm_KFAS",
 #'            ex_sign = "positive", df_name = "experiment",
 #'            res_name = "Paramecium", ex_name = "heat",
-#'            unit1 = "millimeter", unit2 = "sec")
+#'            graph_title = "Experiment", unit1 = "millimeter", unit2 = "sec")
 #' }
 #' }
 #'
@@ -160,7 +162,7 @@ ssm_KFAS <- function(cell_list, visual = NULL, out,
                      ex_sign = "negative", df_name = "cell",
                      res_name = "organelle", ex_name,
                      df_idx = NULL, res_idx = NULL,
-                     graph = TRUE, unit1, unit2,
+                     graph = TRUE, graph_title = "Cell", unit1, unit2,
                      shade = TRUE, start_line = TRUE, ps = 7, theme_plot = "bw"){
 
   ## Dependency on KFAS
@@ -664,9 +666,9 @@ ssm_KFAS <- function(cell_list, visual = NULL, out,
 
         # Title of the plots
         if(!is.null(df_idx) & !is.null(res_idx)){
-          titles <- paste(stringr::str_to_title(df_name), " ", df_idx[j], ", ", res_name, " ", res_idx[j], sep="")
+          titles <- paste(graph_title, " ", df_idx[j], ", ", res_name, " ", res_idx[j], sep="")
         }else{
-          titles <- paste(stringr::str_to_title(df_name), " ", i, ", ", res_name, " ", j, sep="")
+          titles <- paste(graph_title, " ", i, ", ", res_name, " ", j, sep="")
         }
 
         # X-axis min and max of shade
