@@ -244,7 +244,7 @@ lm_dist_start <- function(cell_list, mvtime, robust = FALSE,
   ## Plotting for all cells
   # Title of the plots
   if(length(cell_list) != 1){
-    titles <- c(paste0("All ", stringr::str_to_lower(graph_title), "s"))
+    titles <- c(paste0("All ", graph_title, "s"))
 
     data <- df
 
