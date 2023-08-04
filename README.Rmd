@@ -43,8 +43,8 @@ minor tasks.
 ## Installation
 You can install the development version of cellssm from [GitHub](https://github.com/) with:
 ``` r
-# install.packages("devtools")
-devtools::install_github("hnishio/cellssm")
+# install.packages("remotes")
+remotes::install_github("hnishio/cellssm")
 ```
 
 ## Workflow example (chloroplast accumulation responses to a blue microbeam)
@@ -95,9 +95,9 @@ ssm_file <- stringr::str_split(system.file("extdata", "individual_model.stan",
 ssm_path <- paste(ssm_file[-length(ssm_file)], collapse = "/")
 # Linear regression
 glist <- lm_dist_beta(cell_list = cell_list, mvtime = chloroplast_mvtime,
-                      ssm_path = ssm_path,
-                      ssm_method = "Bayes", res_name = "chloroplast",
-                      ex_name = "microbeam", unit1 = "micrometer", unit2 = "min")
+                      ssm_path = ssm_path, ssm_method = "Bayes", robust = TRUE, 
+                      res_name = "chloroplast", ex_name = "microbeam",
+                      unit1 = "micrometer", unit2 = "min")
 (glist[[1]] + labs(tag = "A")) + (glist[[2]] + labs(tag = "B")) + (glist[[3]] + labs(tag = "C")) + 
   (glist[[4]] + labs(tag = "D")) + (glist[[5]] + labs(tag = "E")) +
   patchwork::plot_layout(nrow = 2)
@@ -112,7 +112,7 @@ glist <- lm_dist_beta(cell_list = cell_list, mvtime = chloroplast_mvtime,
 
 ```{r lm_signal, eval = F}
 # Linear regression
-glist <- lm_signal(cell_list = cell_list, mvtime = chloroplast_mvtime,
+glist <- lm_signal(cell_list = cell_list, mvtime = chloroplast_mvtime, robust = TRUE,
                    ex_name = "microbeam", unit1 = "micrometer", unit2 = "min")
 glist[[1]] + glist[[2]] + glist[[3]] + glist[[4]] + glist[[5]] + glist[[6]] +
    patchwork::plot_layout(ncol = 3)
@@ -120,7 +120,7 @@ glist[[1]] + glist[[2]] + glist[[3]] + glist[[4]] + glist[[5]] + glist[[6]] +
 
 ![](man/figures/individual_chloroplast_lm_signal.jpg){width=100%}
 
-Linear regression of the distance of chloroplast from a blue microbeam, against the start time estimated by the Bayesian inference. The speed of signal transfer was defined as the slope of regression lines. Dots, solid lines and shaded regions are the observed values, regression lines and 95% confidence intervals, respectively. 
+Repeated median regression of the distance of chloroplast from a blue microbeam, against the start time estimated by the Bayesian inference. The speed of signal transfer was defined as the slope of regression lines. Dots, solid lines and shaded regions are the observed values, regression lines and 95% confidence intervals, respectively. 
 
 #### Bayesian inference of the state-space model (common model)
 In this model, we assumed an imaginary chloroplast which had a distance from the microbeam of zero, and dynamics referred to as the “common dynamics” for each cell. The state-space representation of the common dynamics is similar to that of the “individual model” explained in the previous section. We then assumed that the real dynamics of all chloroplasts followed the common dynamics after the start time estimated for each chloroplast by the “individual model”.

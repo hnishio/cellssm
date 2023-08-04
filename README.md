@@ -51,8 +51,8 @@ You can install the development version of cellssm from
 [GitHub](https://github.com/) with:
 
 ``` r
-# install.packages("devtools")
-devtools::install_github("hnishio/cellssm")
+# install.packages("remotes")
+remotes::install_github("hnishio/cellssm")
 ```
 
 ## Workflow example (chloroplast accumulation responses to a blue microbeam)
@@ -68,7 +68,7 @@ changed the location as a result.
 ``` r
 # Load package
 library(cellssm)
-#> Welcome to cellssm
+#> To read the manual, use: help("cellssm")
 # Load data of chloroplast movements
 data("cell1", "cell2", "cell3", "cell4")
 cell_list <- list(cell1, cell2, cell3, cell4)
@@ -98,7 +98,7 @@ ssm_individual(cell_list = cell_list, out = "02_ssm_individual",
                unit1 = "micrometer", unit2 = "min")
 ```
 
-<img src="man/figures/ssm_individual_cell1_chloroplast1.jpg" width="50.0%" />
+<img src="man/figures/ssm_individual_cell1_chloroplast1.jpg" style="width:50.0%" />
 
 This figure is an example of the output files: Bayesian inference of the
 state-space model for a chloroplast in cell 1. The observed distance of
@@ -139,9 +139,9 @@ ssm_file <- stringr::str_split(system.file("extdata", "individual_model.stan",
 ssm_path <- paste(ssm_file[-length(ssm_file)], collapse = "/")
 # Linear regression
 glist <- lm_dist_beta(cell_list = cell_list, mvtime = chloroplast_mvtime,
-                      ssm_path = ssm_path,
-                      ssm_method = "Bayes", res_name = "chloroplast",
-                      ex_name = "microbeam", unit1 = "micrometer", unit2 = "min")
+                      ssm_path = ssm_path, ssm_method = "Bayes", robust = TRUE, 
+                      res_name = "chloroplast", ex_name = "microbeam",
+                      unit1 = "micrometer", unit2 = "min")
 (glist[[1]] + labs(tag = "A")) + (glist[[2]] + labs(tag = "B")) + (glist[[3]] + labs(tag = "C")) + 
   (glist[[4]] + labs(tag = "D")) + (glist[[5]] + labs(tag = "E")) +
   patchwork::plot_layout(nrow = 2)
@@ -162,7 +162,7 @@ and 95% confidence intervals, respectively.
 
 ``` r
 # Linear regression
-glist <- lm_signal(cell_list = cell_list, mvtime = chloroplast_mvtime,
+glist <- lm_signal(cell_list = cell_list, mvtime = chloroplast_mvtime, robust = TRUE,
                    ex_name = "microbeam", unit1 = "micrometer", unit2 = "min")
 glist[[1]] + glist[[2]] + glist[[3]] + glist[[4]] + glist[[5]] + glist[[6]] +
    patchwork::plot_layout(ncol = 3)
@@ -170,11 +170,11 @@ glist[[1]] + glist[[2]] + glist[[3]] + glist[[4]] + glist[[5]] + glist[[6]] +
 
 <img src="man/figures/individual_chloroplast_lm_signal.jpg" style="width:100.0%" />
 
-Linear regression of the distance of chloroplast from a blue microbeam,
-against the start time estimated by the Bayesian inference. The speed of
-signal transfer was defined as the slope of regression lines. Dots,
-solid lines and shaded regions are the observed values, regression lines
-and 95% confidence intervals, respectively.
+Repeated median regression of the distance of chloroplast from a blue
+microbeam, against the start time estimated by the Bayesian inference.
+The speed of signal transfer was defined as the slope of regression
+lines. Dots, solid lines and shaded regions are the observed values,
+regression lines and 95% confidence intervals, respectively.
 
 #### Bayesian inference of the state-space model (common model)
 
@@ -202,7 +202,7 @@ ssm_common(cell_list = cell_list, mvtime = chloroplast_mvtime, out = "08_ssm_com
           unit1 = "micrometer", unit2 = "min")
 ```
 
-<img src="man/figures/ssm_common_cell1.jpg" width="50.0%" />
+<img src="man/figures/ssm_common_cell1.jpg" style="width:50.0%" />
 
 This figure is an example of the output files: Bayesian inference of the
 state-space model assuming the common dynamics between chloroplasts for

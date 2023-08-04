@@ -40,7 +40,7 @@
 #' cell_list <- list(cell1, cell2, cell3, cell4)
 #'
 #' # Linear regression
-#' glist <- lm_signal(cell_list = cell_list, mvtime = chloroplast_mvtime,
+#' glist <- lm_signal(cell_list = cell_list, mvtime = chloroplast_mvtime, robust = TRUE,
 #'                    ex_name = "microbeam", unit1 = "micrometer", unit2 = "min")
 #' g <- glist[[1]] + glist[[2]] + glist[[3]] + glist[[4]] + glist[[5]] + glist[[6]] +
 #'   patchwork::plot_layout(ncol = 3)
@@ -69,7 +69,7 @@
 #' cell_list <- list(Paramecium)
 #'
 #' # Linear regression
-#' glist <- lm_signal(cell_list = cell_list, mvtime = Paramecium_mvtime,
+#' glist <- lm_signal(cell_list = cell_list, mvtime = Paramecium_mvtime, robust = TRUE,
 #'                    graph_title = "Experiment", ex_name = "heat",
 #'                    unit1 = "millimeter", unit2 = "sec")
 #' g <- glist[[1]] + glist[[2]] +

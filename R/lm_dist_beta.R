@@ -63,11 +63,13 @@
 #' glist <- lm_dist_beta(cell_list = cell_list, mvtime = chloroplast_mvtime,
 #'                       ssm_path = ssm_path, ssm_method = "Bayes", robust = TRUE,
 #'                       res_name = "chloroplast", ex_name = "microbeam",
-#'                       unit1 = "micrometer", unit2 = "min")
+#'                       unit1 = "micrometer", unit2 = "min", eq_pos = "topright")
 #'
 #' # Save output
-#' g <- glist[[1]] + glist[[2]] + glist[[3]] + glist[[4]] + glist[[5]] +
-#'   patchwork::plot_layout(nrow = 2)
+#' g <-  (glist[[1]] + ggplot2::labs(tag = "A")) + (glist[[2]] + ggplot2::labs(tag = "B")) +
+#' (glist[[3]] + ggplot2::labs(tag = "C")) + (glist[[4]] + ggplot2::labs(tag = "D")) +
+#' (glist[[5]] + ggplot2::labs(tag = "E")) +
+#' patchwork::plot_layout(nrow = 2)
 #'
 #' \dontrun{
 #' # Create an output directory
