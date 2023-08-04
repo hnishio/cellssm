@@ -98,7 +98,7 @@ ssm_individual(cell_list = cell_list, out = "02_ssm_individual",
                unit1 = "micrometer", unit2 = "min")
 ```
 
-<img src="man/figures/ssm_individual_cell1_chloroplast1.jpg" style="width:50.0%" />
+<img src="man/figures/ssm_individual_cell1_chloroplast1.jpg" width="50.0%" />
 
 This figure is an example of the output files: Bayesian inference of the
 state-space model for a chloroplast in cell 1. The observed distance of
@@ -202,7 +202,7 @@ ssm_common(cell_list = cell_list, mvtime = chloroplast_mvtime, out = "08_ssm_com
           unit1 = "micrometer", unit2 = "min")
 ```
 
-<img src="man/figures/ssm_common_cell1.jpg" style="width:50.0%" />
+<img src="man/figures/ssm_common_cell1.jpg" width="50.0%" />
 
 This figure is an example of the output files: Bayesian inference of the
 state-space model assuming the common dynamics between chloroplasts for

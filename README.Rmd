@@ -141,6 +141,6 @@ ssm_common(cell_list = cell_list, mvtime = chloroplast_mvtime, out = "08_ssm_com
           unit1 = "micrometer", unit2 = "min")
 ```
 
-![](man/figures/ssm_common_cell1.jpg){width=50%}
+![](man/figures/ssm_common_cell1.jpg){width=50%} 
 
 This figure is an example of the output files: Bayesian inference of the state-space model assuming the common dynamics between chloroplasts for cell 1. The estimated values of the distance of the chloroplast from the blue microbeam (first panel), the velocity of movement (second panel), the coefficient of the blue microbeam (third panel), and the random fluctuations of the velocity (last panel) are shown. Solid lines and shaded regions are the medians and 95 % credible intervals of the Bayesian inference, respectively. The shaded and light regions represent the period without and with the explanatory variable (a blue microbeam), respectively.
